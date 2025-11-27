@@ -441,6 +441,8 @@ Because Whimsical supports [PWA](https://developer.mozilla.org/en-US/docs/Web/Pr
 
 Script to update everything from cli. 
 
+$ git clone git@github.com:guarinogabriel/mac-cli.git
+
 ```sh
 #!/bin/sh
 ###########################################################################
