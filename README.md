@@ -392,3 +392,239 @@ Because Whimsical supports [PWA](https://developer.mozilla.org/en-US/docs/Web/Pr
 + [kap](https://getkap.co/) - Screen recorder to generate gif.
 + [magnet](https://apps.apple.com/us/app/magnet/id441258766?mt=12) - Window manager.
 + [Input Source Pro](https://inputsource.pro/) - A tool for multi-language users.
+
+### Brew installs
+
+#### Formulas
++ bash
++ wget
++ vim
++ uv
++ tig
++ telnet
++ rclone
++ pandoc
++ jira-cli
++ ipmitool
++ htop
++ go
++ ffmpeg
++ vlc
++ openssl
++ lftp
++ mtr
++ nmap
++ ncurses
++ net-snmp
++ tree
++ tmux
++ jq
+
+  #### Casks 
++ [Keyboard Maestro](https://www.keyboardmaestro.com/main/)
++ [Rectangle Pro](https://rectangleapp.com/pro/)
++ [Karabiner-elements](https://karabiner-elements.pqrs.org/)
++ Keeweb , or other Keepass
++ syncthing or syncthing-app
++ spotify
++ netspot
++ visual-studio-code
++ rustdesk
++ 
+
+
+
+## Scripts in the $PATH
+
+
+### mac update 
+
+Script to update everything from cli. 
+
+```sh
+#!/bin/sh
+###########################################################################
+#  mac CLI (mac command line tools) - macOS command line tools for developers
+###########################################################################
+
+# Version: 2.0
+# Date: December 8, 2015
+# Author: Gabriel Guarino
+#
+# Collection of useful functions to automate macOS common tasks
+#
+###########################################################################
+
+# Mac CLI directory
+MAC="$(dirname "$0")"
+
+#--------------------------------------------------------------------
+# Configuration
+#--------------------------------------------------------------------
+export cli_path="/usr/local/bin/"
+export plugins_path="/usr/local/bin/mac-cli/"
+export php="/Applications/MAMP/bin/php/php5.5.26/bin/php"
+export php_cli=$(which php)
+export github_email_account=$(git config user.email)
+export echocommand="false"
+export pref_editor="${pref_Editor}"
+
+#--------------------------------------------------------------------
+# Parameters
+#--------------------------------------------------------------------
+export fn=$1
+export firstParameter=$2
+export secondParameter=$3
+export allParameters=${@:2}
+
+#--------------------------------------------------------------------
+# Colors
+#--------------------------------------------------------------------
+export GREEN='\033[0;32m'
+export GRAY='\033[0;37m'
+export LIGHTBLUE='\033[1;34m'
+export LIGHTGREEN='\033[1;32m'
+export WHITEBOLD='\033[1;37m'
+export RED='\033[1;31m'
+export NC='\033[0m' # No Color
+
+#--------------------------------------------------------------------
+# List of Commands
+#--------------------------------------------------------------------
+
+COMMANDS=(
+    list
+    help
+    usage
+    categories
+    general
+    search
+    network
+    ssh
+    webdev
+    performance
+    terminal
+    git
+    web_utilities
+    homebrew
+    image
+    magento
+    update
+    upgrade
+    uninstall
+    lock
+    restart
+    sleep
+    display
+    shutdown
+    uptime
+    volume
+    volume:ismute
+    volume:mute
+    volume:unmute
+    hidden:show
+    hidden:hide
+    screensaver
+    folders:list
+    folder:size
+    dock:add-space
+    bluetooth:status
+    bluetooth:enable
+    bluetooth:disable
+    wifi:status
+    wifi:scan
+    wifi:enable
+    wifi:disable
+    eject-all
+    battery
+    info
+    find:text
+    find:biggest-files
+    find:biggest-directories
+    zip:extract
+    gzip:compress
+    gzip:extract
+    tar:compress
+    tar:extract
+    find:recent
+    search:replace
+    speedtest
+    ports
+    ip:local
+    ip:public
+    hosts:edit
+    ssh:download-file
+    ssh:download-folder
+    ssh:sync:local
+    ssh:sync:remote
+    ssh:upload
+    ssh:public-key
+    ssh:list
+    system
+    temp
+    memory
+    trash:empty
+    trash:size
+    git:config
+    git:open
+    git:create:branch
+    git:branches:date
+    git:undo-commit
+    git:log
+    git:branch
+    git:branch:rename
+    git:branch:remove-local
+    git:branch:remove-remote
+    git:branch
+    git:settings
+    git:add-removed
+    git:size
+    brew:update
+)
+## ---- END OF COMMANDS; Comment required for bash_completion------
+
+if [ -z "$fn" ] || [[ "$#" -lt "1" ]]; then
+    fn="list"
+fi
+
+#--------------------------------------------------------------------
+# Help
+#--------------------------------------------------------------------
+
+# Documentation / Help
+source "$MAC/mac-cli/misc/help"
+
+#--------------------------------------------------------------------
+# Catch command not found
+#--------------------------------------------------------------------
+
+if [[ ! " ${COMMANDS[@]} " =~ " ${fn} " ]]; then
+    echo "${RED}Command not found: '${fn}' $(test ! -z "$allParameters" -a "$allParameters" != " " && echo "\nParameters: $allParameters" || echo "")${NC}"
+    read -p "Choose a category for which to list help/usage... ($(categoriesList)) " category # Ask user for a category to print usage
+
+    if [ ! -z "${category}" ]; then
+        echo "$(usageList ${category})\n" # Show help/usage for user-selected category
+        echo "$(printAdditionalHelp)"
+    else
+        kill -INT $$ # Exit
+    fi
+fi
+
+#--------------------------------------------------------------------
+# Plugins
+#--------------------------------------------------------------------
+
+source "$MAC/mac-cli/plugins/brew"
+source "$MAC/mac-cli/plugins/general"
+source "$MAC/mac-cli/plugins/git"
+source "$MAC/mac-cli/plugins/network"
+source "$MAC/mac-cli/plugins/performance"
+source "$MAC/mac-cli/plugins/search"
+source "$MAC/mac-cli/plugins/ssh"
+source "$MAC/mac-cli/plugins/volume"
+```
+
+
+  
+
+
