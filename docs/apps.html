@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Apps | mac.riera.co.uk</title>
+    <meta name="description" content="Daily apps and exclusions for the mac.riera.co.uk rebuild.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/style.css">
+    <script defer src="assets/app.js"></script>
+  </head>
+  <body data-page="apps">
+    <div class="site-frame">
+      <div data-site-shell="header"></div>
+
+      <main>
+        <section class="hero-panel reveal">
+          <span class="eyebrow">Apps</span>
+          <div class="page-grid">
+            <div class="page-heading">
+              <h1>The app list is small enough to remember and explicit enough not to drift.</h1>
+              <p>
+                Publishing the app roster matters because the repo doubles as documentation. The fastest way
+                to keep it honest is to be explicit about both the tools that stay and the ones that are gone.
+              </p>
+            </div>
+            <div class="callout">
+              <p>
+                Keyboard Maestro handles the launcher and clipboard role. Rectangle Pro handles window management.
+                Obsidian, Shottr, Kap, and Vivaldi stay in the everyday path.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="1">
+          <div class="section-heading">
+            <h2>Current App Groups</h2>
+            <p>These match the generated Homebrew groupings in the repo.</p>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Browsers + AI</h3>
+              <p>Vivaldi, DuckDuckGo, VS Code, Codex, Claude.</p>
+            </article>
+            <article class="card">
+              <h3>Productivity</h3>
+              <p>Keyboard Maestro, Rectangle Pro, Karabiner-Elements, Obsidian, KeeWeb, Spotify.</p>
+            </article>
+            <article class="card">
+              <h3>Capture</h3>
+              <p>Shottr, Kap, and ffmpeg.</p>
+            </article>
+            <article class="card">
+              <h3>Network</h3>
+              <p>RustDesk, NetSpot, and the CLI diagnostics that only need to appear on heavier rebuilds.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="2">
+          <div class="section-heading">
+            <h2>Explicit Exclusions</h2>
+            <p>Keeping the “no” list visible is part of keeping the rebuild stable.</p>
+          </div>
+          <ul class="stacked-list">
+            <li>App Expose is off.</li>
+            <li>Edge is out. Vivaldi is the browser path.</li>
+            <li>Alfred and Raycast are out. Keyboard Maestro covers that ground.</li>
+            <li>pnpm is out. Volta stays in.</li>
+            <li>Dropover, iBar, Whimsical, and Notion are out of the default rebuild.</li>
+          </ul>
+        </section>
+      </main>
+
+      <div data-site-shell="footer"></div>
+    </div>
+  </body>
+</html>

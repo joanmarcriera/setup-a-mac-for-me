@@ -1,0 +1,5 @@
+# Coding and writing tools that belong on every workstation rebuild.
+brew "go"
+brew "pandoc"
+brew "jira-cli"
+brew "volta"

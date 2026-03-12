@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Post-Install | mac.riera.co.uk</title>
+    <meta name="description" content="Post-install verification for the mac.riera.co.uk rebuild.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/style.css">
+    <script defer src="assets/app.js"></script>
+  </head>
+  <body data-page="post-install">
+    <div class="site-frame">
+      <div data-site-shell="header"></div>
+
+      <main>
+        <section class="hero-panel reveal">
+          <span class="eyebrow">Post-Install</span>
+          <div class="page-grid">
+            <div class="page-heading">
+              <h1>Verify the rebuild before calling it done.</h1>
+              <p>
+                The repo now includes scripts and CI so the public site and the working setup can be checked instead of trusted.
+                Run the scripts locally, then use the remaining manual checks as a final pass.
+              </p>
+            </div>
+            <div class="callout">
+              <p>
+                <strong>Verification order:</strong> generate artifacts if data changed, apply defaults, run the setup check,
+                then finish the browser and Keyboard Maestro handoff.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="1">
+          <div class="section-heading">
+            <h2>Commands</h2>
+            <p>These are the repo-level commands worth keeping close after a rebuild.</p>
+          </div>
+          <div class="content-columns">
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Rebuild generated files</h2>
+                  <p class="muted">Run after editing <code>data/install-groups.json</code>.</p>
+                </div>
+                <button type="button" class="button button-subtle" data-copy-text="python3 scripts/generate_brew_artifacts.py">Copy</button>
+              </div>
+              <pre>python3 scripts/generate_brew_artifacts.py</pre>
+            </section>
+
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Verify workstation</h2>
+                  <p class="muted">Checks Homebrew installs and Dock/Launchpad defaults.</p>
+                </div>
+                <button type="button" class="button button-subtle" data-copy-text="./scripts/verify-setup.sh workstation">Copy</button>
+              </div>
+              <pre>./scripts/verify-setup.sh workstation</pre>
+            </section>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="2">
+          <div class="section-heading">
+            <h2>Manual Final Pass</h2>
+            <p>The scripts cover the repeatable parts. These are the checks still worth doing by eye.</p>
+          </div>
+          <ul class="checklist">
+            <li>Tap to Click and three-finger drag are both working.</li>
+            <li>Vivaldi opens as the default browser and uses DuckDuckGo by default.</li>
+            <li>Keyboard Maestro shortcuts are firing correctly for launcher and clipboard history.</li>
+            <li>VS Code sync has restored the expected extensions and editor feel.</li>
+            <li>Codex and Claude are signed in and usable.</li>
+            <li>Shottr, Kap, and Rectangle Pro all respond with the expected shortcuts.</li>
+          </ul>
+        </section>
+
+        <section class="section reveal" data-delay="3">
+          <div class="section-heading">
+            <h2>Local Preview and CI</h2>
+            <p>The Pages site is static. It is easy to preview and validate before publishing.</p>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Preview locally</h3>
+              <p><code>python3 -m http.server --directory docs 8000</code> gives a quick local preview of the Pages site.</p>
+            </article>
+            <article class="card">
+              <h3>Validate docs</h3>
+              <p><code>python3 scripts/check_docs.py</code> checks internal file references and required Pages files.</p>
+            </article>
+            <article class="card">
+              <h3>Validate generated files</h3>
+              <p><code>python3 scripts/generate_brew_artifacts.py --check</code> catches drift between the data source and generated outputs.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <div data-site-shell="footer"></div>
+    </div>
+  </body>
+</html>

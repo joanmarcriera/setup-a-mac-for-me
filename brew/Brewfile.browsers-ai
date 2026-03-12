@@ -1,0 +1,6 @@
+# Browser and coding assistants used in the daily workflow.
+cask "vivaldi"
+cask "duckduckgo"
+cask "visual-studio-code"
+cask "codex"
+cask "claude"

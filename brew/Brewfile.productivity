@@ -1,0 +1,7 @@
+# Window management, keyboard automation, notes, and personal utilities.
+cask "keyboard-maestro"
+cask "rectangle-pro"
+cask "karabiner-elements"
+cask "obsidian"
+cask "keeweb"
+cask "spotify"

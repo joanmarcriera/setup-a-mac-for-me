@@ -1,0 +1,26 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check generated artifacts
+        run: python3 scripts/generate_brew_artifacts.py --check
+
+      - name: Check docs links and required files
+        run: python3 scripts/check_docs.py
+
+      - name: Parse Brewfiles
+        run: |
+          for file in brew/Brewfile.*; do
+            brew bundle list --file "$file"
+          done

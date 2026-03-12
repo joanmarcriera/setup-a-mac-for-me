@@ -1,0 +1,12 @@
+# Diagnostics, remote access, and support tooling kept out of the default rebuild.
+brew "telnet"
+brew "rclone"
+brew "ipmitool"
+brew "openssl"
+brew "lftp"
+brew "mtr"
+brew "nmap"
+brew "net-snmp"
+
+cask "rustdesk"
+cask "netspot"

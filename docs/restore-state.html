@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Restore State | mac.riera.co.uk</title>
+    <meta name="description" content="Manual restore checklist for the mac.riera.co.uk rebuild.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/style.css">
+    <script defer src="assets/app.js"></script>
+  </head>
+  <body data-page="restore-state">
+    <div class="site-frame">
+      <div data-site-shell="header"></div>
+
+      <main>
+        <section class="hero-panel reveal">
+          <span class="eyebrow">Restore State</span>
+          <div class="page-grid">
+            <div class="page-heading">
+              <h1>Installation is fast. State restore is where the machine becomes yours again.</h1>
+              <p>
+                Homebrew gets the apps on disk. This page is the short manual list for the things that
+                still have to be signed into, licensed, or nudged back into the right shape.
+              </p>
+            </div>
+            <div class="callout">
+              <p>
+                Keep this page close while rebuilding. It is the part most likely to be forgotten after a few months away.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="1">
+          <div class="section-heading">
+            <h2>Core Restore Checklist</h2>
+            <p>Do these in roughly this order so the machine starts feeling normal quickly.</p>
+          </div>
+          <ul class="timeline">
+            <li>Sign into Vivaldi and confirm sync brings back workspaces, bookmarks, and extensions.</li>
+            <li>Sign into VS Code and enable Settings Sync.</li>
+            <li>Reconnect Codex and Claude to the repos and workflows you use daily.</li>
+            <li>Import or sync Keyboard Maestro macros and reconnect launcher and clipboard shortcuts.</li>
+            <li>Activate Rectangle Pro and restore the expected window movement shortcuts.</li>
+            <li>Reconnect Karabiner-Elements rules if the keyboard layer is part of the current machine.</li>
+            <li>Open Obsidian and reconnect vaults and plugins.</li>
+            <li>Check Shottr and Kap preferences if output folders or shortcut bindings matter.</li>
+          </ul>
+        </section>
+
+        <section class="section reveal" data-delay="2">
+          <div class="section-heading">
+            <h2>Things Worth Storing Outside This Repo</h2>
+            <p>Document the restore source, not the secret itself.</p>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Licenses</h3>
+              <p>Keyboard Maestro and Rectangle Pro license material should live in a secure password manager, not in git.</p>
+            </article>
+            <article class="card">
+              <h3>Exports</h3>
+              <p>Macro exports, browser backup flows, and Karabiner profiles should live in a separate private backup path.</p>
+            </article>
+            <article class="card">
+              <h3>Account-heavy setups</h3>
+              <p>Keep a note of which logins must be restored, but avoid turning the repo into a secrets checklist.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <div data-site-shell="footer"></div>
+    </div>
+  </body>
+</html>

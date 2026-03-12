@@ -1,0 +1,5 @@
+# Screenshot, recording, and media tooling.
+brew "ffmpeg"
+
+cask "shottr"
+cask "kap"

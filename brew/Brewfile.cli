@@ -1,0 +1,11 @@
+# Core shell and terminal tools for day one.
+brew "bash"
+brew "wget"
+brew "vim"
+brew "uv"
+brew "tig"
+brew "htop"
+brew "tree"
+brew "tmux"
+brew "jq"
+brew "ncurses"

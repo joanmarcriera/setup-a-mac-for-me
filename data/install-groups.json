@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "title": "mac.riera.co.uk",
+    "owner": "Joan Marc Riera",
+    "description": "Opinionated MacBook Pro rebuild guide and Homebrew installer.",
+    "tagline": "A clean, repeatable Mac setup for Joan Marc Riera's actual daily stack."
+  },
+  "groups": [
+    {
+      "id": "cli",
+      "label": "CLI",
+      "description": "Core shell and terminal tools for day one.",
+      "formulae": [
+        "bash",
+        "wget",
+        "vim",
+        "uv",
+        "tig",
+        "htop",
+        "tree",
+        "tmux",
+        "jq",
+        "ncurses"
+      ],
+      "casks": [],
+      "notes": [
+        "zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+      ]
+    },
+    {
+      "id": "dev",
+      "label": "Dev",
+      "description": "Coding and writing tools that belong on every workstation rebuild.",
+      "formulae": [
+        "go",
+        "pandoc",
+        "jira-cli",
+        "volta"
+      ],
+      "casks": [],
+      "notes": [
+        "Node.js version management goes through Volta. pnpm is intentionally excluded."
+      ]
+    },
+    {
+      "id": "browsers-ai",
+      "label": "Browsers + AI",
+      "description": "Browser and coding assistants used in the daily workflow.",
+      "formulae": [],
+      "casks": [
+        "vivaldi",
+        "duckduckgo",
+        "visual-studio-code",
+        "codex",
+        "claude"
+      ],
+      "notes": [
+        "Vivaldi is the main browser. DuckDuckGo is the search-first companion."
+      ]
+    },
+    {
+      "id": "productivity",
+      "label": "Productivity",
+      "description": "Window management, keyboard automation, notes, and personal utilities.",
+      "formulae": [],
+      "casks": [
+        "keyboard-maestro",
+        "rectangle-pro",
+        "karabiner-elements",
+        "obsidian",
+        "keeweb",
+        "spotify"
+      ],
+      "notes": [
+        "Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers.",
+        "Keyboard Maestro and Rectangle Pro still require paid licenses after install."
+      ]
+    },
+    {
+      "id": "capture",
+      "label": "Capture",
+      "description": "Screenshot, recording, and media tooling.",
+      "formulae": [
+        "ffmpeg"
+      ],
+      "casks": [
+        "shottr",
+        "kap"
+      ],
+      "notes": [
+        "Shottr and Kap stay in the default workstation because they are used often."
+      ]
+    },
+    {
+      "id": "network",
+      "label": "Network",
+      "description": "Diagnostics, remote access, and support tooling kept out of the default rebuild.",
+      "formulae": [
+        "telnet",
+        "rclone",
+        "ipmitool",
+        "openssl",
+        "lftp",
+        "mtr",
+        "nmap",
+        "net-snmp"
+      ],
+      "casks": [
+        "rustdesk",
+        "netspot"
+      ],
+      "notes": [
+        "Useful when the Mac is doubling as a support or network box."
+      ]
+    }
+  ],
+  "bundles": [
+    {
+      "id": "minimal",
+      "label": "Minimal",
+      "description": "Enough to browse, code, and get back into the repo quickly.",
+      "include": [
+        "cli",
+        "browsers-ai",
+        "productivity"
+      ]
+    },
+    {
+      "id": "workstation",
+      "label": "Workstation",
+      "description": "The usual day-one rebuild for daily work.",
+      "include": [
+        "cli",
+        "dev",
+        "browsers-ai",
+        "productivity",
+        "capture"
+      ]
+    },
+    {
+      "id": "all",
+      "label": "Full",
+      "description": "Daily rebuild plus network and support tools.",
+      "include": [
+        "cli",
+        "dev",
+        "browsers-ai",
+        "productivity",
+        "capture",
+        "network"
+      ]
+    }
+  ]
+}

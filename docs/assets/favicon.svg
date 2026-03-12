@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="MR monogram">
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#a54d2c"/>
+      <stop offset="100%" stop-color="#24574d"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+  <path d="M28 94V34h18l18 32 18-32h18v60H84V63L69 89H58L44 63v31H28Z" fill="#fff7ef"/>
+</svg>

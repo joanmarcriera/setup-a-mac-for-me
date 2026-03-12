@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>mac.riera.co.uk</title>
+    <meta name="description" content="Opinionated MacBook Pro rebuild guide for Joan Marc Riera.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/style.css">
+    <script defer src="assets/app.js"></script>
+  </head>
+  <body data-page="index">
+    <div class="site-frame">
+      <div data-site-shell="header"></div>
+
+      <main>
+        <section class="hero-panel reveal">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <span class="eyebrow">Overview</span>
+              <h1>Mac setup, without the drift.</h1>
+              <p>
+                This repo is the public version of a personal rebuild guide. It keeps the stack honest:
+                Vivaldi, DuckDuckGo, zsh, Keyboard Maestro, VS Code, Codex, Claude, Obsidian,
+                Shottr, Kap, Rectangle Pro, and the few network tools that matter when support work
+                shows up.
+              </p>
+              <div class="hero-actions">
+                <a class="button" href="homebrew.html">Open Installer</a>
+                <a class="button button-subtle" href="post-install.html">Run Verification</a>
+              </div>
+            </div>
+
+            <div class="panel-stack">
+              <article class="metric-card">
+                <strong data-metric="formula-total">0</strong>
+                <span>Homebrew formulae tracked in the repo</span>
+              </article>
+              <article class="metric-card">
+                <strong data-metric="cask-total">0</strong>
+                <span>apps wired into the install data</span>
+              </article>
+              <article class="metric-card">
+                <strong data-metric="bundle-total">0</strong>
+                <span>presets exposed in the installer</span>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="1">
+          <div class="section-heading">
+            <h2>Future-Self Flow</h2>
+            <p>The quickest rebuild path is short on purpose. Anything not scriptable is called out explicitly.</p>
+          </div>
+          <ol class="timeline">
+            <li>Install Homebrew and use the interactive installer to pick <code>Minimal</code>, <code>Workstation</code>, or <code>Full</code>.</li>
+            <li>Run <code>./scripts/apply-macos-defaults.sh</code> for Dock and Launchpad defaults.</li>
+            <li>Restore app state for Vivaldi, Keyboard Maestro, Rectangle Pro, VS Code, Obsidian, and Karabiner.</li>
+            <li>Run <code>./scripts/verify-setup.sh workstation</code> and finish the remaining manual checks.</li>
+          </ol>
+        </section>
+
+        <section class="section reveal" data-delay="2">
+          <div class="section-heading">
+            <h2>What This Site Optimizes For</h2>
+            <p>It is not a generic “best Mac apps” list. It is a crisp rebuild guide for one specific working setup.</p>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Bundle-first installs</h3>
+              <p>Presets and group slices are generated from the same data source as the repo Brewfiles.</p>
+            </article>
+            <article class="card">
+              <h3>Minimal zsh</h3>
+              <p>Only the useful parts stay. Legacy plugin habits do not get carried forward.</p>
+            </article>
+            <article class="card">
+              <h3>Keyboard-first workflow</h3>
+              <p>Keyboard Maestro takes the launcher and clipboard role. Alfred and Raycast stay out.</p>
+            </article>
+            <article class="card">
+              <h3>Public and maintainable</h3>
+              <p>The Pages site, scripts, and generated artifacts can be validated in CI before publishing.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="3">
+          <div class="section-heading">
+            <h2>Page Map</h2>
+            <p>Use the site as either a linear checklist or a reference library.</p>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3><a href="homebrew.html">Homebrew</a></h3>
+              <p>Interactive installer with preset matching, group toggles, and copy-ready commands.</p>
+            </article>
+            <article class="card">
+              <h3><a href="macos-defaults.html">macOS Defaults</a></h3>
+              <p>Trackpad, Dock, Launchpad, and the manual system settings that still need clicking.</p>
+            </article>
+            <article class="card">
+              <h3><a href="browser.html">Browser</a></h3>
+              <p>Vivaldi as the default browser and DuckDuckGo as the default search engine.</p>
+            </article>
+            <article class="card">
+              <h3><a href="terminal.html">Terminal</a></h3>
+              <p>Dark zsh setup, minimal plugins, and no legacy shell extras.</p>
+            </article>
+            <article class="card">
+              <h3><a href="coding.html">Coding</a></h3>
+              <p>VS Code, Codex, Claude, Volta, and the core development restore checklist.</p>
+            </article>
+            <article class="card">
+              <h3><a href="apps.html">Apps</a></h3>
+              <p>The current app roster plus the exclusions that keep the stack from drifting again.</p>
+            </article>
+            <article class="card">
+              <h3><a href="restore-state.html">Restore State</a></h3>
+              <p>The manual bits that matter after installation: sync, licenses, shortcuts, and profile imports.</p>
+            </article>
+            <article class="card">
+              <h3><a href="post-install.html">Post-Install</a></h3>
+              <p>Scripts and checks to confirm the machine actually matches the documented setup.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <div data-site-shell="footer"></div>
+    </div>
+  </body>
+</html>

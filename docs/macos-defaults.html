@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>macOS Defaults | mac.riera.co.uk</title>
+    <meta name="description" content="Manual macOS defaults and shell commands for the mac.riera.co.uk setup.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/style.css">
+    <script defer src="assets/app.js"></script>
+  </head>
+  <body data-page="macos-defaults">
+    <div class="site-frame">
+      <div data-site-shell="header"></div>
+
+      <main>
+        <section class="hero-panel reveal">
+          <span class="eyebrow">macOS Defaults</span>
+          <div class="page-grid">
+            <div class="page-heading">
+              <h1>System settings with the drift removed.</h1>
+              <p>
+                Some preferences are manual because Apple still puts them behind UI panels.
+                The rest are scriptable and live in <code>scripts/apply-macos-defaults.sh</code>.
+              </p>
+            </div>
+            <div class="callout">
+              <p>
+                This setup keeps <strong>Tap to Click</strong> and <strong>three-finger drag</strong>,
+                speeds up Dock autohide, expands Launchpad to 10x8, and keeps App Expose turned off.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="1">
+          <div class="section-heading">
+            <h2>Manual Steps</h2>
+            <p>These still need actual clicks in System Settings.</p>
+          </div>
+          <div class="content-columns">
+            <div class="panel">
+              <h2>Trackpad</h2>
+              <ul class="checklist">
+                <li>Enable Tap to Click.</li>
+                <li>Enable three-finger drag under Accessibility → Pointer Control → Trackpad Options.</li>
+                <li>Leave App Expose disabled.</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h2>Keyboard Shortcut Handoff</h2>
+              <ul class="checklist">
+                <li>Disable Spotlight if Keyboard Maestro is going to take the main launcher shortcut.</li>
+                <li>Reconnect clipboard history and launcher triggers inside Keyboard Maestro.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="2">
+          <div class="section-heading">
+            <h2>Scriptable Defaults</h2>
+            <p>These are already wrapped in a script for day-one setup and restore.</p>
+          </div>
+          <div class="content-columns">
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Apply</h2>
+                  <p class="muted">Run from repo root.</p>
+                </div>
+                <button type="button" class="button button-subtle" data-copy-text="./scripts/apply-macos-defaults.sh">Copy</button>
+              </div>
+              <pre>./scripts/apply-macos-defaults.sh</pre>
+            </section>
+
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Restore</h2>
+                  <p class="muted">Back out the Dock and Launchpad tweaks.</p>
+                </div>
+                <button type="button" class="button button-subtle" data-copy-text="./scripts/apply-macos-defaults.sh --restore">Copy</button>
+              </div>
+              <pre>./scripts/apply-macos-defaults.sh --restore</pre>
+            </section>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="3">
+          <div class="section-heading">
+            <h2>Reference Screens</h2>
+            <p>Keeping the images nearby makes the manual path faster when the UI changes names slightly.</p>
+          </div>
+          <div class="screenshot-grid">
+            <article class="screenshot-card">
+              <h3>Tap to Click</h3>
+              <p>Trackpad → Point &amp; Click</p>
+              <figure>
+                <img src="assets/media/enable-tap-to-click.png" alt="Tap to Click setting">
+              </figure>
+            </article>
+            <article class="screenshot-card">
+              <h3>Three-Finger Drag</h3>
+              <p>Accessibility → Pointer Control → Trackpad Options</p>
+              <figure>
+                <img src="assets/media/enable-three-finger-drag.png" alt="Three finger drag setting">
+              </figure>
+            </article>
+            <article class="screenshot-card">
+              <h3>Launchpad 10x8</h3>
+              <p>Reference view after the Dock restart.</p>
+              <figure>
+                <img src="assets/media/change-launchpad-grid-to-10x8.png" alt="Launchpad grid example">
+              </figure>
+            </article>
+            <article class="screenshot-card">
+              <h3>Spotlight Handoff</h3>
+              <p>Disable Spotlight if Keyboard Maestro is taking the launcher shortcut.</p>
+              <figure>
+                <img src="assets/media/diable-spotlight-shortcut.png" alt="Spotlight shortcut settings">
+              </figure>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <div data-site-shell="footer"></div>
+    </div>
+  </body>
+</html>

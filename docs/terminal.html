@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Terminal | mac.riera.co.uk</title>
+    <meta name="description" content="Terminal and zsh defaults for the mac.riera.co.uk setup.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/style.css">
+    <script defer src="assets/app.js"></script>
+  </head>
+  <body data-page="terminal">
+    <div class="site-frame">
+      <div data-site-shell="header"></div>
+
+      <main>
+        <section class="hero-panel reveal">
+          <span class="eyebrow">Terminal</span>
+          <div class="page-grid">
+            <div class="page-heading">
+              <h1>Dark terminal, 20% transparency, plain zsh.</h1>
+              <p>
+                The terminal setup should feel familiar within minutes, not after a theme digression.
+                The shell stays on zsh, the look stays dark with about 20% transparency, and the plugin list stays short.
+              </p>
+            </div>
+            <div class="callout">
+              <p>
+                Legacy shell extras stay out. <strong>autojump</strong> and
+                <strong>zsh-syntax-highlighting</strong> are intentionally not part of this rebuild.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="1">
+          <div class="section-heading">
+            <h2>Shell Baseline</h2>
+            <p>The goal is a clean, portable shell profile that does not need constant babysitting.</p>
+          </div>
+          <div class="content-columns">
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Minimal plugin list</h2>
+                  <p class="muted">Only keep what is still worth it.</p>
+                </div>
+                <button type="button" class="button button-subtle" data-copy-text="plugins=(git)">Copy</button>
+              </div>
+              <pre>plugins=(git)</pre>
+            </section>
+
+            <section class="panel">
+              <h2>What not to reintroduce</h2>
+              <ul class="checklist">
+                <li>No autojump.</li>
+                <li>No zsh-syntax-highlighting.</li>
+                <li>No pnpm in the shell bootstrap path.</li>
+              </ul>
+            </section>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="2">
+          <div class="section-heading">
+            <h2>Terminal Look</h2>
+            <p>Keep it visually familiar enough that the machine feels like yours immediately.</p>
+          </div>
+          <div class="screenshot-grid">
+            <article class="screenshot-card">
+              <h3>Transparency Reference</h3>
+              <p>Use a dark profile with about 20% transparency.</p>
+              <figure>
+                <img src="assets/media/iterm2-blur.png" alt="Terminal transparency reference">
+              </figure>
+            </article>
+            <article class="screenshot-card">
+              <h3>Natural Text Editing</h3>
+              <p>If the terminal supports it, keep familiar key bindings for word-wise editing.</p>
+              <figure>
+                <img src="assets/media/iterm2-natural-text-editing.png" alt="Natural text editing key mappings">
+              </figure>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <div data-site-shell="footer"></div>
+    </div>
+  </body>
+</html>
