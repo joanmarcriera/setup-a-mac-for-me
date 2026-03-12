@@ -8,5 +8,7 @@ brew "mtr"
 brew "nmap"
 brew "net-snmp"
 
+cask "tailscale-app"
+cask "little-snitch"
 cask "rustdesk"
 cask "netspot"

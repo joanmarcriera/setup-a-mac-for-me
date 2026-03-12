@@ -3,3 +3,5 @@ brew "go"
 brew "pandoc"
 brew "jira-cli"
 brew "volta"
+
+cask "orbstack"

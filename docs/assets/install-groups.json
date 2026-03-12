@@ -37,9 +37,12 @@
         "jira-cli",
         "volta"
       ],
-      "casks": [],
+      "casks": [
+        "orbstack"
+      ],
       "notes": [
-        "Node.js version management goes through Volta. pnpm is intentionally excluded."
+        "Node.js version management goes through Volta. pnpm is intentionally excluded.",
+        "OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
       ]
     },
     {
@@ -69,16 +72,18 @@
         "keyboard-maestro",
         "rectangle-pro",
         "karabiner-elements",
+        "betterdisplay",
         "obsidian",
         "logseq",
-        "mailmate",
+        "mailmate@beta",
         "keepassxc",
         "spotify"
       ],
       "notes": [
         "Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers.",
         "Keyboard Maestro and Rectangle Pro still require paid licenses after install.",
-        "MailMate stable currently requires Rosetta 2 on Apple Silicon. If that becomes annoying, switch to mailmate@beta.",
+        "BetterDisplay stays because external monitor scaling and brightness control keep coming up.",
+        "MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2.",
         "KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
       ]
     },
@@ -127,11 +132,14 @@
         "net-snmp"
       ],
       "casks": [
+        "tailscale-app",
+        "little-snitch",
         "rustdesk",
         "netspot"
       ],
       "notes": [
-        "Useful when the Mac is doubling as a support or network box."
+        "Useful when the Mac is doubling as a support or network box.",
+        "The current Homebrew cask token is tailscale-app, not tailscale."
       ]
     }
   ],

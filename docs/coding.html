@@ -18,15 +18,16 @@
           <span class="eyebrow">Coding</span>
           <div class="page-grid">
             <div class="page-heading">
-              <h1>VS Code, Codex, Claude, Antigravity, and just enough runtime tooling.</h1>
+              <h1>VS Code, Codex, Claude, Antigravity, OrbStack, and just enough runtime tooling.</h1>
               <p>
                 The development setup is intentionally narrow: install the editor, install the assistants,
-                restore sync, and keep Node.js versioning on Volta. No pnpm detour, no extra package-manager layer.
+                restore sync, keep Node.js versioning on Volta, and use OrbStack for the local container path.
+                No pnpm detour, no extra package-manager layer.
               </p>
             </div>
             <div class="callout">
               <p>
-                The <code>dev</code> slice keeps Go, Pandoc, Jira CLI, and Volta together because they belong on a real workstation.
+                The <code>dev</code> slice keeps Go, Pandoc, Jira CLI, Volta, and OrbStack together because they belong on a real workstation.
               </p>
             </div>
           </div>
@@ -53,6 +54,10 @@
             <article class="card">
               <h3>Antigravity</h3>
               <p>Install the current Google Antigravity app if it stays part of the coding loop, especially when you want a second agent workflow outside VS Code.</p>
+            </article>
+            <article class="card">
+              <h3>OrbStack</h3>
+              <p>Keep local containers and Linux workloads on OrbStack so the machine can run Docker-compatible workflows without falling back to Docker Desktop.</p>
             </article>
             <article class="card">
               <h3>Volta</h3>

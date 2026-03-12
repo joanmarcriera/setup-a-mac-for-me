@@ -27,7 +27,7 @@
             <div class="callout">
               <p>
                 Keyboard Maestro handles the launcher and clipboard role. Rectangle Pro handles window management.
-                Obsidian, Logseq, MailMate, Shottr, Kap, and Vivaldi stay in the everyday path.
+                BetterDisplay, Obsidian, Logseq, MailMate beta, Shottr, Kap, and Vivaldi stay in the everyday path.
               </p>
             </div>
           </div>
@@ -40,12 +40,16 @@
           </div>
           <div class="card-grid">
             <article class="card">
+              <h3>Dev</h3>
+              <p>OrbStack sits next to Go, Pandoc, Jira CLI, and Volta because local container work belongs in the rebuild.</p>
+            </article>
+            <article class="card">
               <h3>Browsers + AI</h3>
               <p>Vivaldi, DuckDuckGo, VS Code, Codex, Claude, Antigravity.</p>
             </article>
             <article class="card">
               <h3>Productivity</h3>
-              <p>Keyboard Maestro, Rectangle Pro, Karabiner-Elements, Obsidian, Logseq, MailMate, KeePassXC, Spotify.</p>
+              <p>Keyboard Maestro, Rectangle Pro, Karabiner-Elements, BetterDisplay, Obsidian, Logseq, MailMate beta, KeePassXC, Spotify.</p>
             </article>
             <article class="card">
               <h3>Backup</h3>
@@ -57,7 +61,7 @@
             </article>
             <article class="card">
               <h3>Network</h3>
-              <p>RustDesk, NetSpot, and the CLI diagnostics that only need to appear on heavier rebuilds.</p>
+              <p>Tailscale, Little Snitch, RustDesk, NetSpot, and the CLI diagnostics that only need to appear on heavier rebuilds.</p>
             </article>
           </div>
         </section>
@@ -73,8 +77,8 @@
               <p>KeeWeb stayed valid in Homebrew but its desktop releases have stalled. KeePassXC is the chosen replacement.</p>
             </article>
             <article class="card">
-              <h3>MailMate</h3>
-              <p>MailMate stays in the setup, but the stable Homebrew cask currently requires Rosetta 2 on Apple Silicon.</p>
+              <h3>MailMate beta</h3>
+              <p>The repo now chooses <code>mailmate@beta</code> on Apple Silicon so MailMate stays native and avoids Rosetta 2.</p>
             </article>
             <article class="card">
               <h3>Kap</h3>
@@ -99,25 +103,25 @@
 
         <section class="section reveal" data-delay="3">
           <div class="section-heading">
-            <h2>Worth Evaluating Later</h2>
-            <p>These are not part of the default rebuild, but they fit the way this machine is actually used.</p>
+            <h2>New Additions</h2>
+            <p>These tools are now part of the tracked setup instead of sitting on the sidelines.</p>
           </div>
           <div class="card-grid">
             <article class="card">
               <h3>Tailscale</h3>
-              <p>Useful if you want painless access to NFS-backed machines, support boxes, or remote services without opening ports.</p>
+              <p>Added in the network slice so NFS-backed machines, support boxes, and private services stay reachable without opening ports.</p>
             </article>
             <article class="card">
               <h3>OrbStack</h3>
-              <p>A strong fit if local Docker or Linux workloads matter and you want less friction than the standard Docker Desktop path.</p>
+              <p>Added in the dev slice as the default local container and Linux path instead of Docker Desktop.</p>
             </article>
             <article class="card">
               <h3>BetterDisplay</h3>
-              <p>Worth it if external monitor scaling, DDC brightness control, or awkward display layouts keep showing up.</p>
+              <p>Added in productivity because external monitor scaling, DDC brightness control, and awkward display layouts keep coming up.</p>
             </article>
             <article class="card">
               <h3>Little Snitch</h3>
-              <p>Good if you want tighter visibility into outbound traffic on a Mac that also does network and support work.</p>
+              <p>Added in the network slice for tighter visibility into outbound traffic on a Mac that also does network and support work.</p>
             </article>
           </div>
         </section>

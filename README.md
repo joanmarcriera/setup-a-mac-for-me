@@ -75,7 +75,8 @@ This repo reflects the current preferences for the next rebuild:
 - dark terminal with about 20% transparency
 - zsh with a minimal plugin set
 - Keyboard Maestro instead of Alfred or Raycast
-- VS Code, Codex, Claude, Antigravity
-- Obsidian, Logseq, MailMate, Shottr, Kap, Rectangle Pro
+- VS Code, Codex, Claude, Antigravity, OrbStack
+- Obsidian, Logseq, MailMate beta, Shottr, Kap, Rectangle Pro, BetterDisplay
+- Tailscale and Little Snitch in the network slice
 - Kopia for encrypted backups across Google Drive and NFS
 - no App Expose, `autojump`, `zsh-syntax-highlighting`, `pnpm`, Dropover, iBar, Whimsical, or Notion

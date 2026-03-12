@@ -4,14 +4,14 @@
     "title": "Apps | mac.riera.co.uk",
     "url": "apps.html",
     "summary": "Daily apps and exclusions for the mac.riera.co.uk rebuild.",
-    "body": "The app list is small enough to remember and explicit enough not to drift. Current App Groups Browsers + AI Productivity Backup Capture Network Replacements And Watchlist KeeWeb \u2192 KeePassXC MailMate Kap Explicit Exclusions Worth Evaluating Later Tailscale OrbStack BetterDisplay Little Snitch Apps | mac.riera.co.uk Apps The app list is small enough to remember and explicit enough not to drift. Publishing the app roster matters because the repo doubles as documentation. The fastest way to keep it honest is to be explicit about both the tools that stay and the ones that are gone. Keyboard Maestro handles the launcher and clipboard role. Rectangle Pro handles window management. Obsidian, Logseq, MailMate, Shottr, Kap, and Vivaldi stay in the everyday path. Current App Groups These match the generated Homebrew groupings in the repo. Browsers + AI Vivaldi, DuckDuckGo, VS Code, Codex, Claude, Antigravity. Productivity Keyboard Maestro, Rectangle Pro, Karabiner-Elements, Obsidian, Logseq, MailMate, KeePassXC, Spotify. Backup Kopia CLI plus KopiaUI for encrypted backups with Google Drive and NFS-friendly repository layouts. Capture Shottr, Kap, and ffmpeg. Network RustDesk, NetSpot, and the CLI diagnostics that only need to appear on heavier rebuilds. Replacements And Watchlist The public list stays useful only if stale tools are called out explicitly. KeeWeb \u2192 KeePassXC KeeWeb stayed valid in Homebrew but its desktop releases have stalled. KeePassXC is the chosen replacement. MailMate MailMate stays in the setup, but the stable Homebrew cask currently requires Rosetta 2 on Apple Silicon. Kap Kap stays. It still has a current Homebrew cask and remains a clean lightweight recorder. Explicit Exclusions Keeping the \u201cno\u201d list visible is part of keeping the rebuild stable. App Expose is off. Edge is out. Vivaldi is the browser path. Alfred and Raycast are out. Keyboard Maestro covers that ground. pnpm is out. Volta stays in. Dropover, iBar, Whimsical, and Notion are out of the default rebuild. Worth Evaluating Later These are not part of the default rebuild, but they fit the way this machine is actually used. Tailscale Useful if you want painless access to NFS-backed machines, support boxes, or remote services without opening ports. OrbStack A strong fit if local Docker or Linux workloads matter and you want less friction than the standard Docker Desktop path. BetterDisplay Worth it if external monitor scaling, DDC brightness control, or awkward display layouts keep showing up. Little Snitch Good if you want tighter visibility into outbound traffic on a Mac that also does network and support work."
+    "body": "The app list is small enough to remember and explicit enough not to drift. Current App Groups Dev Browsers + AI Productivity Backup Capture Network Replacements And Watchlist KeeWeb \u2192 KeePassXC MailMate beta Kap Explicit Exclusions New Additions Tailscale OrbStack BetterDisplay Little Snitch Apps | mac.riera.co.uk Apps The app list is small enough to remember and explicit enough not to drift. Publishing the app roster matters because the repo doubles as documentation. The fastest way to keep it honest is to be explicit about both the tools that stay and the ones that are gone. Keyboard Maestro handles the launcher and clipboard role. Rectangle Pro handles window management. BetterDisplay, Obsidian, Logseq, MailMate beta, Shottr, Kap, and Vivaldi stay in the everyday path. Current App Groups These match the generated Homebrew groupings in the repo. Dev OrbStack sits next to Go, Pandoc, Jira CLI, and Volta because local container work belongs in the rebuild. Browsers + AI Vivaldi, DuckDuckGo, VS Code, Codex, Claude, Antigravity. Productivity Keyboard Maestro, Rectangle Pro, Karabiner-Elements, BetterDisplay, Obsidian, Logseq, MailMate beta, KeePassXC, Spotify. Backup Kopia CLI plus KopiaUI for encrypted backups with Google Drive and NFS-friendly repository layouts. Capture Shottr, Kap, and ffmpeg. Network Tailscale, Little Snitch, RustDesk, NetSpot, and the CLI diagnostics that only need to appear on heavier rebuilds. Replacements And Watchlist The public list stays useful only if stale tools are called out explicitly. KeeWeb \u2192 KeePassXC KeeWeb stayed valid in Homebrew but its desktop releases have stalled. KeePassXC is the chosen replacement. MailMate beta The repo now chooses mailmate@beta on Apple Silicon so MailMate stays native and avoids Rosetta 2. Kap Kap stays. It still has a current Homebrew cask and remains a clean lightweight recorder. Explicit Exclusions Keeping the \u201cno\u201d list visible is part of keeping the rebuild stable. App Expose is off. Edge is out. Vivaldi is the browser path. Alfred and Raycast are out. Keyboard Maestro covers that ground. pnpm is out. Volta stays in. Dropover, iBar, Whimsical, and Notion are out of the default rebuild. New Additions These tools are now part of the tracked setup instead of sitting on the sidelines. Tailscale Added in the network slice so NFS-backed machines, support boxes, and private services stay reachable without opening ports. OrbStack Added in the dev slice as the default local container and Linux path instead of Docker Desktop. BetterDisplay Added in productivity because external monitor scaling, DDC brightness control, and awkward display layouts keep coming up. Little Snitch Added in the network slice for tighter visibility into outbound traffic on a Mac that also does network and support work."
   },
   {
     "kind": "page",
     "title": "Audit | mac.riera.co.uk",
     "url": "audit.html",
     "summary": "Current package audit for the mac.riera.co.uk setup.",
-    "body": "Package audit snapshot for March 12, 2026. What Checked Out Core CLI formulae Daily casks Jira CLI Backup tooling Replacement Chosen Removed from default list New default Watchlist, Not Removal Audit | mac.riera.co.uk Audit Package audit snapshot for March 12, 2026. The Homebrew names in the repo were re-checked against the current catalog and the higher-risk projects were spot-checked upstream for release activity. The package list is still valid, but one replacement was worth making. Chosen replacement: KeeWeb \u2192 KeePassXC . KeeWeb is still installable, but its desktop releases have stalled long enough that it no longer belongs in the default rebuild. What Checked Out The core list remains viable. These are the packages that did not show abandonment or naming issues during the audit. Core CLI formulae bash, wget, vim, uv, tig, htop, tree, tmux, jq, go, pandoc, volta, ffmpeg, rclone, mtr, nmap, and the network tools are still current Homebrew entries. Daily casks Vivaldi, DuckDuckGo, VS Code, Codex, Claude, Keyboard Maestro, Rectangle Pro, Obsidian, Logseq, MailMate, KeePassXC, Shottr, RustDesk, NetSpot, Antigravity, and Kap all still have current Homebrew entries. Jira CLI jira-cli is still active in Homebrew and its upstream project remains current, so it stays in the dev bundle. Backup tooling Kopia and KopiaUI are current Homebrew entries and now cover the backup role in the repo. Replacement Chosen The replacement is already reflected in the install data and generated Brewfiles. Removed from default list KeeWeb remains installable, but its latest desktop release trail is old enough that it now sits in \u201cworks, but stale\u201d territory. New default KeePassXC is the replacement because it is actively released, broadly used, and a better long-term fit for a KeePass-compatible desktop workflow. Watchlist, Not Removal These tools stay, but with a note attached. MailMate stays, but the stable Homebrew cask currently requires Rosetta 2 on Apple Silicon. If that becomes friction, switch to mailmate@beta . Kap stays because it still has a current cask and a clear niche in the workflow, even though it is not the only capture option anymore. Logseq stays as a secondary knowledge tool next to Obsidian, with git-friendly file graphs making it easy to back up privately."
+    "body": "Package audit snapshot for March 12, 2026. What Checked Out Core CLI formulae Daily casks Jira CLI Backup tooling Replacement Chosen Removed from default list New default Watchlist, Not Removal Audit | mac.riera.co.uk Audit Package audit snapshot for March 12, 2026. The Homebrew names in the repo were re-checked against the current catalog and the higher-risk projects were spot-checked upstream for release activity. The package list is still valid, but one replacement was worth making. Chosen replacement: KeeWeb \u2192 KeePassXC . KeeWeb is still installable, but its desktop releases have stalled long enough that it no longer belongs in the default rebuild. What Checked Out The core list remains viable. These are the packages that did not show abandonment or naming issues during the audit. Core CLI formulae bash, wget, vim, uv, tig, htop, tree, tmux, jq, go, pandoc, volta, ffmpeg, rclone, mtr, nmap, and the network tools are still current Homebrew entries. Daily casks Vivaldi, DuckDuckGo, VS Code, Codex, Claude, Keyboard Maestro, Rectangle Pro, BetterDisplay, Obsidian, Logseq, MailMate beta, KeePassXC, Shottr, RustDesk, NetSpot, Tailscale App, Little Snitch, Antigravity, Kap, and OrbStack all still have current Homebrew entries. Jira CLI jira-cli is still active in Homebrew and its upstream project remains current, so it stays in the dev bundle. Backup tooling Kopia and KopiaUI are current Homebrew entries and now cover the backup role in the repo. Replacement Chosen The replacement is already reflected in the install data and generated Brewfiles. Removed from default list KeeWeb remains installable, but its latest desktop release trail is old enough that it now sits in \u201cworks, but stale\u201d territory. New default KeePassXC is the replacement because it is actively released, broadly used, and a better long-term fit for a KeePass-compatible desktop workflow. Watchlist, Not Removal These tools stay, but with a note attached. MailMate stays, but the repo now chooses mailmate@beta on Apple Silicon because the stable Homebrew cask currently requires Rosetta 2. Kap stays because it still has a current cask and a clear niche in the workflow, even though it is not the only capture option anymore. Logseq stays as a secondary knowledge tool next to Obsidian, with git-friendly file graphs making it easy to back up privately."
   },
   {
     "kind": "page",
@@ -32,7 +32,7 @@
     "title": "Coding | mac.riera.co.uk",
     "url": "coding.html",
     "summary": "Coding setup for the mac.riera.co.uk rebuild.",
-    "body": "VS Code, Codex, Claude, Antigravity, and just enough runtime tooling. Editor Restore VS Code Codex Claude Antigravity Volta Reference Screens VS Code Look code Command Coding | mac.riera.co.uk Coding VS Code, Codex, Claude, Antigravity, and just enough runtime tooling. The development setup is intentionally narrow: install the editor, install the assistants, restore sync, and keep Node.js versioning on Volta. No pnpm detour, no extra package-manager layer. The dev slice keeps Go, Pandoc, Jira CLI, and Volta together because they belong on a real workstation. Editor Restore Install the tools, sign in, and pull the environment back into shape quickly. VS Code Install from Homebrew, sign in, and let Settings Sync pull extensions, settings, and UI state back. Codex Install the current Codex app and reconnect the workflow you use for repo work. Claude Install the desktop app and restore the project-level workflow you use next to VS Code and Codex. Antigravity Install the current Google Antigravity app if it stays part of the coding loop, especially when you want a second agent workflow outside VS Code. Volta Keep Node.js version management in Volta so project runtimes stay clean without pulling pnpm into the base install. Reference Screens Visual cues matter when rebuilding fast and verifying the terminal integration is back. VS Code Look Sanity-check fonts, editor chrome, and overall feel after sync lands. code Command Confirm the VS Code command-line entry point is available from the shell."
+    "body": "VS Code, Codex, Claude, Antigravity, OrbStack, and just enough runtime tooling. Editor Restore VS Code Codex Claude Antigravity OrbStack Volta Reference Screens VS Code Look code Command Coding | mac.riera.co.uk Coding VS Code, Codex, Claude, Antigravity, OrbStack, and just enough runtime tooling. The development setup is intentionally narrow: install the editor, install the assistants, restore sync, keep Node.js versioning on Volta, and use OrbStack for the local container path. No pnpm detour, no extra package-manager layer. The dev slice keeps Go, Pandoc, Jira CLI, Volta, and OrbStack together because they belong on a real workstation. Editor Restore Install the tools, sign in, and pull the environment back into shape quickly. VS Code Install from Homebrew, sign in, and let Settings Sync pull extensions, settings, and UI state back. Codex Install the current Codex app and reconnect the workflow you use for repo work. Claude Install the desktop app and restore the project-level workflow you use next to VS Code and Codex. Antigravity Install the current Google Antigravity app if it stays part of the coding loop, especially when you want a second agent workflow outside VS Code. OrbStack Keep local containers and Linux workloads on OrbStack so the machine can run Docker-compatible workflows without falling back to Docker Desktop. Volta Keep Node.js version management in Volta so project runtimes stay clean without pulling pnpm into the base install. Reference Screens Visual cues matter when rebuilding fast and verifying the terminal integration is back. VS Code Look Sanity-check fonts, editor chrome, and overall feel after sync lands. code Command Confirm the VS Code command-line entry point is available from the shell."
   },
   {
     "kind": "page",
@@ -46,7 +46,7 @@
     "title": "mac.riera.co.uk",
     "url": "index.html",
     "summary": "Opinionated MacBook Pro rebuild guide for Joan Marc Riera.",
-    "body": "Mac setup, without the drift. Future-Self Flow What This Site Optimizes For Bundle-first installs Minimal zsh Keyboard-first workflow Public and maintainable Page Map mac.riera.co.uk Overview Mac setup, without the drift. This repo is the public version of a personal rebuild guide. It keeps the stack honest: Vivaldi, DuckDuckGo, zsh, Keyboard Maestro, VS Code, Codex, Claude, Antigravity, Obsidian, Logseq, MailMate, Shottr, Kap, Rectangle Pro, and the backup flow that fits NFS plus Google Drive. 0 Homebrew formulae tracked in the repo 0 apps wired into the install data 0 presets exposed in the installer Future-Self Flow The quickest rebuild path is short on purpose. Anything not scriptable is called out explicitly. Install Homebrew and use the interactive installer to pick Minimal , Workstation , or Full . Run ./scripts/apply-macos-defaults.sh for Dock and Launchpad defaults. Restore app state for Vivaldi, Keyboard Maestro, Rectangle Pro, VS Code, Obsidian, and Karabiner. Run ./scripts/verify-setup.sh workstation and finish the remaining manual checks. What This Site Optimizes For It is not a generic \u201cbest Mac apps\u201d list. It is a crisp rebuild guide for one specific working setup. Bundle-first installs Presets and group slices are generated from the same data source as the repo Brewfiles. Minimal zsh Only the useful parts stay. Legacy plugin habits do not get carried forward. Keyboard-first workflow Keyboard Maestro takes the launcher and clipboard role. Alfred and Raycast stay out. Public and maintainable The Pages site, scripts, and generated artifacts can be validated in CI before publishing. Page Map Use the site as either a linear checklist or a reference library. Interactive installer with preset matching, group toggles, and copy-ready commands. Trackpad, Dock, Launchpad, and the manual system settings that still need clicking. Vivaldi as the default browser and DuckDuckGo as the default search engine. Dark zsh setup, minimal plugins, and no legacy shell extras. VS Code, Codex, Claude, Antigravity, Volta, and the core development restore checklist. The current app roster plus the exclusions that keep the stack from drifting again. Kopia-based backup guidance for Google Drive, NFS mirrors, and versioned config exports. Validation notes for the current package list, including replacements for stale projects. The manual bits that matter after installation: sync, licenses, shortcuts, and profile imports. Scripts and checks to confirm the machine actually matches the documented setup. Site-wide search for pages, groups, bundles, and individual Homebrew package names."
+    "body": "Mac setup, without the drift. Future-Self Flow What This Site Optimizes For Bundle-first installs Minimal zsh Keyboard-first workflow Public and maintainable Page Map mac.riera.co.uk Overview Mac setup, without the drift. This repo is the public version of a personal rebuild guide. It keeps the stack honest: Vivaldi, DuckDuckGo, zsh, Keyboard Maestro, VS Code, Codex, Claude, Antigravity, OrbStack, BetterDisplay, Obsidian, Logseq, MailMate beta, Shottr, Kap, Rectangle Pro, and the backup flow that fits NFS plus Google Drive. 0 Homebrew formulae tracked in the repo 0 apps wired into the install data 0 presets exposed in the installer Future-Self Flow The quickest rebuild path is short on purpose. Anything not scriptable is called out explicitly. Install Homebrew and use the interactive installer to pick Minimal , Workstation , or Full . Run ./scripts/apply-macos-defaults.sh for Dock and Launchpad defaults. Restore app state for Vivaldi, Keyboard Maestro, Rectangle Pro, VS Code, Obsidian, and Karabiner. Run ./scripts/verify-setup.sh workstation and finish the remaining manual checks. What This Site Optimizes For It is not a generic \u201cbest Mac apps\u201d list. It is a crisp rebuild guide for one specific working setup. Bundle-first installs Presets and group slices are generated from the same data source as the repo Brewfiles. Minimal zsh Only the useful parts stay. Legacy plugin habits do not get carried forward. Keyboard-first workflow Keyboard Maestro takes the launcher and clipboard role. Alfred and Raycast stay out. Public and maintainable The Pages site, scripts, and generated artifacts can be validated in CI before publishing. Page Map Use the site as either a linear checklist or a reference library. Interactive installer with preset matching, group toggles, and copy-ready commands. Trackpad, Dock, Launchpad, and the manual system settings that still need clicking. Vivaldi as the default browser and DuckDuckGo as the default search engine. Dark zsh setup, minimal plugins, and no legacy shell extras. VS Code, Codex, Claude, Antigravity, OrbStack, Volta, and the core development restore checklist. The current app roster plus the exclusions that keep the stack from drifting again. Kopia-based backup guidance for Google Drive, NFS mirrors, and versioned config exports. Validation notes for the current package list, including replacements for stale projects. The manual bits that matter after installation: sync, licenses, shortcuts, and profile imports. Scripts and checks to confirm the machine actually matches the documented setup. Site-wide search for pages, groups, bundles, and individual Homebrew package names."
   },
   {
     "kind": "page",
@@ -60,14 +60,14 @@
     "title": "Post-Install | mac.riera.co.uk",
     "url": "post-install.html",
     "summary": "Post-install verification for the mac.riera.co.uk rebuild.",
-    "body": "Verify the rebuild before calling it done. Commands Rebuild generated files Rebuild search index Verify workstation Manual Final Pass Local Preview and CI Preview locally Validate docs Validate generated files Validate search index Post-Install | mac.riera.co.uk Post-Install Verify the rebuild before calling it done. The repo now includes scripts and CI so the public site and the working setup can be checked instead of trusted. Run the scripts locally, then use the remaining manual checks as a final pass. Verification order: generate artifacts if data changed, apply defaults, run the setup check, then finish the browser and Keyboard Maestro handoff. Commands These are the repo-level commands worth keeping close after a rebuild. Rebuild generated files Run after editing install data or package groups. Rebuild search index Run after editing the site pages. Verify workstation Checks Homebrew installs and Dock/Launchpad defaults. Manual Final Pass The scripts cover the repeatable parts. These are the checks still worth doing by eye. Tap to Click and three-finger drag are both working. Vivaldi opens as the default browser and uses DuckDuckGo by default. Keyboard Maestro shortcuts are firing correctly for launcher and clipboard history. VS Code sync has restored the expected extensions and editor feel. Codex, Claude, and Antigravity are signed in and usable. MailMate accounts connect cleanly and Logseq graphs open where expected. Shottr, Kap, and Rectangle Pro all respond with the expected shortcuts. Kopia can see the current repository and the NFS mirror path is mounted correctly before sync runs. Local Preview and CI The Pages site is static. It is easy to preview and validate before publishing. Preview locally python3 -m http.server --directory docs 8000 gives a quick local preview of the Pages site. Validate docs python3 scripts/check_docs.py checks internal file references and required Pages files. Validate generated files python3 scripts/generate_brew_artifacts.py --check catches drift between the data source and generated outputs. Validate search index python3 scripts/build_search_index.py --check catches drift between the public pages and the client-side search index."
+    "body": "Verify the rebuild before calling it done. Commands Rebuild generated files Rebuild search index Verify workstation Manual Final Pass Local Preview and CI Preview locally Validate docs Validate generated files Validate search index Post-Install | mac.riera.co.uk Post-Install Verify the rebuild before calling it done. The repo now includes scripts and CI so the public site and the working setup can be checked instead of trusted. Run the scripts locally, then use the remaining manual checks as a final pass. Verification order: generate artifacts if data changed, apply defaults, run the setup check, then finish the browser and Keyboard Maestro handoff. Commands These are the repo-level commands worth keeping close after a rebuild. Rebuild generated files Run after editing install data or package groups. Rebuild search index Run after editing the site pages. Verify workstation Checks Homebrew installs and Dock/Launchpad defaults. Manual Final Pass The scripts cover the repeatable parts. These are the checks still worth doing by eye. Tap to Click and three-finger drag are both working. Vivaldi opens as the default browser and uses DuckDuckGo by default. Keyboard Maestro shortcuts are firing correctly for launcher and clipboard history. VS Code sync has restored the expected extensions and editor feel. Codex, Claude, Antigravity, and OrbStack are signed in and usable. MailMate beta launches natively, accounts connect cleanly, and Logseq graphs open where expected. BetterDisplay profiles apply correctly and Tailscale plus Little Snitch behave the way this machine expects. Shottr, Kap, and Rectangle Pro all respond with the expected shortcuts. Kopia can see the current repository and the NFS mirror path is mounted correctly before sync runs. Local Preview and CI The Pages site is static. It is easy to preview and validate before publishing. Preview locally python3 -m http.server --directory docs 8000 gives a quick local preview of the Pages site. Validate docs python3 scripts/check_docs.py checks internal file references and required Pages files. Validate generated files python3 scripts/generate_brew_artifacts.py --check catches drift between the data source and generated outputs. Validate search index python3 scripts/build_search_index.py --check catches drift between the public pages and the client-side search index."
   },
   {
     "kind": "page",
     "title": "Restore State | mac.riera.co.uk",
     "url": "restore-state.html",
     "summary": "Manual restore checklist for the mac.riera.co.uk rebuild.",
-    "body": "Installation is fast. State restore is where the machine becomes yours again. Core Restore Checklist Things Worth Storing Outside This Repo Licenses Exports Account-heavy setups Restore State | mac.riera.co.uk Restore State Installation is fast. State restore is where the machine becomes yours again. Homebrew gets the apps on disk. This page is the short manual list for the things that still have to be signed into, licensed, or nudged back into the right shape. Keep this page close while rebuilding. It is the part most likely to be forgotten after a few months away. Core Restore Checklist Do these in roughly this order so the machine starts feeling normal quickly. Sign into Vivaldi and confirm sync brings back workspaces, bookmarks, and extensions. Sign into VS Code and enable Settings Sync. Reconnect Codex and Claude to the repos and workflows you use daily. Restore Antigravity if it is part of the current coding flow. Import or sync Keyboard Maestro macros and reconnect launcher and clipboard shortcuts. Activate Rectangle Pro and restore the expected window movement shortcuts. Reconnect Karabiner-Elements rules if the keyboard layer is part of the current machine. Open Obsidian and reconnect vaults and plugins. Reconnect Logseq graphs and confirm any git-based graph backup still points at the right remote. Restore MailMate accounts, IMAP settings, and message rules. Check Shottr and Kap preferences if output folders or shortcut bindings matter. Things Worth Storing Outside This Repo Document the restore source, not the secret itself. Licenses Keyboard Maestro and Rectangle Pro license material should live in a secure password manager, not in git. Exports Keyboard Maestro exports, browser backup flows, Logseq graphs, and Karabiner profiles should live in a separate private backup path. Account-heavy setups Keep a note of which logins must be restored, but avoid turning the repo into a secrets checklist."
+    "body": "Installation is fast. State restore is where the machine becomes yours again. Core Restore Checklist Things Worth Storing Outside This Repo Licenses Exports Account-heavy setups Restore State | mac.riera.co.uk Restore State Installation is fast. State restore is where the machine becomes yours again. Homebrew gets the apps on disk. This page is the short manual list for the things that still have to be signed into, licensed, or nudged back into the right shape. Keep this page close while rebuilding. It is the part most likely to be forgotten after a few months away. Core Restore Checklist Do these in roughly this order so the machine starts feeling normal quickly. Sign into Vivaldi and confirm sync brings back workspaces, bookmarks, and extensions. Sign into VS Code and enable Settings Sync. Reconnect Codex and Claude to the repos and workflows you use daily. Restore Antigravity if it is part of the current coding flow. Import or sync Keyboard Maestro macros and reconnect launcher and clipboard shortcuts. Activate Rectangle Pro and restore the expected window movement shortcuts. Reconnect Karabiner-Elements rules if the keyboard layer is part of the current machine. Restore BetterDisplay presets if external monitor layouts and brightness mappings matter on this desk. Open Obsidian and reconnect vaults and plugins. Reconnect Logseq graphs and confirm any git-based graph backup still points at the right remote. Restore MailMate accounts, IMAP settings, and message rules. Sign into Tailscale, restore Little Snitch rules if you export them, and confirm OrbStack starts with the expected local container state. Check Shottr and Kap preferences if output folders or shortcut bindings matter. Things Worth Storing Outside This Repo Document the restore source, not the secret itself. Licenses Keyboard Maestro and Rectangle Pro license material should live in a secure password manager, not in git. Exports Keyboard Maestro exports, browser backup flows, Logseq graphs, Karabiner profiles, and any Little Snitch rule exports should live in a separate private backup path. Account-heavy setups Keep a note of which logins must be restored, but avoid turning the repo into a secrets checklist."
   },
   {
     "kind": "page",
@@ -186,35 +186,42 @@
     "title": "Dev",
     "url": "homebrew.html",
     "summary": "Coding and writing tools that belong on every workstation rebuild.",
-    "body": "go pandoc jira-cli volta Node.js version management goes through Volta. pnpm is intentionally excluded."
+    "body": "go pandoc jira-cli volta orbstack Node.js version management goes through Volta. pnpm is intentionally excluded. OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
   },
   {
     "kind": "formula",
     "title": "go",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Dev",
-    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded."
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded. OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
   },
   {
     "kind": "formula",
     "title": "pandoc",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Dev",
-    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded."
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded. OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
   },
   {
     "kind": "formula",
     "title": "jira-cli",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Dev",
-    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded."
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded. OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
   },
   {
     "kind": "formula",
     "title": "volta",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Dev",
-    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded."
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded. OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
+  },
+  {
+    "kind": "cask",
+    "title": "orbstack",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Dev",
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded. OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
   },
   {
     "kind": "group",
@@ -270,63 +277,70 @@
     "title": "Productivity",
     "url": "homebrew.html",
     "summary": "Window management, keyboard automation, notes, and personal utilities.",
-    "body": "keyboard-maestro rectangle-pro karabiner-elements obsidian logseq mailmate keepassxc spotify Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. MailMate stable currently requires Rosetta 2 on Apple Silicon. If that becomes annoying, switch to mailmate@beta. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
   },
   {
     "kind": "cask",
     "title": "keyboard-maestro",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. MailMate stable currently requires Rosetta 2 on Apple Silicon. If that becomes annoying, switch to mailmate@beta. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
   },
   {
     "kind": "cask",
     "title": "rectangle-pro",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. MailMate stable currently requires Rosetta 2 on Apple Silicon. If that becomes annoying, switch to mailmate@beta. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
   },
   {
     "kind": "cask",
     "title": "karabiner-elements",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. MailMate stable currently requires Rosetta 2 on Apple Silicon. If that becomes annoying, switch to mailmate@beta. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+  },
+  {
+    "kind": "cask",
+    "title": "betterdisplay",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Productivity",
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
   },
   {
     "kind": "cask",
     "title": "obsidian",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. MailMate stable currently requires Rosetta 2 on Apple Silicon. If that becomes annoying, switch to mailmate@beta. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
   },
   {
     "kind": "cask",
     "title": "logseq",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. MailMate stable currently requires Rosetta 2 on Apple Silicon. If that becomes annoying, switch to mailmate@beta. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
   },
   {
     "kind": "cask",
-    "title": "mailmate",
+    "title": "mailmate@beta",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. MailMate stable currently requires Rosetta 2 on Apple Silicon. If that becomes annoying, switch to mailmate@beta. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
   },
   {
     "kind": "cask",
     "title": "keepassxc",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. MailMate stable currently requires Rosetta 2 on Apple Silicon. If that becomes annoying, switch to mailmate@beta. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
   },
   {
     "kind": "cask",
     "title": "spotify",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. MailMate stable currently requires Rosetta 2 on Apple Silicon. If that becomes annoying, switch to mailmate@beta. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
   },
   {
     "kind": "group",
@@ -382,76 +396,90 @@
     "title": "Network",
     "url": "homebrew.html",
     "summary": "Diagnostics, remote access, and support tooling kept out of the default rebuild.",
-    "body": "telnet rclone ipmitool openssl lftp mtr nmap net-snmp rustdesk netspot Useful when the Mac is doubling as a support or network box."
+    "body": "telnet rclone ipmitool openssl lftp mtr nmap net-snmp tailscale-app little-snitch rustdesk netspot Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
   },
   {
     "kind": "formula",
     "title": "telnet",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
   },
   {
     "kind": "formula",
     "title": "rclone",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
   },
   {
     "kind": "formula",
     "title": "ipmitool",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
   },
   {
     "kind": "formula",
     "title": "openssl",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
   },
   {
     "kind": "formula",
     "title": "lftp",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
   },
   {
     "kind": "formula",
     "title": "mtr",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
   },
   {
     "kind": "formula",
     "title": "nmap",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
   },
   {
     "kind": "formula",
     "title": "net-snmp",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
+  },
+  {
+    "kind": "cask",
+    "title": "tailscale-app",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Network",
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
+  },
+  {
+    "kind": "cask",
+    "title": "little-snitch",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Network",
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
   },
   {
     "kind": "cask",
     "title": "rustdesk",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
   },
   {
     "kind": "cask",
     "title": "netspot",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
   }
 ]
