@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Backup | mac.riera.co.uk</title>
+    <meta name="description" content="Backup tooling and backup layout for the mac.riera.co.uk rebuild.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/style.css">
+    <script defer src="assets/app.js"></script>
+  </head>
+  <body data-page="backup">
+    <div class="site-frame">
+      <div data-site-shell="header"></div>
+
+      <main>
+        <section class="hero-panel reveal">
+          <span class="eyebrow">Backup</span>
+          <div class="page-grid">
+            <div class="page-heading">
+              <h1>Kopia is the chosen backup tool for this setup.</h1>
+              <p>
+                The backup shape now assumes two things are available: Google Drive for offsite storage and an NFS path
+                for a fast local mirror. Kopia fits that combination better than ad hoc file copying because the repository
+                is encrypted, verifiable, and portable.
+              </p>
+            </div>
+            <div class="callout">
+              <p>
+                Chosen stack: <strong>kopia</strong> + <strong>kopiaui</strong>. The repo keeps both so the CLI and GUI
+                paths are available on the next rebuild.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="1">
+          <div class="section-heading">
+            <h2>Chosen Backup Shape</h2>
+            <p>This layout uses both of your storage backends instead of picking only one.</p>
+          </div>
+          <ol class="timeline">
+            <li>Create the encrypted Kopia repository in a dedicated Google Drive folder so offsite backup exists even when the NFS share is unavailable.</li>
+            <li>Use Kopia repository synchronization to mirror that repository to the NFS path when the share is mounted.</li>
+            <li>Keep the live backup repository separate from Git version history. Use Git only for file-based config and export snapshots.</li>
+            <li>Run repository verification regularly so the backup is checked, not just assumed.</li>
+          </ol>
+        </section>
+
+        <section class="section reveal" data-delay="2">
+          <div class="section-heading">
+            <h2>Useful Commands</h2>
+            <p>These are the two commands worth remembering. Initial repository creation can be done in KopiaUI if that is faster.</p>
+          </div>
+          <div class="content-columns">
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Create Google Drive repo</h2>
+                  <p class="muted">Use a dedicated Google Drive folder and keep the credentials file outside git.</p>
+                </div>
+              </div>
+              <pre>kopia repository create gdrive --folder-id=&lt;google-drive-folder-id&gt; --credentials-file=&lt;service-account-json&gt;</pre>
+            </section>
+
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Sync to NFS mirror</h2>
+                  <p class="muted">The <code>--must-exist</code> flag prevents accidentally writing into an unmounted path.</p>
+                </div>
+              </div>
+              <pre>kopia repository sync-to filesystem --path /Volumes/backups/kopia --must-exist --delete --no-progress</pre>
+            </section>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="3">
+          <div class="section-heading">
+            <h2>What To Protect</h2>
+            <p>These are the paths that matter more than generic app binaries, because Homebrew can reinstall apps but it cannot recreate state.</p>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Automation</h3>
+              <p><code>~/Library/Application Support/Keyboard Maestro</code>, exported macro folders, and any text expander source files.</p>
+            </article>
+            <article class="card">
+              <h3>Knowledge</h3>
+              <p>Obsidian vaults, Logseq graphs, plugin settings, and any repo-backed knowledge projects.</p>
+            </article>
+            <article class="card">
+              <h3>Mail and identity</h3>
+              <p>MailMate settings, dotfiles, SSH material, repo clones, and the small app preference directories that would be annoying to rebuild.</p>
+            </article>
+            <article class="card">
+              <h3>Exclude the noise</h3>
+              <p>Skip caches, node_modules, derived build output, downloaded dependencies, and media you can already re-fetch.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="3">
+          <div class="section-heading">
+            <h2>Keyboard Maestro And GitHub</h2>
+            <p>GitHub is useful here, but not as a live sync replacement.</p>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Keep live sync simple</h3>
+              <p>Continue using Google Drive for live Keyboard Maestro sync if it is already stable. That is the low-risk path.</p>
+            </article>
+            <article class="card">
+              <h3>Use git for snapshots</h3>
+              <p>Export all macros as a folder and store those exports in a private Git repo for version history and rollback.</p>
+            </article>
+            <article class="card">
+              <h3>Do the same for Logseq</h3>
+              <p>Logseq file graphs are a good fit for a private Git repo, which also gives you change history across notes and config.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <div data-site-shell="footer"></div>
+    </div>
+  </body>
+</html>

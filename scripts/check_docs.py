@@ -18,7 +18,9 @@ REQUIRED_FILES = [
     DOCS / "assets" / "style.css",
     DOCS / "assets" / "app.js",
     DOCS / "assets" / "homebrew.js",
+    DOCS / "assets" / "search.js",
     DOCS / "assets" / "install-groups.json",
+    DOCS / "assets" / "search-index.json",
 ]
 
 

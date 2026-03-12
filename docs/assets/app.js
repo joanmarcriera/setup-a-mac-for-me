@@ -6,6 +6,8 @@ const sitePages = [
   { id: "terminal", label: "Terminal", href: "terminal.html" },
   { id: "coding", label: "Coding", href: "coding.html" },
   { id: "apps", label: "Apps", href: "apps.html" },
+  { id: "backup", label: "Backup", href: "backup.html" },
+  { id: "audit", label: "Audit", href: "audit.html" },
   { id: "restore-state", label: "Restore State", href: "restore-state.html" },
   { id: "post-install", label: "Post-Install", href: "post-install.html" }
 ];
@@ -45,6 +47,16 @@ function renderShell() {
               )
               .join("")}
           </nav>
+          <form class="site-search" data-site-search>
+            <input
+              type="search"
+              name="q"
+              placeholder="Search pages, packages, notes"
+              aria-label="Search the site"
+              data-site-search-input
+            >
+            <button type="submit">Search</button>
+          </form>
         </div>
       </header>
     `;
@@ -100,9 +112,46 @@ function setupCopyButtons() {
   });
 }
 
+function setupSiteSearch() {
+  const query = new URLSearchParams(window.location.search).get("q") || "";
+
+  document.querySelectorAll("[data-site-search-input]").forEach((input) => {
+    input.value = query;
+  });
+
+  document.querySelectorAll("[data-site-search]").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const input = form.querySelector("[data-site-search-input]");
+      const value = input ? input.value.trim() : "";
+      const target = value ? `search.html?q=${encodeURIComponent(value)}` : "search.html";
+      window.location.href = target;
+    });
+  });
+
+  window.addEventListener("keydown", (event) => {
+    if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) {
+      return;
+    }
+
+    const active = document.activeElement;
+    if (active && ["INPUT", "TEXTAREA"].includes(active.tagName)) {
+      return;
+    }
+
+    const input = document.querySelector("[data-site-search-input]");
+    if (input instanceof HTMLInputElement) {
+      event.preventDefault();
+      input.focus();
+      input.select();
+    }
+  });
+}
+
 async function start() {
   renderShell();
   setupCopyButtons();
+  setupSiteSearch();
 
   try {
     const data = await loadInstallData();

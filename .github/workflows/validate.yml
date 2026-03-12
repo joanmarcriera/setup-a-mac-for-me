@@ -16,6 +16,9 @@ jobs:
       - name: Check generated artifacts
         run: python3 scripts/generate_brew_artifacts.py --check
 
+      - name: Check search index
+        run: python3 scripts/build_search_index.py --check
+
       - name: Check docs links and required files
         run: python3 scripts/check_docs.py
 

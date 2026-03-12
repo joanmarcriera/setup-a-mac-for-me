@@ -1,0 +1,4 @@
+# Encrypted backup tooling for NFS and Google Drive.
+brew "kopia"
+
+cask "kopiaui"

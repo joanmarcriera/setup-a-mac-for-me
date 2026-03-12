@@ -61,6 +61,7 @@ Edit `data/install-groups.json`, then regenerate the derived files:
 
 ```sh
 python3 scripts/generate_brew_artifacts.py
+python3 scripts/build_search_index.py
 python3 scripts/check_docs.py
 ```
 
@@ -74,6 +75,7 @@ This repo reflects the current preferences for the next rebuild:
 - dark terminal with about 20% transparency
 - zsh with a minimal plugin set
 - Keyboard Maestro instead of Alfred or Raycast
-- VS Code, Codex, Claude
-- Obsidian, Shottr, Kap, Rectangle Pro
+- VS Code, Codex, Claude, Antigravity
+- Obsidian, Logseq, MailMate, Shottr, Kap, Rectangle Pro
+- Kopia for encrypted backups across Google Drive and NFS
 - no App Expose, `autojump`, `zsh-syntax-highlighting`, `pnpm`, Dropover, iBar, Whimsical, or Notion

@@ -52,10 +52,12 @@
         "duckduckgo",
         "visual-studio-code",
         "codex",
-        "claude"
+        "claude",
+        "antigravity"
       ],
       "notes": [
-        "Vivaldi is the main browser. DuckDuckGo is the search-first companion."
+        "Vivaldi is the main browser. DuckDuckGo is the search-first companion.",
+        "Antigravity is part of the current AI toolchain."
       ]
     },
     {
@@ -68,12 +70,31 @@
         "rectangle-pro",
         "karabiner-elements",
         "obsidian",
-        "keeweb",
+        "logseq",
+        "mailmate",
+        "keepassxc",
         "spotify"
       ],
       "notes": [
         "Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers.",
-        "Keyboard Maestro and Rectangle Pro still require paid licenses after install."
+        "Keyboard Maestro and Rectangle Pro still require paid licenses after install.",
+        "MailMate stable currently requires Rosetta 2 on Apple Silicon. If that becomes annoying, switch to mailmate@beta.",
+        "KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+      ]
+    },
+    {
+      "id": "backup",
+      "label": "Backup",
+      "description": "Encrypted backup tooling for NFS and Google Drive.",
+      "formulae": [
+        "kopia"
+      ],
+      "casks": [
+        "kopiaui"
+      ],
+      "notes": [
+        "Kopia was chosen because it supports filesystem repositories, Google Drive, repository verification, and a native macOS UI.",
+        "The recommended shape is a Google Drive repository with an NFS mirror, not the other way around."
       ]
     },
     {
@@ -134,6 +155,7 @@
         "dev",
         "browsers-ai",
         "productivity",
+        "backup",
         "capture"
       ]
     },
@@ -146,6 +168,7 @@
         "dev",
         "browsers-ai",
         "productivity",
+        "backup",
         "capture",
         "network"
       ]

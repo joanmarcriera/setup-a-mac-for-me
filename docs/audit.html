@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Audit | mac.riera.co.uk</title>
+    <meta name="description" content="Current package audit for the mac.riera.co.uk setup.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/style.css">
+    <script defer src="assets/app.js"></script>
+  </head>
+  <body data-page="audit">
+    <div class="site-frame">
+      <div data-site-shell="header"></div>
+
+      <main>
+        <section class="hero-panel reveal">
+          <span class="eyebrow">Audit</span>
+          <div class="page-grid">
+            <div class="page-heading">
+              <h1>Package audit snapshot for March 12, 2026.</h1>
+              <p>
+                The Homebrew names in the repo were re-checked against the current catalog and the higher-risk projects
+                were spot-checked upstream for release activity. The package list is still valid, but one replacement was worth making.
+              </p>
+            </div>
+            <div class="callout">
+              <p>
+                Chosen replacement: <strong>KeeWeb → KeePassXC</strong>. KeeWeb is still installable, but its desktop releases have stalled long enough that it no longer belongs in the default rebuild.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="1">
+          <div class="section-heading">
+            <h2>What Checked Out</h2>
+            <p>The core list remains viable. These are the packages that did not show abandonment or naming issues during the audit.</p>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Core CLI formulae</h3>
+              <p>bash, wget, vim, uv, tig, htop, tree, tmux, jq, go, pandoc, volta, ffmpeg, rclone, mtr, nmap, and the network tools are still current Homebrew entries.</p>
+            </article>
+            <article class="card">
+              <h3>Daily casks</h3>
+              <p>Vivaldi, DuckDuckGo, VS Code, Codex, Claude, Keyboard Maestro, Rectangle Pro, Obsidian, Logseq, MailMate, KeePassXC, Shottr, RustDesk, NetSpot, Antigravity, and Kap all still have current Homebrew entries.</p>
+            </article>
+            <article class="card">
+              <h3>Jira CLI</h3>
+              <p>jira-cli is still active in Homebrew and its upstream project remains current, so it stays in the dev bundle.</p>
+            </article>
+            <article class="card">
+              <h3>Backup tooling</h3>
+              <p>Kopia and KopiaUI are current Homebrew entries and now cover the backup role in the repo.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="2">
+          <div class="section-heading">
+            <h2>Replacement Chosen</h2>
+            <p>The replacement is already reflected in the install data and generated Brewfiles.</p>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Removed from default list</h3>
+              <p><strong>KeeWeb</strong> remains installable, but its latest desktop release trail is old enough that it now sits in “works, but stale” territory.</p>
+            </article>
+            <article class="card">
+              <h3>New default</h3>
+              <p><strong>KeePassXC</strong> is the replacement because it is actively released, broadly used, and a better long-term fit for a KeePass-compatible desktop workflow.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="3">
+          <div class="section-heading">
+            <h2>Watchlist, Not Removal</h2>
+            <p>These tools stay, but with a note attached.</p>
+          </div>
+          <ul class="stacked-list">
+            <li>MailMate stays, but the stable Homebrew cask currently requires Rosetta 2 on Apple Silicon. If that becomes friction, switch to <code>mailmate@beta</code>.</li>
+            <li>Kap stays because it still has a current cask and a clear niche in the workflow, even though it is not the only capture option anymore.</li>
+            <li>Logseq stays as a secondary knowledge tool next to Obsidian, with git-friendly file graphs making it easy to back up privately.</li>
+          </ul>
+        </section>
+      </main>
+
+      <div data-site-shell="footer"></div>
+    </div>
+  </body>
+</html>

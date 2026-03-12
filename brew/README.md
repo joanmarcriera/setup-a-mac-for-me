@@ -23,6 +23,7 @@ brew bundle --file brew/Brewfile.cli
 brew bundle --file brew/Brewfile.dev
 brew bundle --file brew/Brewfile.browsers-ai
 brew bundle --file brew/Brewfile.productivity
+brew bundle --file brew/Brewfile.backup
 brew bundle --file brew/Brewfile.capture
 brew bundle --file brew/Brewfile.network
 ```
@@ -50,7 +51,7 @@ brew install go pandoc jira-cli volta
 Browser and coding assistants used in the daily workflow.
 
 ```sh
-brew install --cask vivaldi duckduckgo visual-studio-code codex claude
+brew install --cask vivaldi duckduckgo visual-studio-code codex claude antigravity
 ```
 
 ### Productivity
@@ -58,7 +59,19 @@ brew install --cask vivaldi duckduckgo visual-studio-code codex claude
 Window management, keyboard automation, notes, and personal utilities.
 
 ```sh
-brew install --cask keyboard-maestro rectangle-pro karabiner-elements obsidian keeweb spotify
+brew install --cask keyboard-maestro rectangle-pro karabiner-elements obsidian logseq mailmate keepassxc spotify
+```
+
+### Backup
+
+Encrypted backup tooling for NFS and Google Drive.
+
+```sh
+brew install kopia
+```
+
+```sh
+brew install --cask kopiaui
 ```
 
 ### Capture
@@ -90,8 +103,13 @@ brew install --cask rustdesk netspot
 - zsh stays minimal: no autojump and no zsh-syntax-highlighting.
 - Node.js version management goes through Volta. pnpm is intentionally excluded.
 - Vivaldi is the main browser. DuckDuckGo is the search-first companion.
+- Antigravity is part of the current AI toolchain.
 - Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers.
 - Keyboard Maestro and Rectangle Pro still require paid licenses after install.
+- MailMate stable currently requires Rosetta 2 on Apple Silicon. If that becomes annoying, switch to mailmate@beta.
+- KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled.
+- Kopia was chosen because it supports filesystem repositories, Google Drive, repository verification, and a native macOS UI.
+- The recommended shape is a Google Drive repository with an NFS mirror, not the other way around.
 - Shottr and Kap stay in the default workstation because they are used often.
 - Useful when the Mac is doubling as a support or network box.
 - Alfred, Raycast, `pnpm`, Dropover, iBar, Whimsical, and Notion are intentionally excluded.

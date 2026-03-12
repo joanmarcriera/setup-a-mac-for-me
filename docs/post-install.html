@@ -43,13 +43,26 @@
               <div class="command-meta">
                 <div>
                   <h2>Rebuild generated files</h2>
-                  <p class="muted">Run after editing <code>data/install-groups.json</code>.</p>
+                  <p class="muted">Run after editing install data or package groups.</p>
                 </div>
                 <button type="button" class="button button-subtle" data-copy-text="python3 scripts/generate_brew_artifacts.py">Copy</button>
               </div>
               <pre>python3 scripts/generate_brew_artifacts.py</pre>
             </section>
 
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Rebuild search index</h2>
+                  <p class="muted">Run after editing the site pages.</p>
+                </div>
+                <button type="button" class="button button-subtle" data-copy-text="python3 scripts/build_search_index.py">Copy</button>
+              </div>
+              <pre>python3 scripts/build_search_index.py</pre>
+            </section>
+          </div>
+
+          <div class="content-columns">
             <section class="panel command-block">
               <div class="command-meta">
                 <div>
@@ -73,8 +86,10 @@
             <li>Vivaldi opens as the default browser and uses DuckDuckGo by default.</li>
             <li>Keyboard Maestro shortcuts are firing correctly for launcher and clipboard history.</li>
             <li>VS Code sync has restored the expected extensions and editor feel.</li>
-            <li>Codex and Claude are signed in and usable.</li>
+            <li>Codex, Claude, and Antigravity are signed in and usable.</li>
+            <li>MailMate accounts connect cleanly and Logseq graphs open where expected.</li>
             <li>Shottr, Kap, and Rectangle Pro all respond with the expected shortcuts.</li>
+            <li>Kopia can see the current repository and the NFS mirror path is mounted correctly before sync runs.</li>
           </ul>
         </section>
 
@@ -95,6 +110,10 @@
             <article class="card">
               <h3>Validate generated files</h3>
               <p><code>python3 scripts/generate_brew_artifacts.py --check</code> catches drift between the data source and generated outputs.</p>
+            </article>
+            <article class="card">
+              <h3>Validate search index</h3>
+              <p><code>python3 scripts/build_search_index.py --check</code> catches drift between the public pages and the client-side search index.</p>
             </article>
           </div>
         </section>

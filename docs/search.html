@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search | mac.riera.co.uk</title>
+    <meta name="description" content="Search the mac.riera.co.uk setup guide.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/style.css">
+    <script defer src="assets/app.js"></script>
+    <script defer src="assets/search.js"></script>
+  </head>
+  <body data-page="search">
+    <div class="site-frame">
+      <div data-site-shell="header"></div>
+
+      <main>
+        <section class="hero-panel reveal">
+          <span class="eyebrow">Search</span>
+          <div class="page-grid">
+            <div class="page-heading">
+              <h1>Search the setup by page, bundle, group, or package name.</h1>
+              <p>
+                The index covers site pages plus the generated Homebrew package catalog, so queries like
+                <code>mailmate</code>, <code>kopia</code>, <code>keepassxc</code>, and <code>backup</code> work the way they should.
+              </p>
+            </div>
+            <div class="callout">
+              <p>
+                Shortcut: press <strong>/</strong> anywhere on the site to focus the header search field.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="1">
+          <div class="panel">
+            <form class="search-form" data-search-page-form>
+              <input
+                type="search"
+                name="q"
+                placeholder="Search packages, pages, setup notes"
+                aria-label="Search the site"
+                data-search-page-input
+              >
+              <button type="submit">Search</button>
+            </form>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="2">
+          <div class="section-heading">
+            <h2>Results</h2>
+            <p data-search-count class="muted"></p>
+          </div>
+          <div class="search-results" data-search-results></div>
+        </section>
+      </main>
+
+      <div data-site-shell="footer"></div>
+    </div>
+  </body>
+</html>
