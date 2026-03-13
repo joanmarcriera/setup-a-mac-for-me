@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Factory Reset | mac.riera.co.uk</title>
+    <meta name="description" content="How to back up a MacBook Pro and reset it to factory settings before starting over.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/style.css">
+    <script defer src="assets/app.js"></script>
+  </head>
+  <body data-page="factory-reset">
+    <div class="site-frame">
+      <div data-site-shell="header"></div>
+
+      <main>
+        <section class="hero-panel reveal">
+          <span class="eyebrow">Factory Reset</span>
+          <div class="page-grid">
+            <div class="page-heading">
+              <h1>Back up the whole machine, then erase it cleanly.</h1>
+              <p>
+                This is the path to use before selling a Mac, handing it to someone else, or deliberately starting over.
+                The backup here is full-machine first, selective exports second. The reset path follows current Apple-silicon guidance.
+              </p>
+            </div>
+            <div class="callout">
+              <p>
+                Short version: run a fresh Time Machine backup, take one last Kopia snapshot of the irreplaceable paths,
+                verify both, then use Erase Assistant from System Settings.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="1">
+          <div class="section-heading">
+            <h2>Pre-Wipe Backup Stack</h2>
+            <p>Use a full-system backup plus the app-state backups that matter to this setup.</p>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3>1. Time Machine first</h3>
+              <p>Use Time Machine as the safety net for the entire Mac. That is the backup Apple points to before erasing a machine.</p>
+            </article>
+            <article class="card">
+              <h3>2. Kopia for critical paths</h3>
+              <p>Take a final Kopia snapshot or repository sync so the high-value files also land in Google Drive and the NFS mirror.</p>
+            </article>
+            <article class="card">
+              <h3>3. Export the awkward bits</h3>
+              <p>Export Keyboard Maestro macros, keep Karabiner and Little Snitch exports close, and make sure Obsidian, Logseq, and MailMate state is where you expect it.</p>
+            </article>
+            <article class="card">
+              <h3>4. Sync the cloud tools</h3>
+              <p>Confirm Vivaldi, VS Code, and any other account-backed tools have finished syncing before the wipe starts.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="2">
+          <div class="section-heading">
+            <h2>Time Machine Checklist</h2>
+            <p>This is the fastest whole-machine backup path before a reset.</p>
+          </div>
+          <ol class="timeline">
+            <li>Connect an external backup disk or mount the Time Machine network destination.</li>
+            <li>Open Time Machine settings and add the backup disk if it is not already configured.</li>
+            <li>Start a backup and wait for it to complete before you erase the Mac.</li>
+            <li>Run <code>tmutil latestbackup</code> in Terminal to confirm the most recent backup exists.</li>
+            <li>If the wipe is precautionary rather than urgent, spot-check that the latest backup contains the files you care about most.</li>
+          </ol>
+
+          <div class="content-columns">
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Verify latest Time Machine backup</h2>
+                  <p class="muted">A quick CLI check before Erase Assistant.</p>
+                </div>
+                <button type="button" class="button button-subtle" data-copy-text="tmutil latestbackup">Copy</button>
+              </div>
+              <pre>tmutil latestbackup</pre>
+            </section>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="3">
+          <div class="section-heading">
+            <h2>Factory Reset On Apple Silicon</h2>
+            <p>This is the normal path for a current MacBook Pro.</p>
+          </div>
+          <ol class="timeline">
+            <li>Open <code>System Settings</code>.</li>
+            <li>Go to <code>General</code> → <code>Transfer or Reset</code>.</li>
+            <li>Choose <code>Erase All Content and Settings</code>.</li>
+            <li>Enter the administrator password and review what will be removed.</li>
+            <li>Continue through Erase Assistant and let the Mac reboot to the <code>Hello</code> screen.</li>
+          </ol>
+          <div class="callout">
+            <p>
+              Apple says Erase Assistant signs you out of Apple services, turns off Find My and Activation Lock,
+              removes apps you installed, erases all volumes, and deletes all user accounts and their data.
+            </p>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="3">
+          <div class="section-heading">
+            <h2>If Erase Assistant Is Unavailable</h2>
+            <p>This is the fallback path, not the normal one for Apple-silicon MacBook Pros.</p>
+          </div>
+          <div class="card-grid">
+            <article class="card">
+              <h3>Older Intel-only route</h3>
+              <p>Apple documents a separate Recovery-based erase-and-reinstall flow for Intel Macs without the T2 chip. Keep it as a reference, but do not reach for it first on modern MacBook Pros.</p>
+            </article>
+            <article class="card">
+              <h3>Stay connected</h3>
+              <p>If you do end up in Recovery, Apple calls out two basics: keep the Mac online and keep a laptop on power while reinstalling macOS.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section reveal" data-delay="4">
+          <div class="section-heading">
+            <h2>After The Wipe</h2>
+            <p>Choose the restore path based on whether you want a clean rebuild or a fast migration.</p>
+          </div>
+          <ul class="stacked-list">
+            <li>If the goal is a clean rebuild, set the Mac up as new and follow this site from the beginning.</li>
+            <li>If the goal is a faster return, use Migration Assistant to pull accounts, apps, files, and settings from a Time Machine backup.</li>
+            <li>Keep Kopia and app exports available even if you migrate, because selective restore is often cleaner than moving everything back.</li>
+          </ul>
+        </section>
+      </main>
+
+      <div data-site-shell="footer"></div>
+    </div>
+  </body>
+</html>

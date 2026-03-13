@@ -7,6 +7,7 @@ const sitePages = [
   { id: "coding", label: "Coding", href: "coding.html" },
   { id: "apps", label: "Apps", href: "apps.html" },
   { id: "backup", label: "Backup", href: "backup.html" },
+  { id: "factory-reset", label: "Factory Reset", href: "factory-reset.html" },
   { id: "audit", label: "Audit", href: "audit.html" },
   { id: "restore-state", label: "Restore State", href: "restore-state.html" },
   { id: "post-install", label: "Post-Install", href: "post-install.html" }
