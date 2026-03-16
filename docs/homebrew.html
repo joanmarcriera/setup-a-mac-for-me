@@ -19,17 +19,16 @@
           <span class="eyebrow">Homebrew</span>
           <div class="page-grid">
             <div class="page-heading">
-              <h1>Pick a preset, trim the groups, copy the command.</h1>
+              <h1>Copy the brew command you want and move on.</h1>
               <p>
-                The installer is backed by the same JSON file that generates the repo Brewfiles.
-                If the selection matches a preset, you get one clean <code>brew bundle</code> command.
-                If not, the UI falls back to grouped slices or merged raw install commands.
+                This page stays simple on purpose. Each default setup and each smaller group gets raw
+                <code>brew install</code> commands you can copy and paste directly.
               </p>
             </div>
             <div class="callout">
               <p>
-                The default path is <strong>Workstation</strong>. It includes the daily tools but leaves
-                the heavier network kit out until it is actually needed.
+                <strong>Workstation</strong> is still the default path. It now includes
+                iTerm2, Chrome, Chrome Canary, Google Drive, GitHub Desktop, and <code>gh</code>.
               </p>
               <div class="badge-row">
                 <span class="badge badge-accent">Minimal</span>
@@ -43,81 +42,48 @@
         <section id="homebrew-installer" class="section reveal" data-delay="1">
           <div class="panel">
             <div class="section-heading">
-              <h2>Interactive Installer</h2>
-              <p>Use preset buttons when they fit. Toggle individual groups when the rebuild needs a lighter or heavier shape.</p>
+              <h2>Default Bundles</h2>
+              <p>Pick the preset that matches the rebuild and copy the commands as-is.</p>
             </div>
-
-            <div class="button-row">
-              <button type="button" class="button" data-output-mode="bundle">Bundle Commands</button>
-              <button type="button" class="button button-subtle" data-output-mode="raw">Raw Brew Commands</button>
-            </div>
-
-            <div class="section">
-              <div class="section-heading">
-                <h2>Presets</h2>
-                <p>Preset buttons snap to generated bundle files in the repo.</p>
-              </div>
-              <div class="option-grid" data-installer="presets"></div>
-            </div>
-
-            <div class="section">
-              <div class="section-heading">
-                <h2>Groups</h2>
-                <p>Use these when the rebuild is custom and a one-command preset would install too much.</p>
-              </div>
-              <div class="toggle-grid" data-installer="groups"></div>
+            <div class="table-wrap">
+              <table class="command-table">
+                <thead>
+                  <tr>
+                    <th>Bundle</th>
+                    <th>Includes</th>
+                    <th>Commands</th>
+                  </tr>
+                </thead>
+                <tbody data-homebrew="bundles"></tbody>
+              </table>
             </div>
           </div>
 
-          <div class="installer-layout">
-            <section class="panel output-block">
-              <div class="command-meta">
-                <div>
-                  <h2>Command Output</h2>
-                  <p class="muted" data-installer="match"></p>
-                </div>
-                <div class="button-row">
-                  <button type="button" class="button button-forest" data-installer="copy">Copy Command</button>
-                  <button type="button" class="button button-subtle" data-installer="reset">Reset to Workstation</button>
-                </div>
-              </div>
-              <pre data-installer="output"></pre>
-            </section>
-
-            <aside class="panel">
-              <h2>Selection Summary</h2>
-              <div class="badge-row" data-installer="badges"></div>
-              <div class="stat-grid">
-                <article>
-                  <strong data-installer="formulae">0</strong>
-                  <span>formulae</span>
-                </article>
-                <article>
-                  <strong data-installer="casks">0</strong>
-                  <span>casks</span>
-                </article>
-                <article>
-                  <strong data-installer="group-count">0</strong>
-                  <span>groups</span>
-                </article>
-              </div>
-            </aside>
+          <div class="panel">
+            <div class="section-heading">
+              <h2>Individual Groups</h2>
+              <p>Use these smaller commands when you want only part of the stack.</p>
+            </div>
+            <div class="table-wrap">
+              <table class="command-table">
+                <thead>
+                  <tr>
+                    <th>Group</th>
+                    <th>Size</th>
+                    <th>Commands</th>
+                  </tr>
+                </thead>
+                <tbody data-homebrew="groups"></tbody>
+              </table>
+            </div>
           </div>
 
           <div class="panel">
             <div class="section-heading">
               <h2>Notes</h2>
-              <p>Selection-specific reminders pulled from the install data.</p>
+              <p>Short reminders that still matter during install.</p>
             </div>
-            <div data-installer="notes"></div>
-          </div>
-
-          <div class="panel">
-            <div class="section-heading">
-              <h2>Selected Group Breakdown</h2>
-              <p>The group cards below make it obvious what the current output will pull in.</p>
-            </div>
-            <div class="card-grid" data-installer="breakdown"></div>
+            <div data-homebrew="notes"></div>
           </div>
         </section>
       </main>

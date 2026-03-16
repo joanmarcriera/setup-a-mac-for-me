@@ -1,7 +1,10 @@
 # Browser and coding assistants used in the daily workflow.
+cask "google-chrome"
+cask "google-chrome@canary"
 cask "vivaldi"
 cask "duckduckgo"
 cask "visual-studio-code"
+cask "github"
 cask "codex"
 cask "claude"
 cask "antigravity"

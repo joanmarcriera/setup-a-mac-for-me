@@ -64,38 +64,50 @@ def collect_bundle_items(bundle: dict, groups_by_id: dict[str, dict]) -> tuple[l
     return unique(formulae), unique(casks)
 
 
+def brew_commands(formulae: list[str], casks: list[str]) -> list[str]:
+    commands: list[str] = []
+    if formulae:
+        commands.append(f"brew install {' '.join(formulae)}")
+    if casks:
+        commands.append(f"brew install --cask {' '.join(casks)}")
+    return commands
+
+
 def render_brew_readme(data: dict) -> str:
     groups = data["groups"]
     bundles = data["bundles"]
-    bundle_commands = "\n".join(f"brew bundle --file brew/Brewfile.{bundle['id']}" for bundle in bundles)
-    grouped_commands = "\n".join(f"brew bundle --file brew/Brewfile.{group['id']}" for group in groups)
 
     sections = [
         "# Homebrew Install Commands",
         "",
         "This folder is generated from `data/install-groups.json`.",
         "",
-        "It keeps Homebrew installs in three formats:",
+        "Copy and paste the commands you want.",
         "",
-        "- one-command bundles",
-        "- grouped `brew bundle` files",
-        "- raw `brew install` commands",
+        "The default bundles are listed first, followed by the smaller group commands.",
         "",
-        "## Fastest Options",
-        "",
-        "```sh",
-        bundle_commands,
-        "```",
-        "",
-        "## Grouped Bundle Commands",
-        "",
-        "```sh",
-        grouped_commands,
-        "```",
-        "",
-        "## Raw Brew Commands",
+        "## Default Bundles",
         "",
     ]
+
+    groups_by_id = {group["id"]: group for group in groups}
+
+    for bundle in bundles:
+        formulae, casks = collect_bundle_items(bundle, groups_by_id)
+        sections.extend(
+            [
+                f"### {bundle['label']}",
+                "",
+                bundle["description"],
+                "",
+                "```sh",
+                "\n".join(brew_commands(formulae, casks)),
+                "```",
+                "",
+            ]
+        )
+
+    sections.extend(["## Individual Groups", ""])
 
     for group in groups:
         sections.extend(
@@ -106,10 +118,7 @@ def render_brew_readme(data: dict) -> str:
                 "",
             ]
         )
-        if group["formulae"]:
-            sections.extend(["```sh", f"brew install {' '.join(group['formulae'])}", "```", ""])
-        if group["casks"]:
-            sections.extend(["```sh", f"brew install --cask {' '.join(group['casks'])}", "```", ""])
+        sections.extend(["```sh", "\n".join(brew_commands(group["formulae"], group["casks"])), "```", ""])
 
     notes = unique(
         [

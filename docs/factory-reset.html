@@ -26,8 +26,7 @@
             </div>
             <div class="callout">
               <p>
-                Short version: run a fresh Time Machine backup, take one last Kopia snapshot of the irreplaceable paths,
-                verify both, then use Erase Assistant from System Settings.
+                Short version: run a fresh Time Machine backup, verify it, then use Erase Assistant from System Settings.
               </p>
             </div>
           </div>
@@ -44,8 +43,8 @@
               <p>Use Time Machine as the safety net for the entire Mac. That is the backup Apple points to before erasing a machine.</p>
             </article>
             <article class="card">
-              <h3>2. Kopia for critical paths</h3>
-              <p>Take a final Kopia snapshot or repository sync so the high-value files also land in Google Drive and the NFS mirror.</p>
+              <h3>2. Optional selective exports</h3>
+              <p>Export the few awkward bits you would rather restore selectively. This does not require Kopia if Time Machine already covers the machine.</p>
             </article>
             <article class="card">
               <h3>3. Export the awkward bits</h3>
@@ -130,7 +129,7 @@
           <ul class="stacked-list">
             <li>If the goal is a clean rebuild, set the Mac up as new and follow this site from the beginning.</li>
             <li>If the goal is a faster return, use Migration Assistant to pull accounts, apps, files, and settings from a Time Machine backup.</li>
-            <li>Keep Kopia and app exports available even if you migrate, because selective restore is often cleaner than moving everything back.</li>
+            <li>Keep any app exports you made available even if you migrate, because selective restore is often cleaner than moving everything back.</li>
           </ul>
         </section>
       </main>

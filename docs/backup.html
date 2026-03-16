@@ -18,17 +18,16 @@
           <span class="eyebrow">Backup</span>
           <div class="page-grid">
             <div class="page-heading">
-              <h1>Kopia is the chosen backup tool for this setup.</h1>
+              <h1>Time Machine to TrueNAS is good enough if it already covers the job.</h1>
               <p>
-                The backup shape now assumes two things are available: Google Drive for offsite storage and an NFS path
-                for a fast local mirror. Kopia fits that combination better than ad hoc file copying because the repository
-                is encrypted, verifiable, and portable.
+                If Time Machine to the TrueNAS or NFS target gives a full backup and a restore path you trust,
+                there is no need to add Kopia just for the sake of it. Keep backup simple unless a real gap shows up.
               </p>
             </div>
             <div class="callout">
               <p>
-                Chosen stack: <strong>kopia</strong> + <strong>kopiaui</strong>. The repo keeps both so the CLI and GUI
-                paths are available on the next rebuild.
+                Default answer: <strong>use Time Machine</strong>. Treat Kopia as optional only when you want an extra
+                encrypted offsite copy, repository verification, or a second backup shape beyond Time Machine.
               </p>
               <p>
                 If the goal is a full wipe, use <a href="factory-reset.html">Factory Reset</a> as the companion page. Time Machine is the full-machine safety net before Erase Assistant.
@@ -39,41 +38,54 @@
 
         <section class="section reveal" data-delay="1">
           <div class="section-heading">
-            <h2>Chosen Backup Shape</h2>
-            <p>This layout uses both of your storage backends instead of picking only one.</p>
+            <h2>Recommended Backup Shape</h2>
+            <p>Start with the smaller plan first. Add more only if Time Machine is not covering something important.</p>
           </div>
           <ol class="timeline">
-            <li>Create the encrypted Kopia repository in a dedicated Google Drive folder so offsite backup exists even when the NFS share is unavailable.</li>
-            <li>Use Kopia repository synchronization to mirror that repository to the NFS path when the share is mounted.</li>
-            <li>Keep the live backup repository separate from Git version history. Use Git only for file-based config and export snapshots.</li>
-            <li>Run repository verification regularly so the backup is checked, not just assumed.</li>
+            <li>Use Time Machine with the TrueNAS or NFS destination and confirm backups complete normally.</li>
+            <li>Before a reset or major upgrade, confirm the latest Time Machine snapshot exists and can be browsed.</li>
+            <li>Keep app exports and small irreplaceable files in a separate private path if you want faster selective restore.</li>
+            <li>Add Kopia only if you still need encrypted offsite storage or repository-style verification beyond Time Machine.</li>
           </ol>
         </section>
 
         <section class="section reveal" data-delay="2">
           <div class="section-heading">
-            <h2>Useful Commands</h2>
-            <p>These are the two commands worth remembering. Initial repository creation can be done in KopiaUI if that is faster.</p>
+            <h2>Time Machine Checks</h2>
+            <p>These are the commands worth keeping close if Time Machine is the main backup path.</p>
           </div>
           <div class="content-columns">
             <section class="panel command-block">
               <div class="command-meta">
                 <div>
-                  <h2>Create Google Drive repo</h2>
-                  <p class="muted">Use a dedicated Google Drive folder and keep the credentials file outside git.</p>
+                  <h2>Latest backup</h2>
+                  <p class="muted">Confirm the most recent Time Machine snapshot exists.</p>
                 </div>
+                <button type="button" class="button button-subtle" data-copy-text="tmutil latestbackup">Copy</button>
               </div>
-              <pre>kopia repository create gdrive --folder-id=&lt;google-drive-folder-id&gt; --credentials-file=&lt;service-account-json&gt;</pre>
+              <pre>tmutil latestbackup</pre>
             </section>
 
             <section class="panel command-block">
               <div class="command-meta">
                 <div>
-                  <h2>Sync to NFS mirror</h2>
-                  <p class="muted">The <code>--must-exist</code> flag prevents accidentally writing into an unmounted path.</p>
+                  <h2>Backup destination</h2>
+                  <p class="muted">Confirm which destination Time Machine is using.</p>
+                </div>
+                <button type="button" class="button button-subtle" data-copy-text="tmutil destinationinfo">Copy</button>
+              </div>
+              <pre>tmutil destinationinfo</pre>
+            </section>
+
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Optional Kopia extras</h2>
+                  <p class="muted">Only relevant if Time Machine is not enough and you want the extra layer.</p>
                 </div>
               </div>
-              <pre>kopia repository sync-to filesystem --path /Volumes/backups/kopia --must-exist --delete --no-progress</pre>
+              <pre>brew install kopia
+brew install --cask kopiaui google-drive</pre>
             </section>
           </div>
         </section>

@@ -13,8 +13,8 @@ The repo is now organized around one source of truth for install groups:
 
 - `data/install-groups.json`: Homebrew groups and presets
 - `brew/`: generated `Brewfile.*` files and copy/paste commands
-- `docs/`: static GitHub Pages site, including the interactive Homebrew installer
-- `scripts/apply-macos-defaults.sh`: applies Dock and Launchpad defaults
+- `docs/`: static GitHub Pages site with raw Homebrew commands and direct macOS preference commands
+- `scripts/apply-macos-defaults.sh`: optional helper for the same Dock and Launchpad defaults shown on the site
 - `scripts/verify-setup.sh`: checks installed apps plus the scripted macOS defaults
 - `scripts/generate_brew_artifacts.py`: regenerates `brew/` files and the installer data used by the site
 - `scripts/check_docs.py`: validates local site links and required Pages files
@@ -27,17 +27,14 @@ The repo is now organized around one source of truth for install groups:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-2. Use the generated workstation bundle or the interactive installer.
+2. Copy the workstation commands from the Homebrew page or `brew/README.md`.
 
 ```sh
-brew bundle --file brew/Brewfile.workstation
+brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta kopia ffmpeg
+brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify kopiaui google-drive shottr kap
 ```
 
-3. Apply the scripted macOS defaults.
-
-```sh
-./scripts/apply-macos-defaults.sh
-```
+3. Copy the macOS defaults commands you want from `docs/macos-defaults.html`.
 
 4. Restore app state and licenses for Vivaldi, Keyboard Maestro, Rectangle Pro, VS Code, Obsidian, and the rest of the daily stack.
 
@@ -78,5 +75,5 @@ This repo reflects the current preferences for the next rebuild:
 - VS Code, Codex, Claude, Antigravity, OrbStack
 - Obsidian, Logseq, MailMate beta, Shottr, Kap, Rectangle Pro, BetterDisplay
 - Tailscale and Little Snitch in the network slice
-- Kopia for encrypted backups across Google Drive and NFS
+- Time Machine to TrueNAS first, with Kopia only as an optional extra
 - no App Expose, `autojump`, `zsh-syntax-highlighting`, `pnpm`, Dropover, iBar, Whimsical, or Notion

@@ -9,3 +9,6 @@ brew "tree"
 brew "tmux"
 brew "jq"
 brew "ncurses"
+brew "gh"
+
+cask "iterm2"

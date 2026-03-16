@@ -20,9 +20,12 @@
         "tree",
         "tmux",
         "jq",
-        "ncurses"
+        "ncurses",
+        "gh"
       ],
-      "casks": [],
+      "casks": [
+        "iterm2"
+      ],
       "notes": [
         "zsh stays minimal: no autojump and no zsh-syntax-highlighting."
       ]
@@ -51,15 +54,19 @@
       "description": "Browser and coding assistants used in the daily workflow.",
       "formulae": [],
       "casks": [
+        "google-chrome",
+        "google-chrome@canary",
         "vivaldi",
         "duckduckgo",
         "visual-studio-code",
+        "github",
         "codex",
         "claude",
         "antigravity"
       ],
       "notes": [
-        "Vivaldi is the main browser. DuckDuckGo is the search-first companion.",
+        "Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing.",
+        "DuckDuckGo is the search-first companion.",
         "Antigravity is part of the current AI toolchain."
       ]
     },
@@ -90,16 +97,17 @@
     {
       "id": "backup",
       "label": "Backup",
-      "description": "Encrypted backup tooling for NFS and Google Drive.",
+      "description": "Optional backup extras if Time Machine to TrueNAS is not enough.",
       "formulae": [
         "kopia"
       ],
       "casks": [
-        "kopiaui"
+        "kopiaui",
+        "google-drive"
       ],
       "notes": [
-        "Kopia was chosen because it supports filesystem repositories, Google Drive, repository verification, and a native macOS UI.",
-        "The recommended shape is a Google Drive repository with an NFS mirror, not the other way around."
+        "If Time Machine to the TrueNAS or NFS target already gives a complete backup and clean restore path, skip this group.",
+        "Kopia stays optional for cases where an extra encrypted offsite copy or repository-style verification is still useful."
       ]
     },
     {
@@ -163,7 +171,6 @@
         "dev",
         "browsers-ai",
         "productivity",
-        "backup",
         "capture"
       ]
     },
@@ -176,7 +183,6 @@
         "dev",
         "browsers-ai",
         "productivity",
-        "backup",
         "capture",
         "network"
       ]

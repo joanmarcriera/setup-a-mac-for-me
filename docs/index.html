@@ -23,7 +23,7 @@
                 This repo is the public version of a personal rebuild guide. It keeps the stack honest:
                 Vivaldi, DuckDuckGo, zsh, Keyboard Maestro, VS Code, Codex, Claude, Antigravity,
                 OrbStack, BetterDisplay, Obsidian, Logseq, MailMate beta, Shottr, Kap, Rectangle Pro,
-                and the backup flow that fits NFS plus Google Drive.
+                and the backup flow that starts with Time Machine to TrueNAS.
               </p>
               <div class="hero-actions">
                 <a class="button" href="homebrew.html">Open Installer</a>
@@ -51,11 +51,11 @@
         <section class="section reveal" data-delay="1">
           <div class="section-heading">
             <h2>Future-Self Flow</h2>
-            <p>The quickest rebuild path is short on purpose. Anything not scriptable is called out explicitly.</p>
+            <p>The quickest rebuild path is short on purpose. Copy the commands you need, then finish the few settings that still require clicks.</p>
           </div>
           <ol class="timeline">
-            <li>Install Homebrew and use the interactive installer to pick <code>Minimal</code>, <code>Workstation</code>, or <code>Full</code>.</li>
-            <li>Run <code>./scripts/apply-macos-defaults.sh</code> for Dock and Launchpad defaults.</li>
+            <li>Install Homebrew and copy the <code>Minimal</code>, <code>Workstation</code>, or <code>Full</code> command from the Homebrew page.</li>
+            <li>Copy the macOS defaults commands you want from the macOS Defaults page.</li>
             <li>Restore app state for Vivaldi, Keyboard Maestro, Rectangle Pro, VS Code, Obsidian, and Karabiner.</li>
             <li>Run <code>./scripts/verify-setup.sh workstation</code> and finish the remaining manual checks.</li>
           </ol>
@@ -68,8 +68,8 @@
           </div>
           <div class="card-grid">
             <article class="card">
-              <h3>Bundle-first installs</h3>
-              <p>Presets and group slices are generated from the same data source as the repo Brewfiles.</p>
+              <h3>Copy-paste installs</h3>
+              <p>Preset and group commands are generated from the same data source as the repo Brewfiles.</p>
             </article>
             <article class="card">
               <h3>Minimal zsh</h3>
@@ -94,11 +94,11 @@
           <div class="card-grid">
             <article class="card">
               <h3><a href="homebrew.html">Homebrew</a></h3>
-              <p>Interactive installer with preset matching, group toggles, and copy-ready commands.</p>
+              <p>Preset and group command tables with raw <code>brew install</code> lines.</p>
             </article>
             <article class="card">
               <h3><a href="macos-defaults.html">macOS Defaults</a></h3>
-              <p>Trackpad, Dock, Launchpad, and the manual system settings that still need clicking.</p>
+              <p>Trackpad, Dock, Launchpad, and other preferences listed as commands or short manual paths.</p>
             </article>
             <article class="card">
               <h3><a href="browser.html">Browser</a></h3>
@@ -118,7 +118,7 @@
             </article>
             <article class="card">
               <h3><a href="backup.html">Backup</a></h3>
-              <p>Kopia-based backup guidance for Google Drive, NFS mirrors, and versioned config exports.</p>
+              <p>Time Machine first, with Kopia kept optional only if the TrueNAS path is not enough.</p>
             </article>
             <article class="card">
               <h3><a href="factory-reset.html">Factory Reset</a></h3>

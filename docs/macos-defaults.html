@@ -18,10 +18,10 @@
           <span class="eyebrow">macOS Defaults</span>
           <div class="page-grid">
             <div class="page-heading">
-              <h1>System settings with the drift removed.</h1>
+              <h1>Copy the macOS setting you want and apply it directly.</h1>
               <p>
-                Some preferences are manual because Apple still puts them behind UI panels.
-                The rest are scriptable and live in <code>scripts/apply-macos-defaults.sh</code>.
+                No wrapper script needed here. Each common preference is listed with either a direct
+                command or the exact System Settings path.
               </p>
             </div>
             <div class="callout">
@@ -35,59 +35,98 @@
 
         <section class="section reveal" data-delay="1">
           <div class="section-heading">
-            <h2>Manual Steps</h2>
-            <p>These still need actual clicks in System Settings.</p>
+            <h2>Preference List</h2>
+            <p>Use the command when one exists. Otherwise follow the short manual path.</p>
           </div>
-          <div class="content-columns">
-            <div class="panel">
-              <h2>Trackpad</h2>
-              <ul class="checklist">
-                <li>Enable Tap to Click.</li>
-                <li>Enable three-finger drag under Accessibility → Pointer Control → Trackpad Options.</li>
-                <li>Leave App Expose disabled.</li>
-              </ul>
-            </div>
-            <div class="panel">
-              <h2>Keyboard Shortcut Handoff</h2>
-              <ul class="checklist">
-                <li>Disable Spotlight if Keyboard Maestro is going to take the main launcher shortcut.</li>
-                <li>Reconnect clipboard history and launcher triggers inside Keyboard Maestro.</li>
-              </ul>
-            </div>
+          <div class="card-grid">
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Tap to Click</h2>
+                  <p class="muted">Trackpad click on touch.</p>
+                </div>
+                <button type="button" class="button button-subtle" data-copy-text="defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true&#10;defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true&#10;defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1&#10;defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1">Copy</button>
+              </div>
+              <pre>defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1</pre>
+            </section>
+
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Three-Finger Drag</h2>
+                  <p class="muted">Still easiest through the UI.</p>
+                </div>
+              </div>
+              <pre>System Settings → Accessibility → Pointer Control → Trackpad Options → enable "Use trackpad for dragging" and choose "three finger drag"</pre>
+            </section>
+
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Dock Autohide Speed</h2>
+                  <p class="muted">Remove the Dock delay and make the animation faster.</p>
+                </div>
+                <button type="button" class="button button-subtle" data-copy-text="defaults write com.apple.dock autohide-time-modifier -float 0.5&#10;defaults write com.apple.dock autohide-delay -int 0&#10;killall Dock">Copy</button>
+              </div>
+              <pre>defaults write com.apple.dock autohide-time-modifier -float 0.5
+defaults write com.apple.dock autohide-delay -int 0
+killall Dock</pre>
+            </section>
+
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Launchpad 10x8</h2>
+                  <p class="muted">Set the denser Launchpad grid.</p>
+                </div>
+                <button type="button" class="button button-subtle" data-copy-text="defaults write com.apple.dock springboard-columns -int 10&#10;defaults write com.apple.dock springboard-rows -int 8&#10;killall Dock">Copy</button>
+              </div>
+              <pre>defaults write com.apple.dock springboard-columns -int 10
+defaults write com.apple.dock springboard-rows -int 8
+killall Dock</pre>
+            </section>
+
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Restore Dock and Launchpad</h2>
+                  <p class="muted">Back out the Dock timing and Launchpad grid tweaks.</p>
+                </div>
+                <button type="button" class="button button-subtle" data-copy-text="defaults delete com.apple.dock autohide-time-modifier&#10;defaults delete com.apple.dock autohide-delay&#10;defaults write com.apple.dock springboard-rows Default&#10;defaults write com.apple.dock springboard-columns Default&#10;killall Dock">Copy</button>
+              </div>
+              <pre>defaults delete com.apple.dock autohide-time-modifier
+defaults delete com.apple.dock autohide-delay
+defaults write com.apple.dock springboard-rows Default
+defaults write com.apple.dock springboard-columns Default
+killall Dock</pre>
+            </section>
+
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>App Expose</h2>
+                  <p class="muted">Leave it off.</p>
+                </div>
+              </div>
+              <pre>System Settings → Trackpad → More Gestures → keep App Expose disabled</pre>
+            </section>
+
+            <section class="panel command-block">
+              <div class="command-meta">
+                <div>
+                  <h2>Spotlight Shortcut</h2>
+                  <p class="muted">Free the launcher shortcut for Keyboard Maestro if needed.</p>
+                </div>
+              </div>
+              <pre>System Settings → Keyboard → Keyboard Shortcuts → Spotlight → disable the Spotlight shortcut you want to reclaim</pre>
+            </section>
           </div>
         </section>
 
         <section class="section reveal" data-delay="2">
-          <div class="section-heading">
-            <h2>Scriptable Defaults</h2>
-            <p>These are already wrapped in a script for day-one setup and restore.</p>
-          </div>
-          <div class="content-columns">
-            <section class="panel command-block">
-              <div class="command-meta">
-                <div>
-                  <h2>Apply</h2>
-                  <p class="muted">Run from repo root.</p>
-                </div>
-                <button type="button" class="button button-subtle" data-copy-text="./scripts/apply-macos-defaults.sh">Copy</button>
-              </div>
-              <pre>./scripts/apply-macos-defaults.sh</pre>
-            </section>
-
-            <section class="panel command-block">
-              <div class="command-meta">
-                <div>
-                  <h2>Restore</h2>
-                  <p class="muted">Back out the Dock and Launchpad tweaks.</p>
-                </div>
-                <button type="button" class="button button-subtle" data-copy-text="./scripts/apply-macos-defaults.sh --restore">Copy</button>
-              </div>
-              <pre>./scripts/apply-macos-defaults.sh --restore</pre>
-            </section>
-          </div>
-        </section>
-
-        <section class="section reveal" data-delay="3">
           <div class="section-heading">
             <h2>Reference Screens</h2>
             <p>Keeping the images nearby makes the manual path faster when the UI changes names slightly.</p>

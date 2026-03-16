@@ -1,4 +1,5 @@
-# Encrypted backup tooling for NFS and Google Drive.
+# Optional backup extras if Time Machine to TrueNAS is not enough.
 brew "kopia"
 
 cask "kopiaui"
+cask "google-drive"
