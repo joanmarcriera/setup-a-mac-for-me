@@ -1,0 +1,4 @@
+# PDF readers and editors kept ready for paperwork, review, and annotation.
+cask "skim"
+cask "adobe-acrobat-reader"
+cask "pdf-expert"

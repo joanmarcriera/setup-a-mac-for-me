@@ -1,0 +1,7 @@
+# Microsoft apps that are common enough to keep ready on a work machine.
+cask "microsoft-edge"
+cask "microsoft-office"
+cask "microsoft-teams"
+cask "onedrive"
+cask "microsoft-outlook"
+cask "microsoft-remote-desktop"

@@ -4,7 +4,7 @@
     "title": "Apps | mac.riera.co.uk",
     "url": "apps.html",
     "summary": "Daily apps and exclusions for the mac.riera.co.uk rebuild.",
-    "body": "The app list is small enough to remember and explicit enough not to drift. Current App Groups Dev Browsers + AI Productivity Backup Capture Network Replacements And Watchlist KeeWeb \u2192 KeePassXC MailMate beta Kap Explicit Exclusions New Additions Tailscale OrbStack BetterDisplay Little Snitch Apps | mac.riera.co.uk Apps The app list is small enough to remember and explicit enough not to drift. Publishing the app roster matters because the repo doubles as documentation. The fastest way to keep it honest is to be explicit about both the tools that stay and the ones that are gone. Keyboard Maestro handles the launcher and clipboard role. Rectangle Pro handles window management. BetterDisplay, Obsidian, Logseq, MailMate beta, Shottr, Kap, and Vivaldi stay in the everyday path. Current App Groups These match the generated Homebrew groupings in the repo. Dev OrbStack sits next to Go, Pandoc, Jira CLI, and Volta because local container work belongs in the rebuild. Browsers + AI Vivaldi, DuckDuckGo, VS Code, Codex, Claude, Antigravity. Productivity Keyboard Maestro, Rectangle Pro, Karabiner-Elements, BetterDisplay, Obsidian, Logseq, MailMate beta, KeePassXC, Spotify. Backup Time Machine to TrueNAS is the default answer. Kopia stays optional if a second backup layer is still needed. Capture Shottr, Kap, and ffmpeg. Network Tailscale, Little Snitch, RustDesk, NetSpot, and the CLI diagnostics that only need to appear on heavier rebuilds. Replacements And Watchlist The public list stays useful only if stale tools are called out explicitly. KeeWeb \u2192 KeePassXC KeeWeb stayed valid in Homebrew but its desktop releases have stalled. KeePassXC is the chosen replacement. MailMate beta The repo now chooses mailmate@beta on Apple Silicon so MailMate stays native and avoids Rosetta 2. Kap Kap stays. It still has a current Homebrew cask and remains a clean lightweight recorder. Explicit Exclusions Keeping the \u201cno\u201d list visible is part of keeping the rebuild stable. App Expose is off. Edge is out. Vivaldi is the browser path. Alfred and Raycast are out. Keyboard Maestro covers that ground. pnpm is out. Volta stays in. Dropover, iBar, Whimsical, and Notion are out of the default rebuild. New Additions These tools are now part of the tracked setup instead of sitting on the sidelines. Tailscale Added in the network slice so NFS-backed machines, support boxes, and private services stay reachable without opening ports. OrbStack Added in the dev slice as the default local container and Linux path instead of Docker Desktop. BetterDisplay Added in productivity because external monitor scaling, DDC brightness control, and awkward display layouts keep coming up. Little Snitch Added in the network slice for tighter visibility into outbound traffic on a Mac that also does network and support work."
+    "body": "The app list is small enough to remember and explicit enough not to drift. Current App Groups Dev Browsers + AI Productivity Microsoft PDF Backup Capture Network Replacements And Watchlist KeeWeb \u2192 KeePassXC MailMate beta Kap Explicit Exclusions New Additions Tailscale OrbStack BetterDisplay Little Snitch Microsoft + PDF stack Apps | mac.riera.co.uk Apps The app list is small enough to remember and explicit enough not to drift. Publishing the app roster matters because the repo doubles as documentation. The fastest way to keep it honest is to be explicit about both the tools that stay and the ones that are gone. Keyboard Maestro handles the launcher and clipboard role. Rectangle Pro handles window management. BetterDisplay, Obsidian, Logseq, MailMate beta, Shottr, Kap, and Vivaldi stay in the everyday path. Current App Groups These match the generated Homebrew groupings in the repo. Dev OrbStack sits next to Go, Pandoc, Jira CLI, and Volta because local container work belongs in the rebuild. Browsers + AI Vivaldi, DuckDuckGo, VS Code, Codex, Claude, Antigravity. Productivity Keyboard Maestro, Rectangle Pro, Karabiner-Elements, BetterDisplay, Obsidian, Logseq, MailMate beta, KeePassXC, Spotify, Slack, and Discord. Microsoft Edge, Office, Teams, OneDrive, Outlook, and Remote Desktop for the usual work-machine requirements. PDF Skim, Acrobat Reader, and PDF Expert for reading, annotation, forms, and edits. Backup Time Machine to TrueNAS is the default answer. Kopia stays optional if a second backup layer is still needed. Capture Shottr, Kap, and ffmpeg. Network Tailscale, Little Snitch, RustDesk, NetSpot, and the CLI diagnostics that only need to appear on heavier rebuilds. Replacements And Watchlist The public list stays useful only if stale tools are called out explicitly. KeeWeb \u2192 KeePassXC KeeWeb stayed valid in Homebrew but its desktop releases have stalled. KeePassXC is the chosen replacement. MailMate beta The repo now chooses mailmate@beta on Apple Silicon so MailMate stays native and avoids Rosetta 2. Kap Kap stays. It still has a current Homebrew cask and remains a clean lightweight recorder. Explicit Exclusions Keeping the \u201cno\u201d list visible is part of keeping the rebuild stable. App Expose is off. Vivaldi is still the main browser path even if Edge is installed for Microsoft compatibility work. Alfred and Raycast are out. Keyboard Maestro covers that ground. pnpm is out. Volta stays in. Dropover, iBar, Whimsical, and Notion are out of the default rebuild. New Additions These tools are now part of the tracked setup instead of sitting on the sidelines. Tailscale Added in the network slice so NFS-backed machines, support boxes, and private services stay reachable without opening ports. OrbStack Added in the dev slice as the default local container and Linux path instead of Docker Desktop. BetterDisplay Added in productivity because external monitor scaling, DDC brightness control, and awkward display layouts keep coming up. Little Snitch Added in the network slice for tighter visibility into outbound traffic on a Mac that also does network and support work. Microsoft + PDF stack Added as first-class groups so the common office and document tools show up directly in the main Homebrew commands."
   },
   {
     "kind": "page",
@@ -25,7 +25,7 @@
     "title": "Browser | mac.riera.co.uk",
     "url": "browser.html",
     "summary": "Browser defaults for the mac.riera.co.uk setup.",
-    "body": "Vivaldi first, DuckDuckGo by default. What To Set Immediately Default browser Default search Profile restore Noise control Browser Checklist Browser | mac.riera.co.uk Browser Vivaldi first, DuckDuckGo by default. The browser setup is simple on purpose. No Edge, no Chrome-first posture, and no wandering search defaults. Vivaldi is the main browser and DuckDuckGo is the default search engine inside it. The browsers-ai Homebrew slice installs Vivaldi, DuckDuckGo, VS Code, Codex, Claude, and Antigravity together. What To Set Immediately These are the browser checks worth doing before other app state starts piling on. Default browser Set Vivaldi as the macOS default browser so external links stop opening in whatever macOS guessed first. Default search Set DuckDuckGo as the default search engine inside Vivaldi, not just in the companion browser app. Profile restore Sign into the main Vivaldi profile and let sync pull tabs, workspaces, bookmarks, and extensions back in. Noise control Skip the browsers and launchers that are no longer part of the daily stack. Browser Checklist A tight browser checklist is better than a long browser essay. Install Vivaldi and DuckDuckGo via Homebrew. Set Vivaldi as the default browser in macOS. Set DuckDuckGo as the default search engine in Vivaldi. Restore the Vivaldi profile and confirm workspaces, bookmarks, and extensions are back. Pin the core sites and log back into the coding and note-taking tabs that matter daily."
+    "body": "Vivaldi first, DuckDuckGo by default. What To Set Immediately Default browser Default search Profile restore Noise control Browser Checklist Browser | mac.riera.co.uk Browser Vivaldi first, DuckDuckGo by default. The browser setup is simple on purpose. Vivaldi is still the main browser and DuckDuckGo is still the default search engine inside it, even if Edge and Chrome are installed for compatibility work. The browsers-ai Homebrew slice installs the browser and AI tools, while Microsoft browsers sit in their own group. What To Set Immediately These are the browser checks worth doing before other app state starts piling on. Default browser Set Vivaldi as the macOS default browser so external links stop opening in whatever macOS guessed first. Default search Set DuckDuckGo as the default search engine inside Vivaldi, not just in the companion browser app. Profile restore Sign into the main Vivaldi profile and let sync pull tabs, workspaces, bookmarks, and extensions back in. Noise control Skip the browsers and launchers that are no longer part of the daily stack. Browser Checklist A tight browser checklist is better than a long browser essay. Install Vivaldi and DuckDuckGo via Homebrew. Set Vivaldi as the default browser in macOS. Set DuckDuckGo as the default search engine in Vivaldi. Restore the Vivaldi profile and confirm workspaces, bookmarks, and extensions are back. Pin the core sites and log back into the coding and note-taking tabs that matter daily."
   },
   {
     "kind": "page",
@@ -52,8 +52,8 @@
     "kind": "page",
     "title": "mac.riera.co.uk",
     "url": "index.html",
-    "summary": "Opinionated MacBook Pro rebuild guide for Joan Marc Riera.",
-    "body": "Mac setup, without the UI bloat. Table of Contents Quick Start What This Site Covers Copy-paste installs Minimal zsh Keyboard-first workflow Readable docs Page Map , , , , , , , Install Data Snapshot mac.riera.co.uk Overview Mac setup, without the UI bloat. This site is a plain rebuild guide for one Mac setup. Read from top to bottom, copy the commands you need, and skip anything you do not use. Table of Contents Quick Start The main rebuild path is intentionally short. Install Homebrew and copy the Minimal , Workstation , or Full command from the Homebrew page. Copy the macOS defaults commands you want from the macOS Defaults page. Restore app state for Vivaldi, Keyboard Maestro, Rectangle Pro, VS Code, Obsidian, and Karabiner. Run ./scripts/verify-setup.sh workstation and finish the remaining manual checks. What This Site Covers It is not a generic best-apps list. It is a small wiki for one repeatable rebuild. Copy-paste installs Preset and group commands are generated from the same data source as the repo Brewfiles. Minimal zsh Only the useful parts stay. Legacy plugin habits do not get carried forward. Keyboard-first workflow Keyboard Maestro takes the launcher and clipboard role. Alfred and Raycast stay out. Readable docs The main pages are designed to be read by scrolling down instead of clicking through controls. Page Map Start with the first three pages. The rest are references. All install commands in one scrollable page. Trackpad, Dock, Launchpad, and other settings as commands or short manual paths. The manual state to bring back after packages are installed. , , , Reference pages for the setup details that still need decisions. , , , , Use these when you are backing up, resetting, verifying, or searching for something specific. Install Data Snapshot A quick count from the generated install data. 0 formulae tracked 0 casks tracked 0 default bundles"
+    "summary": "Simple Mac rebuild notes for Joan Marc Riera.",
+    "body": "Mac rebuild notes, written like a readme. Table of Contents Install Homebrew Homebrew installer Install the Default Workstation Workstation formulae Workstation casks Optional Install Variants Minimal Full Apply macOS Defaults Tap to Click Three-Finger Drag Dock Autohide Speed Launchpad 10x8 Leave off Restore App State Backup Verify Verify workstation Reference Pages mac.riera.co.uk Setup Mac rebuild notes, written like a readme. This page is the main path. Scroll down, copy the commands, restore the state that matters, and only open the other pages if you need more detail. Table of Contents Install Homebrew Run this once on a fresh Mac. Homebrew installer Install the Default Workstation This is the main copy-paste path. Workstation formulae Workstation casks Optional Install Variants Only use these if you want a lighter or heavier rebuild than the default workstation. Minimal Enough to browse, code, and get back into the repo quickly. Full Workstation plus the network and support tools. Apply macOS Defaults Use the commands when they exist. Otherwise follow the short manual path. Tap to Click Three-Finger Drag Dock Autohide Speed Launchpad 10x8 Leave off Keep App Expose disabled. Free the Spotlight shortcut if Keyboard Maestro is taking it. Restore App State This is the manual part most likely to be forgotten. Sign into Vivaldi and confirm sync brings back workspaces, bookmarks, and extensions. Sign into VS Code and enable Settings Sync. Reconnect Codex, Claude, and Antigravity if they are part of the current workflow. Import or sync Keyboard Maestro macros and reconnect launcher and clipboard shortcuts. Activate Rectangle Pro and restore the expected window movement shortcuts. Reconnect Karabiner-Elements rules if the keyboard layer matters on this machine. Restore BetterDisplay presets if external monitor layouts and brightness mappings matter. Open Obsidian and reconnect vaults and plugins. Reconnect Logseq graphs and confirm any git-based backup still points at the right remote. Restore MailMate accounts, IMAP settings, and message rules. Sign into Slack, Discord, Teams, Outlook, OneDrive, and Remote Desktop if the work setup needs them. Check Shottr and Kap preferences if output folders or shortcut bindings matter. Backup Keep this simple unless there is a real gap. Default answer: Use Time Machine with the TrueNAS or NFS destination. Run tmutil latestbackup and confirm the latest snapshot exists. Run tmutil destinationinfo and confirm the destination is the one you expect. Add Kopia only if you still need an extra encrypted offsite or repository-style backup layer. Verify Finish with the generated check script and a quick manual pass. Verify workstation Tap to Click and three-finger drag are both working. Vivaldi opens as the default browser and uses DuckDuckGo by default. Keyboard Maestro shortcuts are firing correctly. VS Code, Codex, Claude, OrbStack, Slack, Discord, and Microsoft apps all launch and sign in correctly. If Time Machine is the backup path, confirm tmutil latestbackup returns the expected snapshot. Reference Pages Use these only when you want more detail than this page gives."
   },
   {
     "kind": "page",
@@ -102,14 +102,14 @@
     "title": "Workstation",
     "url": "homebrew.html",
     "summary": "The usual day-one rebuild for daily work.",
-    "body": "cli dev browsers-ai productivity capture"
+    "body": "cli dev browsers-ai productivity microsoft pdf capture"
   },
   {
     "kind": "bundle",
     "title": "Full",
     "url": "homebrew.html",
     "summary": "Daily rebuild plus network and support tools.",
-    "body": "cli dev browsers-ai productivity capture network"
+    "body": "cli dev browsers-ai productivity microsoft pdf capture network"
   },
   {
     "kind": "group",
@@ -319,70 +319,161 @@
     "title": "Productivity",
     "url": "homebrew.html",
     "summary": "Window management, keyboard automation, notes, and personal utilities.",
-    "body": "keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
   },
   {
     "kind": "cask",
     "title": "keyboard-maestro",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
   },
   {
     "kind": "cask",
     "title": "rectangle-pro",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
   },
   {
     "kind": "cask",
     "title": "karabiner-elements",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
   },
   {
     "kind": "cask",
     "title": "betterdisplay",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
   },
   {
     "kind": "cask",
     "title": "obsidian",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
   },
   {
     "kind": "cask",
     "title": "logseq",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
   },
   {
     "kind": "cask",
     "title": "mailmate@beta",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
   },
   {
     "kind": "cask",
     "title": "keepassxc",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
   },
   {
     "kind": "cask",
     "title": "spotify",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+  },
+  {
+    "kind": "cask",
+    "title": "slack",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Productivity",
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+  },
+  {
+    "kind": "cask",
+    "title": "discord",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Productivity",
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+  },
+  {
+    "kind": "group",
+    "title": "Microsoft",
+    "url": "homebrew.html",
+    "summary": "Microsoft apps that are common enough to keep ready on a work machine.",
+    "body": "microsoft-edge microsoft-office microsoft-teams onedrive microsoft-outlook microsoft-remote-desktop Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
+  },
+  {
+    "kind": "cask",
+    "title": "microsoft-edge",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Microsoft",
+    "body": "Microsoft apps that are common enough to keep ready on a work machine. Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
+  },
+  {
+    "kind": "cask",
+    "title": "microsoft-office",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Microsoft",
+    "body": "Microsoft apps that are common enough to keep ready on a work machine. Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
+  },
+  {
+    "kind": "cask",
+    "title": "microsoft-teams",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Microsoft",
+    "body": "Microsoft apps that are common enough to keep ready on a work machine. Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
+  },
+  {
+    "kind": "cask",
+    "title": "onedrive",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Microsoft",
+    "body": "Microsoft apps that are common enough to keep ready on a work machine. Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
+  },
+  {
+    "kind": "cask",
+    "title": "microsoft-outlook",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Microsoft",
+    "body": "Microsoft apps that are common enough to keep ready on a work machine. Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
+  },
+  {
+    "kind": "cask",
+    "title": "microsoft-remote-desktop",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Microsoft",
+    "body": "Microsoft apps that are common enough to keep ready on a work machine. Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
+  },
+  {
+    "kind": "group",
+    "title": "PDF",
+    "url": "homebrew.html",
+    "summary": "PDF readers and editors kept ready for paperwork, review, and annotation.",
+    "body": "skim adobe-acrobat-reader pdf-expert Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. PDF Expert covers editing and annotation."
+  },
+  {
+    "kind": "cask",
+    "title": "skim",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in PDF",
+    "body": "PDF readers and editors kept ready for paperwork, review, and annotation. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. PDF Expert covers editing and annotation."
+  },
+  {
+    "kind": "cask",
+    "title": "adobe-acrobat-reader",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in PDF",
+    "body": "PDF readers and editors kept ready for paperwork, review, and annotation. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. PDF Expert covers editing and annotation."
+  },
+  {
+    "kind": "cask",
+    "title": "pdf-expert",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in PDF",
+    "body": "PDF readers and editors kept ready for paperwork, review, and annotation. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. PDF Expert covers editing and annotation."
   },
   {
     "kind": "group",

@@ -30,8 +30,8 @@ The repo is now organized around one source of truth for install groups:
 2. Copy the workstation commands from the Homebrew page or `brew/README.md`.
 
 ```sh
-brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta kopia ffmpeg
-brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify kopiaui google-drive shottr kap
+brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta ffmpeg
+brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord microsoft-edge microsoft-office microsoft-teams onedrive microsoft-outlook microsoft-remote-desktop skim adobe-acrobat-reader pdf-expert shottr kap
 ```
 
 3. Copy the macOS defaults commands you want from `docs/macos-defaults.html`.
@@ -74,6 +74,7 @@ This repo reflects the current preferences for the next rebuild:
 - Keyboard Maestro instead of Alfred or Raycast
 - VS Code, Codex, Claude, Antigravity, OrbStack
 - Obsidian, Logseq, MailMate beta, Shottr, Kap, Rectangle Pro, BetterDisplay
+- Slack, Discord, Microsoft apps, and PDF readers/editors in the default workstation path
 - Tailscale and Little Snitch in the network slice
 - Time Machine to TrueNAS first, with Kopia only as an optional extra
 - no App Expose, `autojump`, `zsh-syntax-highlighting`, `pnpm`, Dropover, iBar, Whimsical, or Notion

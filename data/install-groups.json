@@ -84,14 +84,49 @@
         "logseq",
         "mailmate@beta",
         "keepassxc",
-        "spotify"
+        "spotify",
+        "slack",
+        "discord"
       ],
       "notes": [
         "Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers.",
         "Keyboard Maestro and Rectangle Pro still require paid licenses after install.",
         "BetterDisplay stays because external monitor scaling and brightness control keep coming up.",
         "MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2.",
-        "KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled."
+        "KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled.",
+        "Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+      ]
+    },
+    {
+      "id": "microsoft",
+      "label": "Microsoft",
+      "description": "Microsoft apps that are common enough to keep ready on a work machine.",
+      "formulae": [],
+      "casks": [
+        "microsoft-edge",
+        "microsoft-office",
+        "microsoft-teams",
+        "onedrive",
+        "microsoft-outlook",
+        "microsoft-remote-desktop"
+      ],
+      "notes": [
+        "Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows.",
+        "Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
+      ]
+    },
+    {
+      "id": "pdf",
+      "label": "PDF",
+      "description": "PDF readers and editors kept ready for paperwork, review, and annotation.",
+      "formulae": [],
+      "casks": [
+        "skim",
+        "adobe-acrobat-reader",
+        "pdf-expert"
+      ],
+      "notes": [
+        "Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. PDF Expert covers editing and annotation."
       ]
     },
     {
@@ -171,6 +206,8 @@
         "dev",
         "browsers-ai",
         "productivity",
+        "microsoft",
+        "pdf",
         "capture"
       ]
     },
@@ -183,6 +220,8 @@
         "dev",
         "browsers-ai",
         "productivity",
+        "microsoft",
+        "pdf",
         "capture",
         "network"
       ]
