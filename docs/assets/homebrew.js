@@ -32,40 +32,38 @@ function brewCommands(formulae, casks) {
     commands.push(`brew install --cask ${casks.join(" ")}`);
   }
 
-  return commands;
+  return commands.join("\n");
 }
 
-function renderRows(items) {
+function renderItems(items) {
   return items
     .map((item) => {
-      const commandText = brewCommands(item.formulae, item.casks).join("\n");
-      const included = item.includeLabels ? item.includeLabels.join(", ") : item.packageSummary;
+      const commandText = brewCommands(item.formulae, item.casks);
+      const detail = item.includeLabels ? item.includeLabels.join(", ") : item.packageSummary;
 
       return `
-        <tr>
-          <td>
-            <strong>${item.label}</strong>
-            <div class="muted">${item.description}</div>
-          </td>
-          <td>${included}</td>
-          <td>
-            <div class="command-stack">
-              <button type="button" class="button button-subtle" data-copy-value="${encodeURIComponent(commandText)}">Copy</button>
-              <pre>${commandText}</pre>
+        <article class="wiki-item">
+          <div class="command-meta">
+            <div>
+              <h3>${item.label}</h3>
+              <p class="muted">${item.description}</p>
             </div>
-          </td>
-        </tr>
+            <button type="button" class="button button-subtle" data-copy-value="${encodeURIComponent(commandText)}">Copy</button>
+          </div>
+          <p class="muted">${detail}</p>
+          <pre>${commandText}</pre>
+        </article>
       `;
     })
     .join("");
 }
 
 async function initHomebrewPage() {
-  const bundlesBody = document.querySelector("[data-homebrew='bundles']");
-  const groupsBody = document.querySelector("[data-homebrew='groups']");
+  const bundlesNode = document.querySelector("[data-homebrew='bundles']");
+  const groupsNode = document.querySelector("[data-homebrew='groups']");
   const notesNode = document.querySelector("[data-homebrew='notes']");
 
-  if (!bundlesBody || !groupsBody || !notesNode) {
+  if (!bundlesNode || !groupsNode || !notesNode) {
     return;
   }
 
@@ -79,7 +77,7 @@ async function initHomebrewPage() {
   const bundles = data.bundles || [];
   const groupsById = Object.fromEntries(groups.map((group) => [group.id, group]));
 
-  const bundleRows = bundles.map((bundle) => {
+  const bundleItems = bundles.map((bundle) => {
     const items = collectItems(bundle.include, groupsById);
     return {
       label: bundle.label,
@@ -90,7 +88,7 @@ async function initHomebrewPage() {
     };
   });
 
-  const groupRows = groups.map((group) => ({
+  const groupItems = groups.map((group) => ({
     label: group.label,
     description: group.description,
     packageSummary: `${group.formulae.length} formulae, ${group.casks.length} casks`,
@@ -98,10 +96,10 @@ async function initHomebrewPage() {
     casks: group.casks
   }));
 
-  const notes = unique(groups.flatMap((group) => group.notes || []));
+  bundlesNode.innerHTML = renderItems(bundleItems);
+  groupsNode.innerHTML = renderItems(groupItems);
 
-  bundlesBody.innerHTML = renderRows(bundleRows);
-  groupsBody.innerHTML = renderRows(groupRows);
+  const notes = unique(groups.flatMap((group) => group.notes || []));
   notesNode.innerHTML = `<ul class="stacked-list">${notes.map((note) => `<li>${note}</li>`).join("")}</ul>`;
 
   document.querySelectorAll("[data-copy-value]").forEach((button) => {

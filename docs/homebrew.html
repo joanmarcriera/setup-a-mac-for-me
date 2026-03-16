@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Homebrew Installer | mac.riera.co.uk</title>
-    <meta name="description" content="Interactive Homebrew installer for the mac.riera.co.uk setup.">
+    <title>Homebrew | mac.riera.co.uk</title>
+    <meta name="description" content="Copy-paste Homebrew commands for the mac.riera.co.uk setup.">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="assets/style.css">
     <script defer src="assets/app.js"></script>
@@ -17,68 +17,40 @@
       <main>
         <section class="hero-panel reveal">
           <span class="eyebrow">Homebrew</span>
-          <div class="page-grid">
-            <div class="page-heading">
-              <h1>Copy the brew command you want and move on.</h1>
-              <p>
-                This page stays simple on purpose. Each default setup and each smaller group gets raw
-                <code>brew install</code> commands you can copy and paste directly.
-              </p>
-            </div>
-            <div class="callout">
-              <p>
-                <strong>Workstation</strong> is still the default path. It now includes
-                iTerm2, Chrome, Chrome Canary, Google Drive, GitHub Desktop, and <code>gh</code>.
-              </p>
-              <div class="badge-row">
-                <span class="badge badge-accent">Minimal</span>
-                <span class="badge badge-accent">Workstation</span>
-                <span class="badge badge-accent">Full</span>
-              </div>
-            </div>
+          <div class="page-heading">
+            <h1>Copy the command you want, then keep scrolling.</h1>
+            <p>This page is intentionally linear. The default bundles come first, then the smaller groups, then the notes.</p>
           </div>
         </section>
 
-        <section id="homebrew-installer" class="section reveal" data-delay="1">
-          <div class="panel">
+        <section class="panel toc reveal" data-delay="1">
+          <h2>Table of Contents</h2>
+          <ul class="toc-list">
+            <li><a href="#default-bundles">Default Bundles</a></li>
+            <li><a href="#individual-groups">Individual Groups</a></li>
+            <li><a href="#install-notes">Notes</a></li>
+          </ul>
+        </section>
+
+        <section id="homebrew-installer" class="section reveal" data-delay="2">
+          <div id="default-bundles" class="panel">
             <div class="section-heading">
               <h2>Default Bundles</h2>
-              <p>Pick the preset that matches the rebuild and copy the commands as-is.</p>
+              <p>Use one of these if you want the usual setup in one go.</p>
             </div>
-            <div class="table-wrap">
-              <table class="command-table">
-                <thead>
-                  <tr>
-                    <th>Bundle</th>
-                    <th>Includes</th>
-                    <th>Commands</th>
-                  </tr>
-                </thead>
-                <tbody data-homebrew="bundles"></tbody>
-              </table>
-            </div>
+            <div class="notice"><strong>Default:</strong> start with <code>Workstation</code> unless you know you need less or more.</div>
+            <div class="wiki-list" data-homebrew="bundles"></div>
           </div>
 
-          <div class="panel">
+          <div id="individual-groups" class="panel">
             <div class="section-heading">
               <h2>Individual Groups</h2>
-              <p>Use these smaller commands when you want only part of the stack.</p>
+              <p>Use these when you want only part of the stack.</p>
             </div>
-            <div class="table-wrap">
-              <table class="command-table">
-                <thead>
-                  <tr>
-                    <th>Group</th>
-                    <th>Size</th>
-                    <th>Commands</th>
-                  </tr>
-                </thead>
-                <tbody data-homebrew="groups"></tbody>
-              </table>
-            </div>
+            <div class="wiki-list" data-homebrew="groups"></div>
           </div>
 
-          <div class="panel">
+          <div id="install-notes" class="panel">
             <div class="section-heading">
               <h2>Notes</h2>
               <p>Short reminders that still matter during install.</p>

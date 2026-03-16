@@ -15,43 +15,31 @@
 
       <main>
         <section class="hero-panel reveal">
-          <div class="hero-grid">
-            <div class="hero-copy">
-              <span class="eyebrow">Overview</span>
-              <h1>Mac setup, without the drift.</h1>
-              <p>
-                This repo is the public version of a personal rebuild guide. It keeps the stack honest:
-                Vivaldi, DuckDuckGo, zsh, Keyboard Maestro, VS Code, Codex, Claude, Antigravity,
-                OrbStack, BetterDisplay, Obsidian, Logseq, MailMate beta, Shottr, Kap, Rectangle Pro,
-                and the backup flow that starts with Time Machine to TrueNAS.
-              </p>
-              <div class="hero-actions">
-                <a class="button" href="homebrew.html">Open Installer</a>
-                <a class="button button-subtle" href="post-install.html">Run Verification</a>
-              </div>
-            </div>
-
-            <div class="panel-stack">
-              <article class="metric-card">
-                <strong data-metric="formula-total">0</strong>
-                <span>Homebrew formulae tracked in the repo</span>
-              </article>
-              <article class="metric-card">
-                <strong data-metric="cask-total">0</strong>
-                <span>apps wired into the install data</span>
-              </article>
-              <article class="metric-card">
-                <strong data-metric="bundle-total">0</strong>
-                <span>presets exposed in the installer</span>
-              </article>
+          <span class="eyebrow">Overview</span>
+          <div class="hero-copy">
+            <h1>Mac setup, without the UI bloat.</h1>
+            <p>This site is a plain rebuild guide for one Mac setup. Read from top to bottom, copy the commands you need, and skip anything you do not use.</p>
+            <div class="hero-actions">
+              <a class="button" href="homebrew.html">Homebrew Commands</a>
+              <a class="button button-subtle" href="macos-defaults.html">macOS Defaults</a>
             </div>
           </div>
         </section>
 
-        <section class="section reveal" data-delay="1">
+        <section class="panel toc reveal" data-delay="1">
+          <h2>Table of Contents</h2>
+          <ul class="toc-list">
+            <li><a href="#quick-start">Quick Start</a></li>
+            <li><a href="#site-shape">What This Site Covers</a></li>
+            <li><a href="#page-map">Page Map</a></li>
+            <li><a href="#repo-size">Install Data Snapshot</a></li>
+          </ul>
+        </section>
+
+        <section id="quick-start" class="section reveal" data-delay="2">
           <div class="section-heading">
-            <h2>Future-Self Flow</h2>
-            <p>The quickest rebuild path is short on purpose. Copy the commands you need, then finish the few settings that still require clicks.</p>
+            <h2>Quick Start</h2>
+            <p>The main rebuild path is intentionally short.</p>
           </div>
           <ol class="timeline">
             <li>Install Homebrew and copy the <code>Minimal</code>, <code>Workstation</code>, or <code>Full</code> command from the Homebrew page.</li>
@@ -61,84 +49,77 @@
           </ol>
         </section>
 
-        <section class="section reveal" data-delay="2">
+        <section id="site-shape" class="section reveal" data-delay="2">
           <div class="section-heading">
-            <h2>What This Site Optimizes For</h2>
-            <p>It is not a generic “best Mac apps” list. It is a crisp rebuild guide for one specific working setup.</p>
+            <h2>What This Site Covers</h2>
+            <p>It is not a generic best-apps list. It is a small wiki for one repeatable rebuild.</p>
           </div>
-          <div class="card-grid">
-            <article class="card">
+          <div class="wiki-list">
+            <article class="wiki-item">
               <h3>Copy-paste installs</h3>
               <p>Preset and group commands are generated from the same data source as the repo Brewfiles.</p>
             </article>
-            <article class="card">
+            <article class="wiki-item">
               <h3>Minimal zsh</h3>
               <p>Only the useful parts stay. Legacy plugin habits do not get carried forward.</p>
             </article>
-            <article class="card">
+            <article class="wiki-item">
               <h3>Keyboard-first workflow</h3>
               <p>Keyboard Maestro takes the launcher and clipboard role. Alfred and Raycast stay out.</p>
             </article>
-            <article class="card">
-              <h3>Public and maintainable</h3>
-              <p>The Pages site, scripts, and generated artifacts can be validated in CI before publishing.</p>
+            <article class="wiki-item">
+              <h3>Readable docs</h3>
+              <p>The main pages are designed to be read by scrolling down instead of clicking through controls.</p>
             </article>
           </div>
         </section>
 
-        <section class="section reveal" data-delay="3">
+        <section id="page-map" class="section reveal" data-delay="3">
           <div class="section-heading">
             <h2>Page Map</h2>
-            <p>Use the site as either a linear checklist or a reference library.</p>
+            <p>Start with the first three pages. The rest are references.</p>
           </div>
-          <div class="card-grid">
-            <article class="card">
+          <div class="wiki-list">
+            <article class="wiki-item">
               <h3><a href="homebrew.html">Homebrew</a></h3>
-              <p>Preset and group command tables with raw <code>brew install</code> lines.</p>
+              <p>All install commands in one scrollable page.</p>
             </article>
-            <article class="card">
+            <article class="wiki-item">
               <h3><a href="macos-defaults.html">macOS Defaults</a></h3>
-              <p>Trackpad, Dock, Launchpad, and other preferences listed as commands or short manual paths.</p>
+              <p>Trackpad, Dock, Launchpad, and other settings as commands or short manual paths.</p>
             </article>
-            <article class="card">
-              <h3><a href="browser.html">Browser</a></h3>
-              <p>Vivaldi as the default browser and DuckDuckGo as the default search engine.</p>
-            </article>
-            <article class="card">
-              <h3><a href="terminal.html">Terminal</a></h3>
-              <p>Dark zsh setup, minimal plugins, and no legacy shell extras.</p>
-            </article>
-            <article class="card">
-              <h3><a href="coding.html">Coding</a></h3>
-              <p>VS Code, Codex, Claude, Antigravity, OrbStack, Volta, and the core development restore checklist.</p>
-            </article>
-            <article class="card">
-              <h3><a href="apps.html">Apps</a></h3>
-              <p>The current app roster plus the exclusions that keep the stack from drifting again.</p>
-            </article>
-            <article class="card">
-              <h3><a href="backup.html">Backup</a></h3>
-              <p>Time Machine first, with Kopia kept optional only if the TrueNAS path is not enough.</p>
-            </article>
-            <article class="card">
-              <h3><a href="factory-reset.html">Factory Reset</a></h3>
-              <p>Full-machine backup plus Apple-silicon reset steps before a clean rebuild, resale, or handoff.</p>
-            </article>
-            <article class="card">
-              <h3><a href="audit.html">Audit</a></h3>
-              <p>Validation notes for the current package list, including replacements for stale projects.</p>
-            </article>
-            <article class="card">
+            <article class="wiki-item">
               <h3><a href="restore-state.html">Restore State</a></h3>
-              <p>The manual bits that matter after installation: sync, licenses, shortcuts, and profile imports.</p>
+              <p>The manual state to bring back after packages are installed.</p>
             </article>
-            <article class="card">
-              <h3><a href="post-install.html">Post-Install</a></h3>
-              <p>Scripts and checks to confirm the machine actually matches the documented setup.</p>
+            <article class="wiki-item">
+              <h3><a href="browser.html">Browser</a>, <a href="terminal.html">Terminal</a>, <a href="coding.html">Coding</a>, <a href="apps.html">Apps</a></h3>
+              <p>Reference pages for the setup details that still need decisions.</p>
             </article>
-            <article class="card">
-              <h3><a href="search.html">Search</a></h3>
-              <p>Site-wide search for pages, groups, bundles, and individual Homebrew package names.</p>
+            <article class="wiki-item">
+              <h3><a href="backup.html">Backup</a>, <a href="factory-reset.html">Factory Reset</a>, <a href="post-install.html">Post-Install</a>, <a href="audit.html">Audit</a>, <a href="search.html">Search</a></h3>
+              <p>Use these when you are backing up, resetting, verifying, or searching for something specific.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="repo-size" class="section reveal" data-delay="3">
+          <div class="section-heading">
+            <h2>Install Data Snapshot</h2>
+            <p>A quick count from the generated install data.</p>
+          </div>
+          <div class="metric-grid">
+            <article class="metric-card">
+              <strong data-metric="formula-total">0</strong>
+              <span>formulae tracked</span>
+            </article>
+            <article class="metric-card">
+              <strong data-metric="cask-total">0</strong>
+              <span>casks tracked</span>
+            </article>
+            <article class="metric-card">
+              <strong data-metric="bundle-total">0</strong>
+              <span>default bundles</span>
             </article>
           </div>
         </section>
