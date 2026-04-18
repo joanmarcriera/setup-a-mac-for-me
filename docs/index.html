@@ -1,221 +1,267 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>mac.riera.co.uk</title>
-    <meta name="description" content="Simple Mac rebuild notes for Joan Marc Riera.">
+<!DOCTYPE html>
+<html lang="en-GB" data-site="mac">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Opinionated MacBook Pro rebuild notes. Homebrew presets, macOS defaults, and a verify script. The main path, written like a readme.">
+    <meta name="theme-color" content="#1f2436">
+    <link rel="canonical" href="https://mac.riera.co.uk/">
+    <meta property="og:title" content="Mac rebuild — The main path">
+    <meta property="og:description" content="Homebrew presets, macOS defaults, restore checklist, verify.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mac.riera.co.uk/">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="assets/style.css">
-    <script defer src="assets/app.js"></script>
-  </head>
-  <body data-page="index">
-    <div class="site-frame">
-      <div data-site-shell="header"></div>
+    <title>Mac Rebuild — Notes That Run</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
-      <main>
-        <section class="hero-panel reveal">
-          <span class="eyebrow">Setup</span>
-          <div class="hero-copy">
-            <h1>Mac rebuild notes, written like a readme.</h1>
-            <p>This page is the main path. Scroll down, copy the commands, restore the state that matters, and only open the other pages if you need more detail.</p>
-          </div>
-        </section>
+<header class="chrome-top">
+    <div class="inner">
+        <a class="brand" href="https://riera.co.uk/">
+            <span class="mark">JR</span>
+            <span>mac.riera.co.uk</span>
+            <span class="sub">/ notes</span>
+        </a>
+        <nav class="chrome-nav">
+            <a href="#install">Install</a>
+            <a href="#defaults">Defaults</a>
+            <a href="#restore">Restore</a>
+            <a href="#references">Reference</a>
+        </nav>
+        <button class="switch-btn" id="switcher-open" aria-label="Open site index">
+            <span>Index</span>
+            <span class="kbd">⌘K</span>
+        </button>
+    </div>
+</header>
 
-        <section class="panel toc reveal" data-delay="1">
-          <h2>Table of Contents</h2>
-          <ul class="toc-list">
-            <li><a href="#install-homebrew">Install Homebrew</a></li>
-            <li><a href="#install-workstation">Install the Default Workstation</a></li>
-            <li><a href="#install-options">Optional Install Variants</a></li>
-            <li><a href="#macos-defaults">Apply macOS Defaults</a></li>
-            <li><a href="#restore-state">Restore App State</a></li>
-            <li><a href="#backup">Backup</a></li>
-            <li><a href="#verify">Verify</a></li>
-            <li><a href="#references">Reference Pages</a></li>
-          </ul>
-        </section>
+<div class="switcher" id="switcher" role="dialog" aria-modal="true" aria-label="Portfolio site index">
+    <div class="switcher-card">
+        <div class="switcher-head">
+            <span class="title">Portfolio index — jump to site</span>
+            <button class="close" id="switcher-close" aria-label="Close">Esc</button>
+        </div>
+        <div class="switcher-list" id="switcher-list"></div>
+    </div>
+</div>
 
-        <section id="install-homebrew" class="section reveal" data-delay="2">
-          <div class="section-heading">
-            <h2>Install Homebrew</h2>
-            <p>Run this once on a fresh Mac.</p>
-          </div>
-          <section class="panel command-block">
-            <div class="command-meta">
-              <div>
-                <h2>Homebrew installer</h2>
-              </div>
-              <button type="button" class="button button-subtle" data-copy-text="/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;">Copy</button>
+<main>
+
+    <section class="sub-hero">
+        <div class="container">
+            <div class="sub-head-grid">
+                <span class="label">mac.riera.co.uk</span>
+                <h1>Mac rebuild notes, written like a readme.</h1>
             </div>
-            <pre>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</pre>
-          </section>
-        </section>
-
-        <section id="install-workstation" class="section reveal" data-delay="2">
-          <div class="section-heading">
-            <h2>Install the Default Workstation</h2>
-            <p>This is the main copy-paste path.</p>
-          </div>
-          <section class="panel command-block">
-            <div class="command-meta">
-              <div>
-                <h2>Workstation formulae</h2>
-              </div>
-              <button type="button" class="button button-subtle" data-copy-text="brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta ffmpeg">Copy</button>
+            <div class="meta-grid">
+                <span class="label">Notes</span>
+                <p class="deck">One opinionated path for a clean MacBook rebuild. Install Homebrew, run one workstation command, apply the macOS defaults that matter, restore app state, verify. Detail pages exist only when this page is not enough.</p>
+                <div class="signal-list">
+                    <div class="signal-row"><span class="k">Generated</span><span>Brewfiles · preset data</span></div>
+                    <div class="signal-row"><span class="k">Verified</span><span>./scripts/verify-setup.sh</span></div>
+                    <div class="signal-row"><span class="k">Source</span><span><a href="https://github.com/joanmarcriera/setup-a-mac-for-me" target="_blank" rel="noreferrer" style="border-bottom: 1px solid var(--line-2); color: var(--ink);">github.com/joanmarcriera/setup-a-mac-for-me →</a></span></div>
+                </div>
             </div>
-            <pre>brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta ffmpeg</pre>
-          </section>
+        </div>
+    </section>
 
-          <section class="panel command-block">
-            <div class="command-meta">
-              <div>
-                <h2>Workstation casks</h2>
-              </div>
-              <button type="button" class="button button-subtle" data-copy-text="brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord microsoft-edge microsoft-office microsoft-teams onedrive microsoft-outlook microsoft-remote-desktop skim adobe-acrobat-reader pdf-expert shottr kap">Copy</button>
+    <section class="section" id="install">
+        <div class="container">
+            <div class="sec-head">
+                <span class="label">§ 01 · Install</span>
+                <h2 class="sec-title">Homebrew first, then one workstation command.</h2>
             </div>
-            <pre>brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord microsoft-edge microsoft-office microsoft-teams onedrive microsoft-outlook microsoft-remote-desktop skim adobe-acrobat-reader pdf-expert shottr kap</pre>
-          </section>
-        </section>
 
-        <section id="install-options" class="section reveal" data-delay="2">
-          <div class="section-heading">
-            <h2>Optional Install Variants</h2>
-            <p>Only use these if you want a lighter or heavier rebuild than the default workstation.</p>
-          </div>
-          <div class="wiki-list">
-            <article class="wiki-item">
-              <h3>Minimal</h3>
-              <p>Enough to browse, code, and get back into the repo quickly.</p>
-              <pre>brew install bash wget vim uv tig htop tree tmux jq ncurses gh
-brew install --cask iterm2 google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord</pre>
-            </article>
-            <article class="wiki-item">
-              <h3>Full</h3>
-              <p>Workstation plus the network and support tools.</p>
-              <pre>brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta ffmpeg telnet rclone ipmitool openssl lftp mtr nmap net-snmp
-brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord microsoft-edge microsoft-office microsoft-teams onedrive microsoft-outlook microsoft-remote-desktop skim adobe-acrobat-reader pdf-expert shottr kap tailscale-app little-snitch rustdesk netspot</pre>
-            </article>
-          </div>
-        </section>
+            <div class="cmd-block">
+                <div class="cmd-head">
+                    <span class="label">Install Homebrew</span>
+                    <button type="button" class="cmd-copy" data-copy-text='/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'>Copy</button>
+                </div>
+                <pre class="cmd-body">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</pre>
+            </div>
 
-        <section id="macos-defaults" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Apply macOS Defaults</h2>
-            <p>Use the commands when they exist. Otherwise follow the short manual path.</p>
-          </div>
-          <div class="wiki-list">
-            <article class="wiki-item">
-              <h3>Tap to Click</h3>
-              <pre>defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+            <div class="cmd-block">
+                <div class="cmd-head">
+                    <span class="label">Workstation formulae</span>
+                    <button type="button" class="cmd-copy" data-copy-text="brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta ffmpeg">Copy</button>
+                </div>
+                <pre class="cmd-body">brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta ffmpeg</pre>
+            </div>
+
+            <div class="cmd-block">
+                <div class="cmd-head">
+                    <span class="label">Workstation casks</span>
+                    <button type="button" class="cmd-copy" data-copy-text="brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord microsoft-edge microsoft-office microsoft-teams onedrive microsoft-outlook microsoft-remote-desktop skim adobe-acrobat-reader pdf-expert shottr kap">Copy</button>
+                </div>
+                <pre class="cmd-body">brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord microsoft-edge microsoft-office microsoft-teams onedrive microsoft-outlook microsoft-remote-desktop skim adobe-acrobat-reader pdf-expert shottr kap</pre>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="defaults">
+        <div class="container">
+            <div class="sec-head">
+                <span class="label">§ 02 · macOS defaults</span>
+                <h2 class="sec-title">Four small tweaks that earn their keep.</h2>
+            </div>
+            <div class="kbd-grid">
+                <div class="kbd-card"><code>tap to click</code><pre class="kbd-card-pre">defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1</pre>
-            </article>
-            <article class="wiki-item">
-              <h3>Three-Finger Drag</h3>
-              <pre>System Settings -> Accessibility -> Pointer Control -> Trackpad Options -> enable "Use trackpad for dragging" and choose "three finger drag"</pre>
-            </article>
-            <article class="wiki-item">
-              <h3>Dock Autohide Speed</h3>
-              <pre>defaults write com.apple.dock autohide-time-modifier -float 0.5
+defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1</pre></div>
+                <div class="kbd-card"><code>dock autohide</code><pre class="kbd-card-pre">defaults write com.apple.dock autohide-time-modifier -float 0.5
 defaults write com.apple.dock autohide-delay -int 0
-killall Dock</pre>
-            </article>
-            <article class="wiki-item">
-              <h3>Launchpad 10x8</h3>
-              <pre>defaults write com.apple.dock springboard-columns -int 10
+killall Dock</pre></div>
+                <div class="kbd-card"><code>launchpad 10×8</code><pre class="kbd-card-pre">defaults write com.apple.dock springboard-columns -int 10
 defaults write com.apple.dock springboard-rows -int 8
-killall Dock</pre>
-            </article>
-            <article class="wiki-item">
-              <h3>Leave off</h3>
-              <p>Keep App Expose disabled. Free the Spotlight shortcut if Keyboard Maestro is taking it.</p>
-            </article>
-          </div>
-        </section>
-
-        <section id="restore-state" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Restore App State</h2>
-            <p>This is the manual part most likely to be forgotten.</p>
-          </div>
-          <ul class="timeline">
-            <li>Sign into Vivaldi and confirm sync brings back workspaces, bookmarks, and extensions.</li>
-            <li>Sign into VS Code and enable Settings Sync.</li>
-            <li>Reconnect Codex, Claude, and Antigravity if they are part of the current workflow.</li>
-            <li>Import or sync Keyboard Maestro macros and reconnect launcher and clipboard shortcuts.</li>
-            <li>Activate Rectangle Pro and restore the expected window movement shortcuts.</li>
-            <li>Reconnect Karabiner-Elements rules if the keyboard layer matters on this machine.</li>
-            <li>Restore BetterDisplay presets if external monitor layouts and brightness mappings matter.</li>
-            <li>Open Obsidian and reconnect vaults and plugins.</li>
-            <li>Reconnect Logseq graphs and confirm any git-based backup still points at the right remote.</li>
-            <li>Restore MailMate accounts, IMAP settings, and message rules.</li>
-            <li>Sign into Slack, Discord, Teams, Outlook, OneDrive, and Remote Desktop if the work setup needs them.</li>
-            <li>Check Shottr and Kap preferences if output folders or shortcut bindings matter.</li>
-          </ul>
-        </section>
-
-        <section id="backup" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Backup</h2>
-            <p>Keep this simple unless there is a real gap.</p>
-          </div>
-          <div class="notice"><strong>Default answer:</strong> if Time Machine to TrueNAS or NFS already gives a full backup and a restore path you trust, there is no need to add Kopia.</div>
-          <ul class="checklist">
-            <li>Use Time Machine with the TrueNAS or NFS destination.</li>
-            <li>Run <code>tmutil latestbackup</code> and confirm the latest snapshot exists.</li>
-            <li>Run <code>tmutil destinationinfo</code> and confirm the destination is the one you expect.</li>
-            <li>Add Kopia only if you still need an extra encrypted offsite or repository-style backup layer.</li>
-          </ul>
-        </section>
-
-        <section id="verify" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Verify</h2>
-            <p>Finish with the generated check script and a quick manual pass.</p>
-          </div>
-          <section class="panel command-block">
-            <div class="command-meta">
-              <div>
-                <h2>Verify workstation</h2>
-              </div>
-              <button type="button" class="button button-subtle" data-copy-text="./scripts/verify-setup.sh workstation">Copy</button>
+killall Dock</pre></div>
+                <div class="kbd-card"><code>three-finger drag</code><p>System Settings → Accessibility → Pointer Control → Trackpad Options → enable "Use trackpad for dragging" → choose "three finger drag".</p></div>
             </div>
-            <pre>./scripts/verify-setup.sh workstation</pre>
-          </section>
-          <ul class="checklist">
-            <li>Tap to Click and three-finger drag are both working.</li>
-            <li>Vivaldi opens as the default browser and uses DuckDuckGo by default.</li>
-            <li>Keyboard Maestro shortcuts are firing correctly.</li>
-            <li>VS Code, Codex, Claude, OrbStack, Slack, Discord, and Microsoft apps all launch and sign in correctly.</li>
-            <li>If Time Machine is the backup path, confirm <code>tmutil latestbackup</code> returns the expected snapshot.</li>
-          </ul>
-        </section>
+        </div>
+    </section>
 
-        <section id="references" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Reference Pages</h2>
-            <p>Use these only when you want more detail than this page gives.</p>
-          </div>
-          <div class="inline-links">
-            <a href="homebrew.html">Homebrew</a>
-            <a href="macos-defaults.html">macOS Defaults</a>
-            <a href="browser.html">Browser</a>
-            <a href="terminal.html">Terminal</a>
-            <a href="coding.html">Coding</a>
-            <a href="apps.html">Apps</a>
-            <a href="backup.html">Backup</a>
-            <a href="factory-reset.html">Factory Reset</a>
-            <a href="restore-state.html">Restore State</a>
-            <a href="post-install.html">Post-Install</a>
-            <a href="audit.html">Audit</a>
-            <a href="search.html">Search</a>
-          </div>
-        </section>
-      </main>
+    <section class="section" id="restore">
+        <div class="container">
+            <div class="sec-head">
+                <span class="label">§ 03 · Restore state</span>
+                <h2 class="sec-title">The manual part, the one most likely to be forgotten.</h2>
+            </div>
+            <div class="prose">
+                <span class="label">Checklist</span>
+                <div class="prose-col">
+                    <p><strong>Browsers.</strong> Sign into Vivaldi and confirm sync brings back workspaces, bookmarks, and extensions. Set DuckDuckGo as default.</p>
+                    <p><strong>Editors.</strong> Sign into VS Code and enable Settings Sync. Reconnect Codex, Claude, and Antigravity if they are part of the current workflow.</p>
+                    <p><strong>Automation.</strong> Import or sync Keyboard Maestro macros and reconnect the launcher and clipboard shortcuts. Activate Rectangle Pro and restore window shortcuts.</p>
+                </div>
+                <div class="prose-col">
+                    <p><strong>Knowledge.</strong> Reconnect Obsidian vaults and plugins. Reconnect Logseq graphs and confirm any git-based backup still points at the right remote.</p>
+                    <p><strong>Mail.</strong> Restore MailMate accounts, IMAP settings, and message rules. Sign into Slack, Discord, Teams, Outlook, OneDrive.</p>
+                    <p><strong>Capture.</strong> Check Shottr and Kap preferences if output folders or shortcut bindings matter. Restore BetterDisplay presets for external monitors.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      <div data-site-shell="footer"></div>
+    <section class="section" id="verify">
+        <div class="container">
+            <div class="sec-head">
+                <span class="label">§ 04 · Verify</span>
+                <h2 class="sec-title">Finish with the generated check script.</h2>
+            </div>
+            <div class="cmd-block">
+                <div class="cmd-head">
+                    <span class="label">Verify workstation</span>
+                    <button type="button" class="cmd-copy" data-copy-text="./scripts/verify-setup.sh workstation">Copy</button>
+                </div>
+                <pre class="cmd-body">./scripts/verify-setup.sh workstation</pre>
+            </div>
+            <div class="panel-row" style="margin-top: 32px;">
+                <div class="panel">
+                    <span class="tag">Backup</span>
+                    <h3>Default answer</h3>
+                    <p>If Time Machine to TrueNAS or NFS already gives a full backup and a restore path you trust, there is no need to add Kopia. Run <code>tmutil latestbackup</code> to confirm the latest snapshot, and <code>tmutil destinationinfo</code> to confirm the destination.</p>
+                </div>
+                <div class="panel">
+                    <span class="tag">Manual pass</span>
+                    <h3>Quick checks</h3>
+                    <p>Tap to Click and three-finger drag both work. Vivaldi opens as default with DuckDuckGo. Keyboard Maestro shortcuts fire. VS Code, Codex, Claude, OrbStack, Slack, Teams all launch and sign in.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="references">
+        <div class="container">
+            <div class="sec-head">
+                <span class="label">§ 05 · Reference pages</span>
+                <h2 class="sec-title">Detail pages, only when the main path is not enough.</h2>
+            </div>
+            <div class="kbd-grid">
+                <div class="kbd-card"><code><a href="homebrew.html">homebrew</a></code><p>Every Brewfile preset with copy commands — minimal, workstation, full.</p></div>
+                <div class="kbd-card"><code><a href="macos-defaults.html">defaults</a></code><p>The full menu of <code>defaults write</code> commands, grouped by domain.</p></div>
+                <div class="kbd-card"><code><a href="browser.html">browser</a></code><p>Vivaldi profile notes, DuckDuckGo defaults, extension expectations.</p></div>
+                <div class="kbd-card"><code><a href="terminal.html">terminal</a></code><p>iTerm2 profile, zsh plugins, dark transparent terminal preset.</p></div>
+                <div class="kbd-card"><code><a href="coding.html">coding</a></code><p>VS Code, Codex, Claude, Antigravity, OrbStack — editor-side restore.</p></div>
+                <div class="kbd-card"><code><a href="apps.html">apps</a></code><p>The daily app stack: Keyboard Maestro, Rectangle Pro, Shottr, Kap.</p></div>
+                <div class="kbd-card"><code><a href="backup.html">backup</a></code><p>Time Machine destination selection; optional Kopia layer.</p></div>
+                <div class="kbd-card"><code><a href="factory-reset.html">factory reset</a></code><p>What to save, what to walk away from, how to erase this machine.</p></div>
+                <div class="kbd-card"><code><a href="post-install.html">post-install</a></code><p>First login passes, the things you always forget until day two.</p></div>
+                <div class="kbd-card"><code><a href="audit.html">audit</a></code><p>The quarterly pass — what is installed, what is still earning its keep.</p></div>
+                <div class="kbd-card"><code><a href="search.html">search</a></code><p>Find a preset, a formula, or a defaults command by name.</p></div>
+                <div class="kbd-card"><code><a href="restore-state.html">restore state</a></code><p>Expanded manual restore — app licenses, sync triggers, edge cases.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container inner">
+            <span class="label">§ 06 · Contact</span>
+            <h2>Notes, corrections, or a preset you think should be added.</h2>
+            <div class="contact-links">
+                <a class="contact-link" href="https://github.com/joanmarcriera/setup-a-mac-for-me" target="_blank" rel="noreferrer">
+                    <span class="k">GitHub</span>
+                    <span class="v">joanmarcriera/setup-a-mac-for-me</span>
+                    <span class="a">→</span>
+                </a>
+                <a class="contact-link" href="mailto:joanmarcriera@gmail.com?subject=Mac%20rebuild">
+                    <span class="k">Email</span>
+                    <span class="v">joanmarcriera@gmail.com</span>
+                    <span class="a">→</span>
+                </a>
+                <a class="contact-link" href="https://riera.co.uk/">
+                    <span class="k">Portfolio</span>
+                    <span class="v">riera.co.uk</span>
+                    <span class="a">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="chrome-footer">
+    <div class="inner">
+        <div class="foot-brand">
+            <span class="label">Colophon</span>
+            <span class="line">Joan Marc Riera Duocastella</span>
+            <span>Cambridgeshire, United Kingdom</span>
+            <span>BCS, the Chartered Institute for IT</span>
+            <span class="stamp">© 2026 · All rights reserved</span>
+        </div>
+        <div>
+            <div class="foot-family-label">Family of sites — jump anywhere</div>
+            <div class="foot-grid" id="foot-grid"></div>
+            <div class="foot-bottom">
+                <span>mac.riera.co.uk / notes</span>
+                <span class="mono">Press <strong>⌘K</strong> to open the index from any page</span>
+            </div>
+        </div>
     </div>
-  </body>
+</footer>
+
+<script src="chrome.js"></script>
+<script>
+  document.querySelectorAll("[data-copy-text]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const value = button.getAttribute("data-copy-text") || "";
+      try {
+        await navigator.clipboard.writeText(value);
+        const original = button.textContent;
+        button.textContent = "Copied";
+        button.classList.add("is-copied");
+        setTimeout(() => {
+          button.textContent = original;
+          button.classList.remove("is-copied");
+        }, 1400);
+      } catch (_err) {
+        button.textContent = "Copy failed";
+      }
+    });
+  });
+</script>
+</body>
 </html>
