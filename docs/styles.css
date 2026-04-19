@@ -610,6 +610,7 @@ button { font: inherit; }
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   padding: 22px;
+  min-width: 0;
 }
 .kbd-card:nth-child(3n) { border-right: none; }
 .kbd-card:nth-last-child(-n+3) { border-bottom: none; }
@@ -618,6 +619,7 @@ button { font: inherit; }
   color: var(--ink);
   display: block; margin-bottom: 10px;
   font-weight: 500;
+  overflow-wrap: anywhere;
 }
 .kbd-card p { font-size: 0.88rem; color: var(--ink-2); line-height: 1.55; }
 
@@ -919,6 +921,7 @@ button { font: inherit; }
   background: var(--paper-2);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+  max-width: 100%;
   overflow-x: auto;
   white-space: pre;
 }
