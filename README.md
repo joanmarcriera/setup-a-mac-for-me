@@ -44,6 +44,42 @@ brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi d
 ./scripts/verify-setup.sh workstation
 ```
 
+## Keep The Mac Updated
+
+If you want a small `~/bin` helper, copy the updater script from this repo:
+
+```sh
+cp scripts/update-mac.sh ~/bin/update-mac
+chmod +x ~/bin/update-mac
+```
+
+It updates:
+
+- Homebrew formulae and casks
+- npm global packages
+- uv, pipx, Volta, rustup, asdf, and mise if they are installed
+- macOS software updates
+- Mac App Store apps if `mas` is installed
+
+It refuses to run upgrades unless Time Machine reports both a latest backup and a visible destination, so it only upgrades when the backup path is available.
+
+By default it runs step by step:
+
+- it previews what it can with non-mutating checks
+- it asks before each mutating step with `Yes`, `No`, `Skip`, or `Quit`
+
+By default it does **not** force auto-updating casks. If you want that behavior anyway, run:
+
+```sh
+update-mac --greedy-casks
+```
+
+If you want it to run straight through without prompts, use:
+
+```sh
+update-mac --yes
+```
+
 ## Local Site Preview
 
 ```sh
