@@ -327,3 +327,9 @@ if [[ "$failures" -gt 0 ]]; then
 fi
 
 printf '\nAll update steps finished successfully.\n'
+
+printf '\n TODO
+
+gcloud components update
+
+\n'
