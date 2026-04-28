@@ -6,10 +6,11 @@ set -o pipefail
 failures=0
 use_greedy_casks=false
 assume_yes=false
+skip_backup_check=false
 
 usage() {
   cat <<'EOF'
-Usage: update-mac [--greedy-casks] [--yes]
+Usage: update-mac [--greedy-casks] [--yes] [--skip-backup-check]
 
 Default behavior:
 - Refuses to upgrade anything unless Time Machine has a latest backup and a visible destination.
@@ -18,9 +19,11 @@ Default behavior:
 - Updates Homebrew without forcing auto-updating casks.
 
 Options:
-  --greedy-casks  Force Homebrew to upgrade auto-updating casks too.
-  -y, --yes       Run mutating steps without interactive approval.
-  -h, --help      Show this help.
+  --greedy-casks       Force Homebrew to upgrade auto-updating casks too.
+  -y, --yes            Run mutating steps without interactive approval.
+  --skip-backup-check  Skip the Time Machine safety gate. Use when Terminal lacks
+                       Full Disk Access and tmutil latestbackup cannot run.
+  -h, --help           Show this help.
 EOF
 }
 
@@ -84,14 +87,14 @@ prompt_for_step() {
   fi
 
   while true; do
-    printf 'Run "%s"? [y]es/[n]o/[s]kip/[q]uit: ' "$label" >/dev/tty
+    printf 'Run "%s"? [Y]es/[n]o/[s]kip/[q]uit (default yes): ' "$label" >/dev/tty
     if ! IFS= read -r reply </dev/tty; then
       return 4
     fi
 
     normalized=$(printf '%s' "$reply" | tr '[:upper:]' '[:lower:]')
     case "$normalized" in
-      y|yes)
+      y|yes|"")
         return 0
         ;;
       n|no)
@@ -161,6 +164,8 @@ require_time_machine_backup() {
   if ! latest_backup=$(tmutil latestbackup 2>&1); then
     printf 'Failed: tmutil latestbackup did not return a usable backup.\n' >&2
     printf '%s\n' "$latest_backup" >&2
+    printf 'If Terminal lacks Full Disk Access, grant it in System Settings → Privacy & Security → Full Disk Access,\n' >&2
+    printf 'or re-run with --skip-backup-check to bypass this gate.\n' >&2
     printf 'Aborting before any upgrades.\n' >&2
     return 1
   fi
@@ -214,6 +219,9 @@ while [[ "$#" -gt 0 ]]; do
     -y|--yes)
       assume_yes=true
       ;;
+    --skip-backup-check)
+      skip_backup_check=true
+      ;;
     -h|--help)
       usage
       exit 0
@@ -229,7 +237,10 @@ done
 
 ensure_prompt_available
 
-if ! require_time_machine_backup; then
+if [[ "$skip_backup_check" == true ]]; then
+  log "Time Machine safety gate"
+  printf 'Skipped: --skip-backup-check was passed.\n'
+elif ! require_time_machine_backup; then
   exit 1
 fi
 
@@ -268,6 +279,7 @@ fi
 if command -v uv >/dev/null 2>&1; then
   preview_step "uv outdated tools" uv tool list --outdated
   run_mutating_step "uv tool upgrades" uv tool upgrade --all
+  preview_step "uv processes currently running (cache may be locked by these)" bash -c 'pgrep -fl uv || true'
   run_mutating_step "uv cache prune" uv cache prune
 else
   missing_tool "uv" "brew install uv" "https://docs.astral.sh/uv/"
@@ -296,13 +308,6 @@ else
   missing_tool "rustup" "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh" "https://www.rust-lang.org/tools/install"
 fi
 
-if command -v asdf >/dev/null 2>&1; then
-  preview_step "asdf installed plugins" asdf plugin list
-  note "asdf plugin updates refresh the plugin definitions. Actual tool versions still follow your .tool-versions files."
-  run_mutating_step "asdf plugin updates" asdf plugin update --all
-else
-  missing_tool "asdf" "brew install asdf" "https://asdf-vm.com/guide/introduction.html"
-fi
 
 if command -v mise >/dev/null 2>&1; then
   preview_step "mise current tools" bash -lc 'cd "$HOME" && mise list'
@@ -327,9 +332,3 @@ if [[ "$failures" -gt 0 ]]; then
 fi
 
 printf '\nAll update steps finished successfully.\n'
-
-printf '\n TODO
-
-gcloud components update
-
-\n'

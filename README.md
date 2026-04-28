@@ -57,7 +57,7 @@ It updates:
 
 - Homebrew formulae and casks
 - npm global packages
-- uv, pipx, Volta, rustup, asdf, and mise if they are installed
+- uv, pipx, Volta, rustup, and mise if they are installed
 - macOS software updates
 - Mac App Store apps if `mas` is installed
 

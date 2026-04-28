@@ -165,6 +165,21 @@ killall Dock</pre>
               <h3>Look</h3>
               <p>Use a dark terminal profile with about 20% transparency and keep familiar word-wise editing bindings.</p>
             </article>
+            <article class="wiki-item">
+              <h3>.zshrc — tool environment lines</h3>
+              <p>Add these after the Homebrew PATH block. Order matters: PATH first, then mise activate.</p>
+              <pre># Volta (Node version manager) — added by Volta installer
+export PATH="$HOME/.volta/bin:$PATH"
+
+# Rust
+. "$HOME/.cargo/env"
+
+# mise — activate after PATH, before any mise-managed tool
+eval "$(mise activate zsh)"
+
+# ~/bin — personal scripts including update-mac
+export PATH="$HOME/bin:$PATH"</pre>
+            </article>
           </div>
         </section>
 
@@ -269,7 +284,7 @@ chmod +x ~/bin/update-mac</pre>
           <div class="wiki-list">
             <article class="wiki-item">
               <h3>What it does</h3>
-              <p>Checks Time Machine first with <code>tmutil latestbackup</code> and <code>tmutil destinationinfo</code>. If backup is not available, it stops before any upgrades. If backup is available, it previews what it can, then asks before each mutating step with <code>Yes</code>, <code>No</code>, <code>Skip</code>, or <code>Quit</code>. It covers Homebrew, npm globals, App Store apps through <code>mas</code>, <code>uv</code>, <code>pipx</code>, Volta, <code>rustup</code>, <code>asdf</code>, <code>mise</code>, and macOS software updates when those tools exist.</p>
+              <p>Checks Time Machine first with <code>tmutil latestbackup</code> and <code>tmutil destinationinfo</code>. If backup is not available, it stops before any upgrades. If backup is available, it previews what it can, then asks before each mutating step with <code>Yes</code>, <code>No</code>, <code>Skip</code>, or <code>Quit</code>. It covers Homebrew, npm globals, App Store apps through <code>mas</code>, <code>uv</code>, <code>pipx</code>, Volta, <code>rustup</code>, <code>mise</code>, and macOS software updates when those tools exist.</p>
             </article>
             <article class="wiki-item">
               <h3>Missing tools</h3>
