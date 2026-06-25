@@ -63,7 +63,14 @@ It updates:
 
 It refuses to run upgrades unless Time Machine reports both a latest backup and a visible destination, so it only upgrades when the backup path is available.
 
-It starts with a **pre-flight summary**: macOS version, free disk, the last Time Machine backup and its age, and a count of pending updates per tool (`brew`, `npm`, `mas`, `uv`, `macOS`).
+It starts with a **pre-flight summary**: macOS version, free disk, the last Time Machine backup and its age, followed by a grouped, risk-annotated **upgrade plan** of what would change. The plan flags, using local checks only (no network, no CVE lookups):
+
+- `!!` **major version jumps** (leading version number changed, or a `0.x` minor bump) — the ones most likely to break something, so review release notes first
+- `!!` a **macOS update that requires a restart**
+- `~` **pre-release channels** (auto-updating `@beta` / `@canary` / nightly software)
+- **pinned** formulae that will not upgrade
+
+Everything else is summarized as routine counts. If `python3` is unavailable the plan degrades to a compact per-tool count line.
 
 By default it runs step by step:
 
