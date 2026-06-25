@@ -281,10 +281,21 @@ chmod +x ~/bin/update-mac</pre>
             </div>
             <pre>update-mac</pre>
           </section>
+          <section class="panel command-block">
+            <div class="command-meta">
+              <div><h2>Preview only</h2></div>
+              <button type="button" class="button button-subtle" data-copy-text="update-mac --dry-run">Copy</button>
+            </div>
+            <pre>update-mac --dry-run</pre>
+          </section>
           <div class="wiki-list">
             <article class="wiki-item">
               <h3>What it does</h3>
-              <p>Checks Time Machine first with <code>tmutil latestbackup</code> and <code>tmutil destinationinfo</code>. If backup is not available, it stops before any upgrades. If backup is available, it previews what it can, then asks before each mutating step with <code>Yes</code>, <code>No</code>, <code>Skip</code>, or <code>Quit</code>. It covers Homebrew, npm globals, App Store apps through <code>mas</code>, <code>uv</code>, <code>pipx</code>, Volta, <code>rustup</code>, <code>mise</code>, and macOS software updates when those tools exist.</p>
+              <p>Opens with a pre-flight summary: macOS version, free disk, the last Time Machine backup and its age, and a count of pending updates per tool. Then it checks Time Machine with <code>tmutil latestbackup</code> and <code>tmutil destinationinfo</code>. If backup is not available, it stops before any upgrades. If backup is available, it previews what it can, then asks <strong>once per tool</strong> with <code>Yes</code>, <code>No</code>, <code>Skip</code>, <code>All</code>, or <code>Quit</code> — choose <code>All</code> to approve that tool and every remaining one without further prompts. It covers Homebrew, npm globals, App Store apps through <code>mas</code>, <code>uv</code>, <code>pipx</code>, Volta, <code>rustup</code>, <code>mise</code>, and macOS software updates when those tools exist.</p>
+            </article>
+            <article class="wiki-item">
+              <h3>Preview first</h3>
+              <p>Run <code>update-mac --dry-run</code> to print the summary and show what every tool would do without changing anything. It skips the Time Machine gate because nothing is mutated, making it the safe way to see what an update would touch.</p>
             </article>
             <article class="wiki-item">
               <h3>Missing tools</h3>

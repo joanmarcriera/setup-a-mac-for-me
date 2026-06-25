@@ -63,10 +63,21 @@ It updates:
 
 It refuses to run upgrades unless Time Machine reports both a latest backup and a visible destination, so it only upgrades when the backup path is available.
 
+It starts with a **pre-flight summary**: macOS version, free disk, the last Time Machine backup and its age, and a count of pending updates per tool (`brew`, `npm`, `mas`, `uv`, `macOS`).
+
 By default it runs step by step:
 
 - it previews what it can with non-mutating checks
-- it asks before each mutating step with `Yes`, `No`, `Skip`, or `Quit`
+- it asks **once per tool** with `Yes`, `No`, `Skip`, `All`, or `Quit`
+- choose `All` at any prompt to approve that tool and every remaining one without further prompts
+
+To preview everything without changing anything (and without the Time Machine gate), run:
+
+```sh
+update-mac --dry-run
+```
+
+It prints the summary, shows what each tool would do, then exits having mutated nothing. This is the safe way to see what an update would touch.
 
 By default it does **not** force auto-updating casks. If you want that behavior anyway, run:
 
