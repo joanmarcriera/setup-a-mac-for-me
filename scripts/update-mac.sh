@@ -574,11 +574,11 @@ elif ! require_time_machine_backup; then
   exit 1
 fi
 
+# Per-tool previews are intentionally minimal: the pre-flight upgrade plan already
+# lists what brew/npm/uv would change. Only previews the plan does not cover are kept.
 if command -v brew >/dev/null 2>&1; then
-  preview_step "Homebrew outdated formulae and standard casks" brew outdated --verbose
   if [[ "$use_greedy_casks" == true ]]; then
-    preview_step "Homebrew outdated greedy casks" brew outdated --cask --greedy --verbose
-    preview_step "Homebrew cleanup dry run" brew cleanup -n
+    preview_step "Homebrew outdated greedy casks (not in the plan above)" brew outdated --cask --greedy --verbose
     if begin_domain "Homebrew" "update, upgrade, greedy cask upgrade, cleanup, doctor"; then
       run_step "Homebrew update" brew update
       run_step "Homebrew upgrade formulae and standard casks" brew upgrade
@@ -588,7 +588,6 @@ if command -v brew >/dev/null 2>&1; then
     fi
   else
     note "Skipping greedy cask upgrades. Use --greedy-casks if you want to force auto-updating casks."
-    preview_step "Homebrew cleanup dry run" brew cleanup -n
     if begin_domain "Homebrew" "update, upgrade, cleanup, doctor"; then
       run_step "Homebrew update" brew update
       run_step "Homebrew upgrade formulae and standard casks" brew upgrade
@@ -601,7 +600,6 @@ else
 fi
 
 if command -v npm >/dev/null 2>&1; then
-  preview_step "npm outdated global packages" npm outdated -g --depth=0
   if begin_domain "npm" "global package updates, cache verify"; then
     run_step "npm global package updates" npm update -g
     run_step "npm cache verify" npm cache verify
@@ -620,7 +618,6 @@ else
 fi
 
 if command -v uv >/dev/null 2>&1; then
-  preview_step "uv outdated tools" uv tool list --outdated
   preview_step "uv processes currently running (cache may be locked by these)" bash -c 'pgrep -fl uv || true'
   if begin_domain "uv" "tool upgrades, cache prune"; then
     run_step "uv tool upgrades" uv tool upgrade --all
@@ -673,7 +670,8 @@ if command -v softwareupdate >/dev/null 2>&1; then
   capture_softwareupdate_list
   log "Available macOS software updates"
   if [[ -n "$softwareupdate_list_output" ]]; then
-    printf '%s\n' "$softwareupdate_list_output"
+    # The plan above already flags the count and any restart; show just the labels here.
+    printf '%s\n' "$softwareupdate_list_output" | grep '\* Label:' || printf 'See the upgrade plan above.\n'
   else
     printf 'No pending changes reported.\n'
   fi
