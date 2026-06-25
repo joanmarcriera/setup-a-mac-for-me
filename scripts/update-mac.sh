@@ -278,6 +278,182 @@ macos_update_count() {
   fi
 }
 
+# Render a grouped, risk-annotated upgrade plan. Uses an inline python3 program so
+# update-mac stays a single portable file (it is meant to be copied to ~/bin). All
+# checks are local: no network, no CVE lookups. Returns non-zero if python3 is
+# missing or the program fails, so the caller can fall back to the counts line.
+print_upgrade_plan() {
+  if ! command -v python3 >/dev/null 2>&1; then
+    return 1
+  fi
+
+  capture_softwareupdate_list
+
+  SOFTWAREUPDATE_LIST="$softwareupdate_list_output" python3 - <<'PY'
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+
+PRERELEASE = re.compile(r"(?i)(beta|canary|nightly|alpha|preview|insider|-rc[-.0-9])")
+
+
+def run(cmd):
+    if not shutil.which(cmd[0]):
+        return ""
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+    except Exception:
+        return ""
+    return result.stdout or ""
+
+
+def parts(version):
+    # Integer components of a version, robust to date-versions (25.09) and the
+    # comma/hash junk Homebrew puts in some cask versions (1.20.5,5474622945).
+    return [int(n) for n in re.findall(r"\d+", version or "")]
+
+
+def breaking(installed, latest):
+    ci, cl = parts(installed), parts(latest)
+    if not ci or not cl:
+        return None
+    if ci[0] != cl[0]:
+        return "major"
+    if ci[0] == 0 and len(ci) > 1 and len(cl) > 1 and ci[1] != cl[1]:
+        return "0.x"
+    return None
+
+
+def short(version):
+    # Trim the comma/build junk for display: keep up to the first comma.
+    return (version or "").split(",")[0]
+
+
+def collect():
+    items = []  # (name, installed, latest, kind, pinned, prerelease)
+
+    brew_raw = run(["brew", "outdated", "--json=v2"])
+    if brew_raw.strip():
+        try:
+            data = json.loads(brew_raw)
+        except ValueError:
+            data = {}
+        for kind, key in (("formula", "formulae"), ("cask", "casks")):
+            for it in data.get(key, []):
+                installed = (it.get("installed_versions") or [""])[0]
+                latest = it.get("current_version") or ""
+                name = it.get("name") or "?"
+                pre = bool(PRERELEASE.search(name) or PRERELEASE.search(latest))
+                items.append((name, installed, latest, kind, bool(it.get("pinned")), pre))
+
+    npm_raw = run(["npm", "outdated", "-g", "--json"])
+    if npm_raw.strip():
+        try:
+            ndata = json.loads(npm_raw)
+        except ValueError:
+            ndata = {}
+        for name, info in ndata.items():
+            installed = info.get("current") or ""
+            latest = info.get("latest") or ""
+            pre = bool(PRERELEASE.search(name) or PRERELEASE.search(latest))
+            items.append((name, installed, latest, "npm", False, pre))
+
+    for line in run(["uv", "tool", "list", "--outdated"]).splitlines():
+        m = re.match(r"(\S+)\s+v?(\S+)\s+\[latest:\s*([^\]]+)\]", line.strip())
+        if m:
+            name, installed, latest = m.group(1), m.group(2), m.group(3).strip()
+            pre = bool(PRERELEASE.search(name) or PRERELEASE.search(latest))
+            items.append((name, installed, latest, "uv", False, pre))
+
+    return items
+
+
+def macos_info():
+    text = os.environ.get("SOFTWAREUPDATE_LIST", "")
+    labels = re.findall(r"^\*\s*Label:", text, re.MULTILINE)
+    restart = []
+    for line in text.splitlines():
+        if "Title:" in line and "restart" in line.lower():
+            m = re.search(r"Title:\s*([^,]+)", line)
+            if m:
+                restart.append(m.group(1).strip())
+    return len(labels), restart
+
+
+def main():
+    items = collect()
+    macos_count, restart_titles = macos_info()
+
+    counts = {}
+    for _, _, _, kind, _, _ in items:
+        counts[kind] = counts.get(kind, 0) + 1
+
+    head = []
+    for kind, label in (("formula", "formulae"), ("cask", "casks"), ("npm", "npm"), ("uv", "uv")):
+        if counts.get(kind):
+            head.append("%d %s" % (counts[kind], label))
+    if macos_count:
+        head.append("%d macOS" % macos_count)
+
+    if not head:
+        print("Upgrade plan: nothing pending.")
+        return 0
+
+    print("Upgrade plan: " + ", ".join(head))
+
+    major = [it for it in items if not it[4] and breaking(it[1], it[2])]
+    prerel = [it for it in items if not it[4] and not breaking(it[1], it[2]) and it[5]]
+    pinned = [it for it in items if it[4]]
+
+    if major:
+        print("  !! major version jump (review release notes):")
+        width = max(len(it[0]) for it in major)
+        for name, installed, latest, kind, _, pre in major:
+            tags = kind if kind in ("cask", "npm", "uv") else ""
+            if pre:
+                tags = (tags + ", pre-release").lstrip(", ")
+            suffix = "   (%s)" % tags if tags else ""
+            print("       %-*s  %s -> %s%s" % (width, name, short(installed), short(latest), suffix))
+
+    if restart_titles:
+        print("  !! macOS update requires a RESTART: " + "; ".join(restart_titles))
+
+    if prerel:
+        print("  ~  pre-release channel (auto-updating beta/canary/nightly):")
+        for name, installed, latest, kind, _, _ in prerel:
+            print("       %s  %s -> %s" % (name, short(installed), short(latest)))
+
+    if pinned:
+        print("     pinned (won't upgrade): " + ", ".join(it[0] for it in pinned))
+
+    routine = [
+        it for it in items
+        if not it[4] and not breaking(it[1], it[2]) and not it[5]
+    ]
+    if routine:
+        rc = {}
+        for _, _, _, kind, _, _ in routine:
+            rc[kind] = rc.get(kind, 0) + 1
+        summary = ", ".join(
+            "%d %s" % (rc[k], lbl)
+            for k, lbl in (("formula", "formulae"), ("cask", "casks"), ("npm", "npm"), ("uv", "uv"))
+            if rc.get(k)
+        )
+        print("     routine (same major version): " + summary)
+
+    return 0
+
+
+try:
+    sys.exit(main())
+except Exception:
+    sys.exit(1)
+PY
+}
+
 print_preflight_summary() {
   local macos_version macos_build host disk_free
   local tm_line="unknown (grant Full Disk Access)"
@@ -304,16 +480,20 @@ print_preflight_summary() {
   printf 'Host %s • macOS %s (%s) • disk free %s • TM backup %s\n' \
     "$host" "$macos_version" "$macos_build" "$disk_free" "$tm_line"
 
-  local parts=()
-  command -v brew >/dev/null 2>&1 && parts+=("brew $(count_lines brew outdated --quiet)")
-  command -v npm >/dev/null 2>&1 && parts+=("npm $(count_lines npm outdated -g --depth=0 --parseable)")
-  command -v mas >/dev/null 2>&1 && parts+=("mas $(count_lines mas outdated)")
-  command -v uv >/dev/null 2>&1 && parts+=("uv $(count_lines uv tool list --outdated)")
-  command -v softwareupdate >/dev/null 2>&1 && parts+=("macOS $(macos_update_count)")
+  # Prefer the grouped, risk-annotated plan. Fall back to a compact counts line
+  # only if python3 is unavailable.
+  if ! print_upgrade_plan; then
+    local parts=()
+    command -v brew >/dev/null 2>&1 && parts+=("brew $(count_lines brew outdated --quiet)")
+    command -v npm >/dev/null 2>&1 && parts+=("npm $(count_lines npm outdated -g --depth=0 --parseable)")
+    command -v mas >/dev/null 2>&1 && parts+=("mas $(count_lines mas outdated)")
+    command -v uv >/dev/null 2>&1 && parts+=("uv $(count_lines uv tool list --outdated)")
+    command -v softwareupdate >/dev/null 2>&1 && parts+=("macOS $(macos_update_count)")
 
-  if [[ "${#parts[@]}" -gt 0 ]]; then
-    printf 'Pending: %s\n' "$(join_by '  ' "${parts[@]}")"
-    note "(brew count is from last-known data; the run refreshes it first.)"
+    if [[ "${#parts[@]}" -gt 0 ]]; then
+      printf 'Pending: %s\n' "$(join_by '  ' "${parts[@]}")"
+      note "(brew count is from last-known data; the run refreshes it first.)"
+    fi
   fi
 
   local flags=()
