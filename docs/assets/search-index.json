@@ -109,7 +109,7 @@
     "title": "Full",
     "url": "homebrew.html",
     "summary": "Daily rebuild plus network and support tools.",
-    "body": "cli dev browsers-ai productivity microsoft pdf capture network"
+    "body": "cli dev browsers-ai productivity microsoft pdf capture network security"
   },
   {
     "kind": "group",
@@ -621,5 +621,26 @@
     "url": "homebrew.html",
     "summary": "Homebrew cask in Network",
     "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
+  },
+  {
+    "kind": "group",
+    "title": "Security",
+    "url": "homebrew.html",
+    "summary": "Vulnerability scanning for installed packages (used by cve-report.sh).",
+    "body": "grype syft grype + syft back scripts/cve-report.sh: syft catalogs installed Homebrew formulae, grype matches them to CVEs. Run ./scripts/cve-report.sh to list vulnerable packages and the brew upgrade that patches each."
+  },
+  {
+    "kind": "formula",
+    "title": "grype",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Security",
+    "body": "Vulnerability scanning for installed packages (used by cve-report.sh). grype + syft back scripts/cve-report.sh: syft catalogs installed Homebrew formulae, grype matches them to CVEs. Run ./scripts/cve-report.sh to list vulnerable packages and the brew upgrade that patches each."
+  },
+  {
+    "kind": "formula",
+    "title": "syft",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Security",
+    "body": "Vulnerability scanning for installed packages (used by cve-report.sh). grype + syft back scripts/cve-report.sh: syft catalogs installed Homebrew formulae, grype matches them to CVEs. Run ./scripts/cve-report.sh to list vulnerable packages and the brew upgrade that patches each."
   }
 ]
