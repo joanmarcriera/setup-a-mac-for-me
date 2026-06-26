@@ -72,6 +72,8 @@ It starts with a **pre-flight summary**: macOS version, free disk, the last Time
 
 Everything else is summarized as routine counts. If `python3` is unavailable the plan degrades to a compact per-tool count line.
 
+When a macOS update is pending, the summary also prints a **recommended order**: install the macOS update first, reboot, then re-run `update-mac` for Homebrew and everything else. A macOS update can change the Command Line Tools and system libraries that Homebrew links against, so upgrading brew on the fresh system avoids mismatches. The note reminds you to back up with Time Machine first and shows your last backup.
+
 By default it runs step by step:
 
 - it previews what it can with non-mutating checks
