@@ -31,7 +31,7 @@ brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi d
 Daily rebuild plus network and support tools.
 
 ```sh
-brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta ffmpeg telnet rclone ipmitool openssl lftp mtr nmap net-snmp
+brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta ffmpeg telnet rclone ipmitool openssl lftp mtr nmap net-snmp grype syft
 brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord microsoft-edge microsoft-office microsoft-teams onedrive microsoft-outlook microsoft-remote-desktop skim adobe-acrobat-reader pdf-expert shottr kap tailscale-app little-snitch rustdesk netspot
 ```
 
@@ -114,6 +114,14 @@ brew install telnet rclone ipmitool openssl lftp mtr nmap net-snmp
 brew install --cask tailscale-app little-snitch rustdesk netspot
 ```
 
+### Security
+
+Vulnerability scanning for installed packages (used by cve-report.sh).
+
+```sh
+brew install grype syft
+```
+
 ## Notes
 
 - zsh stays minimal: no autojump and no zsh-syntax-highlighting.
@@ -136,4 +144,6 @@ brew install --cask tailscale-app little-snitch rustdesk netspot
 - Shottr and Kap stay in the default workstation because they are used often.
 - Useful when the Mac is doubling as a support or network box.
 - The current Homebrew cask token is tailscale-app, not tailscale.
+- grype + syft back scripts/cve-report.sh: syft catalogs installed Homebrew formulae, grype matches them to CVEs.
+- Run ./scripts/cve-report.sh to list vulnerable packages and the brew upgrade that patches each.
 - Alfred, Raycast, `pnpm`, Dropover, iBar, Whimsical, and Notion are intentionally excluded.

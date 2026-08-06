@@ -184,6 +184,20 @@
         "Useful when the Mac is doubling as a support or network box.",
         "The current Homebrew cask token is tailscale-app, not tailscale."
       ]
+    },
+    {
+      "id": "security",
+      "label": "Security",
+      "description": "Vulnerability scanning for installed packages (used by cve-report.sh).",
+      "formulae": [
+        "grype",
+        "syft"
+      ],
+      "casks": [],
+      "notes": [
+        "grype + syft back scripts/cve-report.sh: syft catalogs installed Homebrew formulae, grype matches them to CVEs.",
+        "Run ./scripts/cve-report.sh to list vulnerable packages and the brew upgrade that patches each."
+      ]
     }
   ],
   "bundles": [
@@ -223,7 +237,8 @@
         "microsoft",
         "pdf",
         "capture",
-        "network"
+        "network",
+        "security"
       ]
     }
   ]

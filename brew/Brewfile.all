@@ -23,6 +23,8 @@ brew "lftp"
 brew "mtr"
 brew "nmap"
 brew "net-snmp"
+brew "grype"
+brew "syft"
 
 cask "iterm2"
 cask "orbstack"
