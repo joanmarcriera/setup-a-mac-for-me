@@ -2,6 +2,21 @@
 
 Opinionated MacBook Pro rebuild notes for Joan Marc Riera.
 
+## Usage
+
+This repo publishes a reusable Mac setup guide and Homebrew installer. Visit [mac.riera.co.uk](https://mac.riera.co.uk/) for the interactive site, or copy install commands directly from `brew/README.md`.
+
+To rebuild a Mac:
+1. Install Homebrew: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+2. Copy the install commands you need from `brew/README.md` (or the site)
+3. Run the verify script: `./scripts/verify-setup.sh workstation`
+4. To keep your Mac updated: `cp scripts/update-mac.sh ~/bin/update-mac && chmod +x ~/bin/update-mac && update-mac`
+
+To develop or customize:
+- Edit `data/install-groups.json` with your app list
+- Run `python3 scripts/generate_brew_artifacts.py && python3 scripts/build_search_index.py && python3 scripts/check_docs.py`
+- Preview the site: `python3 -m http.server --directory docs 8000` → http://127.0.0.1:8000
+
 This repo now serves two jobs:
 
 - a public GitHub Pages site under `docs/`
