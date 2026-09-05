@@ -330,6 +330,15 @@ print_macos_order_advice() {
   note "update can change the Command Line Tools and system libraries that Homebrew links against,"
   note "so upgrading brew on the fresh system avoids mismatches."
   note "Back up with Time Machine before the macOS update. Last backup: ${tm_status}."
+  # Say what this run will actually do. The run order is deliberately unchanged
+  # (Homebrew first, macOS last), so without this the advice contradicts the very
+  # run that prints it — and with --yes there is no prompt at which to act on it.
+  if [[ "$assume_yes" == true ]]; then
+    note "Note: --yes is set, so this run will NOT stop — it updates Homebrew first, then macOS."
+    note "Re-run without --yes if you want to follow the order above."
+  else
+    note "This run still updates Homebrew first; press Ctrl-C now to do macOS first instead."
+  fi
 }
 
 # Render a grouped, risk-annotated upgrade plan. Uses an inline python3 program so
