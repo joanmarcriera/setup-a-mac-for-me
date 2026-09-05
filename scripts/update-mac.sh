@@ -278,6 +278,29 @@ macos_update_count() {
   fi
 }
 
+# Count only genuine macOS *system* updates, i.e. entries whose Title starts with
+# "macOS". `softwareupdate -l` also lists XProtect config data, Safari and the
+# Command Line Tools; those do not move the system libraries Homebrew formulae
+# link against, so they must not trigger the install-macOS-first advice.
+# macos_update_count() stays the all-updates count used by the pending summary.
+macos_system_update_lines() {
+  capture_softwareupdate_list
+  if [[ -z "$softwareupdate_list_output" ]]; then
+    return 0
+  fi
+  printf '%s' "$softwareupdate_list_output" | grep 'Title:[[:space:]]*macOS' || true
+}
+
+macos_system_update_count() {
+  local lines
+  lines=$(macos_system_update_lines)
+  if [[ -z "$lines" ]]; then
+    printf '0'
+  else
+    printf '%s' "$lines" | grep -c .
+  fi
+}
+
 # When a macOS update is pending, recommend installing it first and rebooting
 # before Homebrew and the rest. A macOS update can move the Command Line Tools and
 # system libraries that Homebrew formulae link against, so brewing on the fresh
@@ -292,12 +315,12 @@ print_macos_order_advice() {
   fi
 
   capture_softwareupdate_list
-  count=$(macos_update_count)
+  count=$(macos_system_update_count)
   if [[ "$count" -eq 0 ]]; then
     return 0
   fi
 
-  if printf '%s' "$softwareupdate_list_output" | grep -iq 'restart'; then
+  if macos_system_update_lines | grep -iq 'restart'; then
     restart_note=" (it needs a restart)"
   fi
 
