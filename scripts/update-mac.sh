@@ -278,6 +278,69 @@ macos_update_count() {
   fi
 }
 
+# Count only genuine macOS *system* updates, i.e. entries whose Title starts with
+# "macOS". `softwareupdate -l` also lists XProtect config data, Safari and the
+# Command Line Tools; those do not move the system libraries Homebrew formulae
+# link against, so they must not trigger the install-macOS-first advice.
+# macos_update_count() stays the all-updates count used by the pending summary.
+macos_system_update_lines() {
+  capture_softwareupdate_list
+  if [[ -z "$softwareupdate_list_output" ]]; then
+    return 0
+  fi
+  printf '%s' "$softwareupdate_list_output" | grep 'Title:[[:space:]]*macOS' || true
+}
+
+macos_system_update_count() {
+  local lines
+  lines=$(macos_system_update_lines)
+  if [[ -z "$lines" ]]; then
+    printf '0'
+  else
+    printf '%s' "$lines" | grep -c .
+  fi
+}
+
+# When a macOS update is pending, recommend installing it first and rebooting
+# before Homebrew and the rest. A macOS update can move the Command Line Tools and
+# system libraries that Homebrew formulae link against, so brewing on the fresh
+# system avoids mismatches. This is advisory only: the run still does brew first if
+# the user proceeds. Takes the Time Machine backup line so the reminder is concrete.
+print_macos_order_advice() {
+  local tm_status="$1"
+  local count restart_note=""
+
+  if ! command -v softwareupdate >/dev/null 2>&1; then
+    return 0
+  fi
+
+  capture_softwareupdate_list
+  count=$(macos_system_update_count)
+  if [[ "$count" -eq 0 ]]; then
+    return 0
+  fi
+
+  if macos_system_update_lines | grep -iq 'restart'; then
+    restart_note=" (it needs a restart)"
+  fi
+
+  note ""
+  note "Recommended order: a macOS update is pending${restart_note}. It is cleaner to install"
+  note "macOS first, reboot, then re-run update-mac for Homebrew and everything else — a macOS"
+  note "update can change the Command Line Tools and system libraries that Homebrew links against,"
+  note "so upgrading brew on the fresh system avoids mismatches."
+  note "Back up with Time Machine before the macOS update. Last backup: ${tm_status}."
+  # Say what this run will actually do. The run order is deliberately unchanged
+  # (Homebrew first, macOS last), so without this the advice contradicts the very
+  # run that prints it — and with --yes there is no prompt at which to act on it.
+  if [[ "$assume_yes" == true ]]; then
+    note "Note: --yes is set, so this run will NOT stop — it updates Homebrew first, then macOS."
+    note "Re-run without --yes if you want to follow the order above."
+  else
+    note "This run still updates Homebrew first; press Ctrl-C now to do macOS first instead."
+  fi
+}
+
 # Render a grouped, risk-annotated upgrade plan. Uses an inline python3 program so
 # update-mac stays a single portable file (it is meant to be copied to ~/bin). All
 # checks are local: no network, no CVE lookups. Returns non-zero if python3 is
@@ -495,6 +558,8 @@ print_preflight_summary() {
       note "(brew count is from last-known data; the run refreshes it first.)"
     fi
   fi
+
+  print_macos_order_advice "$tm_line"
 
   local flags=()
   [[ "$dry_run" == true ]] && flags+=("dry-run")
