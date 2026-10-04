@@ -14,6 +14,8 @@ set -o pipefail
 failures=0
 use_greedy_casks=false
 assume_yes=false
+yes_flag=false     # --yes was passed (vs. assume_yes, which the [A]ll answer also sets)
+with_macos=false   # --with-macos: let --yes also run the macOS software update
 skip_backup_check=false
 skip_macos=false
 dry_run=false
@@ -42,11 +44,14 @@ Options:
   -y, --yes            Run mutating steps without interactive approval.
   --skip-backup-check  Skip the Time Machine safety gate. Use when Terminal lacks
                        Full Disk Access and tmutil latestbackup cannot run.
+  --with-macos         With --yes, also run `softwareupdate -i -a`. Without it, --yes leaves macOS alone.
   --skip-macos         Do not run (or offer) `softwareupdate -i -a`; still lists what is pending.
                        Useful when a major macOS upgrade is listed and you want to do it by hand.
   -h, --help           Show this help.
 
 At any prompt, choose [A]ll to approve this and every remaining tool without further prompts.
+[A]ll and --yes never cover the macOS software update: it is always asked separately
+(interactive), or skipped under --yes unless --with-macos is given.
 EOF
 }
 
@@ -681,6 +686,10 @@ while [[ "$#" -gt 0 ]]; do
       ;;
     -y|--yes)
       assume_yes=true
+      yes_flag=true
+      ;;
+    --with-macos)
+      with_macos=true
       ;;
     --skip-backup-check)
       skip_backup_check=true
@@ -831,8 +840,16 @@ if command -v softwareupdate >/dev/null 2>&1; then
   fi
   if [[ "$skip_macos" == true ]]; then
     note "Skipped: --skip-macos was passed."
-  elif begin_domain "macOS" "install all available software updates"; then
-    run_step "macOS software updates" softwareupdate -i -a
+  elif [[ "$yes_flag" == true && "$with_macos" != true ]]; then
+    note "Skipped: --yes does not run the macOS update. Add --with-macos or run softwareupdate -i -a yourself."
+  else
+    # [A]ll must not approve an OS update: ask again on its own, ignoring assume_yes.
+    # --yes + --with-macos is the one explicit non-interactive opt-in.
+    saved_assume_yes=$assume_yes
+    [[ "$yes_flag" == true ]] || assume_yes=false
+    begin_domain "macOS" "install all available software updates (not covered by [A]ll)" && macos_ok=true || macos_ok=false
+    assume_yes=$saved_assume_yes
+    [[ "$macos_ok" == true ]] && run_step "macOS software updates" softwareupdate -i -a
   fi
 else
   note "softwareupdate is not available on this machine."

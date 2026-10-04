@@ -127,7 +127,7 @@ By default it does **not** force auto-updating casks. If you want that behavior 
 update-mac --greedy-casks
 ```
 
-If a major macOS upgrade (for example 26 to 27) is listed, `update-mac` says so; `softwareupdate -i -a` runs at the end, so pass `--skip-macos` to leave the OS alone and do it by hand:
+If a major macOS upgrade (for example 26 to 27) is listed, `update-mac` says so. The macOS update is never covered by the **[A]ll** answer or by `--yes`: interactively it is asked on its own at the end, and under `--yes` it is skipped unless you also pass `--with-macos`. Pass `--skip-macos` to not be asked at all and do it by hand:
 
 ```sh
 update-mac --skip-macos
