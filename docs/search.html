@@ -1,63 +1,56 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Search | mac.riera.co.uk</title>
-    <meta name="description" content="Search the mac.riera.co.uk setup guide.">
+    <meta name="description" content="Search the mac.riera.co.uk rebuild guide by step, bundle, group or package name.">
+    <meta name="color-scheme" content="light dark">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&amp;family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,700;0,800;1,400&amp;display=swap">
     <link rel="stylesheet" href="assets/style.css">
+    <script>document.documentElement.classList.add("js");</script>
     <script defer src="assets/app.js"></script>
     <script defer src="assets/search.js"></script>
   </head>
-  <body data-page="search">
-    <div class="site-frame">
-      <div data-site-shell="header"></div>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a class="wordmark" href="index.html">mac.riera.co.uk</a>
+        <nav class="site-nav" aria-label="Site">
+          <a href="index.html">Rebuild guide</a>
+          <a href="homebrew.html">Homebrew catalogue</a>
+          <a href="factory-reset.html">Back up and erase</a>
+          <a href="search.html" aria-current="page">Search</a>
+        </nav>
+      </div>
+    </header>
 
-      <main>
-        <section class="hero-panel reveal">
-          <span class="eyebrow">Search</span>
-          <div class="page-grid">
-            <div class="page-heading">
-              <h1>Search the setup by page, bundle, group, or package name.</h1>
-              <p>
-                The index covers site pages plus the generated Homebrew package catalog, so queries like
-                <code>mailmate</code>, <code>kopia</code>, <code>keepassxc</code>, and <code>backup</code> work the way they should.
-              </p>
-            </div>
-            <div class="callout">
-              <p>
-                Shortcut: press <strong>/</strong> anywhere on the site to focus the header search field.
-              </p>
-            </div>
-          </div>
-        </section>
+    <main id="main" class="page page-narrow">
+      <section class="intro">
+        <h1>Search</h1>
+        <p class="lead">Find a step, a bundle, a group or a package by name, for example <code>mailmate</code>, <code>colima</code> or <code>time machine</code>.</p>
+        <p class="meta">Press <kbd>/</kbd> on any page to jump to search.</p>
+        <form class="search-form" action="search.html" method="get" role="search" data-search-page-form>
+          <label class="visually-hidden" for="search-q">Search the guide</label>
+          <input id="search-q" class="site-search-page" type="search" name="q" placeholder="Package, app or step" data-search-page-input>
+          <button type="submit">Search</button>
+        </form>
+      </section>
 
-        <section class="section reveal" data-delay="1">
-          <div class="panel">
-            <form class="search-form" data-search-page-form>
-              <input
-                type="search"
-                name="q"
-                placeholder="Search packages, pages, setup notes"
-                aria-label="Search the site"
-                data-search-page-input
-              >
-              <button type="submit">Search</button>
-            </form>
-          </div>
-        </section>
+      <p class="search-count" data-search-count role="status"></p>
+      <ul class="search-results" data-search-results></ul>
+      <noscript><p class="aside">Search runs in your browser and needs JavaScript. The <a href="homebrew.html">Homebrew catalogue</a> lists every package.</p></noscript>
+    </main>
 
-        <section class="section reveal" data-delay="2">
-          <div class="section-heading">
-            <h2>Results</h2>
-            <p data-search-count class="muted"></p>
-          </div>
-          <div class="search-results" data-search-results></div>
-        </section>
-      </main>
-
-      <div data-site-shell="footer"></div>
-    </div>
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <p>Commands come from <a href="https://github.com/joanmarcriera/setup-a-mac-for-me/blob/main/data/install-groups.json">data/install-groups.json</a>, which also generates the Brewfiles.</p>
+        <p>By <a href="https://riera.co.uk/">Joan Marc Riera</a></p>
+      </div>
+    </footer>
   </body>
 </html>

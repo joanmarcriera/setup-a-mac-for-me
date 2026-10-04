@@ -1,66 +1,75 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Homebrew | mac.riera.co.uk</title>
-    <meta name="description" content="Copy-paste Homebrew commands for the mac.riera.co.uk setup.">
+    <title>Homebrew catalogue | mac.riera.co.uk</title>
+    <meta name="description" content="Every Homebrew bundle and group in the mac.riera.co.uk rebuild, with copyable install commands, notes, and the apps that were dropped.">
+    <meta name="color-scheme" content="light dark">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&amp;family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,700;0,800;1,400&amp;display=swap">
     <link rel="stylesheet" href="assets/style.css">
+    <script>document.documentElement.classList.add("js");</script>
     <script defer src="assets/app.js"></script>
     <script defer src="assets/homebrew.js"></script>
   </head>
-  <body data-page="homebrew">
-    <div class="site-frame">
-      <div data-site-shell="header"></div>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a class="wordmark" href="index.html">mac.riera.co.uk</a>
+        <nav class="site-nav" aria-label="Site">
+          <a href="index.html">Rebuild guide</a>
+          <a href="homebrew.html" aria-current="page">Homebrew catalogue</a>
+          <a href="factory-reset.html">Back up and erase</a>
+          <a href="search.html">Search</a>
+        </nav>
+        <form class="site-search" action="search.html" method="get" role="search">
+          <label class="visually-hidden" for="site-q">Search the guide</label>
+          <input id="site-q" type="search" name="q" placeholder="Search apps and steps">
+          <button type="submit">Search</button>
+        </form>
+      </div>
+    </header>
 
-      <main>
-        <section class="hero-panel reveal">
-          <span class="eyebrow">Homebrew</span>
-          <div class="page-heading">
-            <h1>Copy the command you want, then keep scrolling.</h1>
-            <p>This page is intentionally linear. The default bundles come first, then the smaller groups, then the notes.</p>
-          </div>
-        </section>
+    <main id="main" class="page page-narrow">
+      <section class="intro">
+        <h1>Homebrew catalogue</h1>
+        <p class="lead">Every bundle and group in the rebuild, each with its own install command. Use a bundle for a full install, or a single group to add one part of the stack.</p>
+        <p class="meta">Last reviewed <time data-last-reviewed datetime="2026-10-04">4 October 2026</time>. Generated from <code>data/install-groups.json</code>.</p>
+        <p class="meta">Jump to <a href="#bundles">bundles</a>, <a href="#groups">groups</a> or <a href="#retired">dropped apps</a>.</p>
+      </section>
 
-        <section class="panel toc reveal" data-delay="1">
-          <h2>Table of Contents</h2>
-          <ul class="toc-list">
-            <li><a href="#default-bundles">Default Bundles</a></li>
-            <li><a href="#individual-groups">Individual Groups</a></li>
-            <li><a href="#install-notes">Notes</a></li>
-          </ul>
-        </section>
+      <noscript>
+        <p class="aside">This catalogue is built in the browser from <a href="assets/install-groups.json">install-groups.json</a>. Without JavaScript, copy the commands from <a href="https://github.com/joanmarcriera/setup-a-mac-for-me/blob/main/brew/README.md">brew/README.md</a> on GitHub, or use the Workstation command on the <a href="index.html#install-workstation">rebuild guide</a>.</p>
+      </noscript>
 
-        <section id="homebrew-installer" class="section reveal" data-delay="2">
-          <div id="default-bundles" class="panel">
-            <div class="section-heading">
-              <h2>Default Bundles</h2>
-              <p>Use one of these if you want the usual setup in one go.</p>
-            </div>
-            <div class="notice"><strong>Default:</strong> start with <code>Workstation</code> unless you know you need less or more.</div>
-            <div class="wiki-list" data-homebrew="bundles"></div>
-          </div>
+      <section class="part" id="bundles">
+        <h2>Bundles</h2>
+        <p class="part-lead">Start with Workstation unless you know you need less or more.</p>
+        <ul class="catalogue" data-homebrew="bundles"></ul>
+      </section>
 
-          <div id="individual-groups" class="panel">
-            <div class="section-heading">
-              <h2>Individual Groups</h2>
-              <p>Use these when you want only part of the stack.</p>
-            </div>
-            <div class="wiki-list" data-homebrew="groups"></div>
-          </div>
+      <section class="part" id="groups">
+        <h2>Groups</h2>
+        <p class="part-lead">Bundles are made of these. Install one on its own to add part of the stack.</p>
+        <ul class="catalogue" data-homebrew="groups"></ul>
+      </section>
 
-          <div id="install-notes" class="panel">
-            <div class="section-heading">
-              <h2>Notes</h2>
-              <p>Short reminders that still matter during install.</p>
-            </div>
-            <div data-homebrew="notes"></div>
-          </div>
-        </section>
-      </main>
+      <section class="part" id="retired">
+        <h2>Dropped from the rebuild</h2>
+        <p class="part-lead">Apps and tools that used to be here, and why they went.</p>
+        <ul class="list" data-homebrew="retired"></ul>
+      </section>
+    </main>
 
-      <div data-site-shell="footer"></div>
-    </div>
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <p>Commands come from <a href="https://github.com/joanmarcriera/setup-a-mac-for-me/blob/main/data/install-groups.json">data/install-groups.json</a>, which also generates the Brewfiles.</p>
+        <p>By <a href="https://riera.co.uk/">Joan Marc Riera</a></p>
+      </div>
+    </footer>
   </body>
 </html>

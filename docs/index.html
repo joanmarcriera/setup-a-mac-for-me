@@ -1,355 +1,371 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>mac.riera.co.uk</title>
-    <meta name="description" content="Direct Mac rebuild notes for Joan Marc Riera.">
+    <title>Rebuild a Mac | mac.riera.co.uk</title>
+    <meta name="description" content="Step-by-step runbook for rebuilding a Mac on macOS 26 Tahoe with Apple silicon and Homebrew: back up, install, configure, restore, verify, then keep it updated.">
+    <meta name="color-scheme" content="light dark">
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&amp;family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,700;0,800;1,400&amp;display=swap">
     <link rel="stylesheet" href="assets/style.css">
+    <script>document.documentElement.classList.add("js");</script>
     <script defer src="assets/app.js"></script>
   </head>
-  <body data-page="index">
-    <div class="site-frame">
-      <div data-site-shell="header"></div>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a class="wordmark" href="index.html">mac.riera.co.uk</a>
+        <nav class="site-nav" aria-label="Site">
+          <a href="index.html" aria-current="page">Rebuild guide</a>
+          <a href="homebrew.html">Homebrew catalogue</a>
+          <a href="factory-reset.html">Back up and erase</a>
+          <a href="search.html">Search</a>
+        </nav>
+        <form class="site-search" action="search.html" method="get" role="search">
+          <label class="visually-hidden" for="site-q">Search the guide</label>
+          <input id="site-q" type="search" name="q" placeholder="Search apps and steps">
+          <button type="submit">Search</button>
+        </form>
+      </div>
+    </header>
 
-      <main>
-        <section class="hero-panel reveal">
-          <span class="eyebrow">Setup</span>
-          <div class="hero-copy">
-            <h1>One page. Copy the commands. Restore the state. Stop.</h1>
-            <p>This is the main rebuild guide. It replaces most of the smaller pages. The only separate pages still worth keeping are the full Homebrew catalog, factory reset steps, and search.</p>
-          </div>
-        </section>
+    <div class="page">
+      <div class="layout">
+        <div class="toc-wrap">
+          <button class="toc-toggle" type="button" aria-expanded="false" aria-controls="toc">
+            <span data-toc-current>Jump to a step</span>
+          </button>
+          <nav class="toc" id="toc" aria-label="On this page">
+            <h2>Rebuild path</h2>
+            <ol>
+              <li><a href="#backup"><span class="n">1</span><span>Back up first<span class="visually-hidden done-flag"></span></span></a></li>
+              <li><a href="#setup-assistant"><span class="n">2</span><span>Setup Assistant<span class="visually-hidden done-flag"></span></span></a></li>
+              <li><a href="#install-homebrew"><span class="n">3</span><span>Homebrew and scripts<span class="visually-hidden done-flag"></span></span></a></li>
+              <li><a href="#install-workstation"><span class="n">4</span><span>Install the apps<span class="visually-hidden done-flag"></span></span></a></li>
+              <li><a href="#terminal"><span class="n">5</span><span>Shell and terminal<span class="visually-hidden done-flag"></span></span></a></li>
+              <li><a href="#macos-defaults"><span class="n">6</span><span>macOS settings<span class="visually-hidden done-flag"></span></span></a></li>
+              <li><a href="#browser-and-profiles"><span class="n">7</span><span>Browser and coding<span class="visually-hidden done-flag"></span></span></a></li>
+              <li><a href="#restore-state"><span class="n">8</span><span>Restore app state<span class="visually-hidden done-flag"></span></span></a></li>
+              <li><a href="#verify"><span class="n">9</span><span>Check the machine<span class="visually-hidden done-flag"></span></span></a></li>
+            </ol>
+            <h2>Already set up</h2>
+            <ul>
+              <li><a href="#keep-updated">Update everything</a></li>
+              <li><a href="#drift">See what changed since setup</a></li>
+              <li><a href="#stack-notes">Decisions and exclusions</a></li>
+            </ul>
+            <button class="button button-quiet toc-reset" type="button" data-progress-reset hidden>Clear ticks</button>
+          </nav>
+        </div>
 
-        <section class="panel toc reveal" data-delay="1">
-          <h2>Table of Contents</h2>
-          <ul class="toc-list">
-            <li><a href="#install-homebrew">Install Homebrew</a></li>
-            <li><a href="#install-workstation">Install the Default Workstation</a></li>
-            <li><a href="#install-options">Optional Variants</a></li>
-            <li><a href="#macos-defaults">macOS Defaults</a></li>
-            <li><a href="#browser-and-profiles">Browser and Profiles</a></li>
-            <li><a href="#terminal">Terminal</a></li>
-            <li><a href="#coding">Coding</a></li>
-            <li><a href="#stack-notes">Apps, Exclusions, and Watchlist</a></li>
-            <li><a href="#restore-state">Restore State</a></li>
-            <li><a href="#backup">Backup</a></li>
-            <li><a href="#keep-updated">Keep Updated</a></li>
-            <li><a href="#verify">Verify</a></li>
-            <li><a href="#references">Remaining Separate Pages</a></li>
-          </ul>
-        </section>
-
-        <section id="install-homebrew" class="section reveal" data-delay="2">
-          <div class="section-heading">
-            <h2>Install Homebrew</h2>
-            <p>Run this once on a fresh Mac.</p>
-          </div>
-          <section class="panel command-block">
-            <div class="command-meta">
-              <div><h2>Homebrew installer</h2></div>
-              <button type="button" class="button button-subtle" data-copy-text="/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;">Copy</button>
-            </div>
-            <pre>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</pre>
+        <main id="main" class="layout-main">
+          <section class="intro">
+            <h1>Rebuild a Mac, from erased to working</h1>
+            <p class="lead">The steps, commands and settings I use to turn a freshly erased Mac into my daily workstation. Work top to bottom, copy each command, and tick each step off as you go.</p>
+            <p class="meta">Written for macOS 26 Tahoe on Apple silicon. App list last reviewed <time data-last-reviewed datetime="2026-10-04">4 October 2026</time>.</p>
+            <p class="meta">Mac already set up? Go to <a href="#keep-updated">keep it updated</a>.</p>
           </section>
-        </section>
 
-        <section id="install-workstation" class="section reveal" data-delay="2">
-          <div class="section-heading">
-            <h2>Install the Default Workstation</h2>
-            <p>This is the default path.</p>
-          </div>
-          <section class="panel command-block">
-            <div class="command-meta">
-              <div><h2>Formulae</h2></div>
-              <button type="button" class="button button-subtle" data-copy-text="brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta ffmpeg">Copy</button>
+          <ol class="path" aria-label="Rebuild path">
+            <li class="step" id="backup" data-step="1">
+              <div class="step-head">
+                <span class="step-num" aria-hidden="true">1</span>
+                <h2>Back up first</h2>
+                <label class="step-done"><input type="checkbox" data-step-done aria-label="Mark step 1 done"> Done</label>
+              </div>
+              <div class="step-body">
+                <p>Skip this on a brand-new Mac. On a Mac you are about to erase, make sure a recent Time Machine backup exists and points where you expect.</p>
+                <figure class="cmd">
+                  <div class="cmd-bar"><figcaption>Check the latest Time Machine backup</figcaption><button type="button" class="copy">Copy</button></div>
+                  <pre><code><span class="ln">tmutil latestbackup</span><span class="ln">tmutil destinationinfo</span></code></pre>
+                </figure>
+                <p>If either command says it is not permitted, give your terminal app Full Disk Access in System Settings &gt; Privacy &amp; Security &gt; Full Disk Access.</p>
+                <p>Homebrew cannot recreate these, so check they are in the backup or exported somewhere private:</p>
+                <ul class="list">
+                  <li>Keyboard Maestro macros and Karabiner-Elements rules</li>
+                  <li>Obsidian vaults and Logseq graphs</li>
+                  <li>MailMate accounts and rules</li>
+                  <li>Dotfiles, SSH keys and repo clones with unpushed work</li>
+                </ul>
+                <p>Leave out caches, <code>node_modules</code>, build output and anything you can download again. The full erase procedure is on <a href="factory-reset.html">Back up and erase</a>.</p>
+              </div>
+            </li>
+
+            <li class="step" id="setup-assistant" data-step="2">
+              <div class="step-head">
+                <span class="step-num" aria-hidden="true">2</span>
+                <h2>Go through Setup Assistant</h2>
+                <label class="step-done"><input type="checkbox" data-step-done aria-label="Mark step 2 done"> Done</label>
+              </div>
+              <div class="step-body">
+                <ul class="list">
+                  <li>Choose <strong>set up as new</strong> for a clean rebuild. Migration Assistant from Time Machine is faster, but it brings the old clutter back with it.</li>
+                  <li>Sign in with your Apple Account so iCloud, the App Store and Find My are ready.</li>
+                  <li>Turn on FileVault when asked.</li>
+                  <li>Apple Intelligence is offered during setup. You can change it later in System Settings &gt; Apple Intelligence &amp; Siri.</li>
+                  <li>Before installing anything else, install pending updates from System Settings &gt; General &gt; Software Update and restart. Homebrew then installs against the current system.</li>
+                </ul>
+              </div>
+            </li>
+
+            <li class="step" id="install-homebrew" data-step="3">
+              <div class="step-head">
+                <span class="step-num" aria-hidden="true">3</span>
+                <h2>Install Homebrew and get the scripts</h2>
+                <label class="step-done"><input type="checkbox" data-step-done aria-label="Mark step 3 done"> Done</label>
+              </div>
+              <div class="step-body">
+                <p>The installer also installs Apple's Command Line Tools, which include <code>git</code>. It asks for your password.</p>
+                <figure class="cmd">
+                  <div class="cmd-bar"><figcaption>Install Homebrew</figcaption><button type="button" class="copy">Copy</button></div>
+                  <pre><code><span class="ln">/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</span></code></pre>
+                </figure>
+                <p>Put <code>brew</code> on your PATH. The installer prints these lines when it finishes; on Apple silicon they are:</p>
+                <figure class="cmd">
+                  <div class="cmd-bar"><figcaption>Add Homebrew to the shell</figcaption><button type="button" class="copy">Copy</button></div>
+                  <pre><code><span class="ln">echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' &gt;&gt; ~/.zprofile</span><span class="ln">eval "$(/opt/homebrew/bin/brew shellenv)"</span><span class="ln">brew doctor</span></code></pre>
+                </figure>
+                <p>Then clone this repo. Later steps run its scripts from the repo folder.</p>
+                <figure class="cmd">
+                  <div class="cmd-bar"><figcaption>Clone the repo</figcaption><button type="button" class="copy">Copy</button></div>
+                  <pre><code><span class="ln">mkdir -p ~/Development</span><span class="ln">git clone https://github.com/joanmarcriera/setup-a-mac-for-me.git ~/Development/setup-a-mac-for-me</span><span class="ln">cd ~/Development/setup-a-mac-for-me</span></code></pre>
+                </figure>
+              </div>
+            </li>
+
+            <li class="step" id="install-workstation" data-step="4">
+              <div class="step-head">
+                <span class="step-num" aria-hidden="true">4</span>
+                <h2>Install the apps</h2>
+                <label class="step-done"><input type="checkbox" data-step-done aria-label="Mark step 4 done"> Done</label>
+              </div>
+              <div class="step-body">
+                <p>Pick a bundle and run its commands. Workstation is the usual day-one install; Minimal and Full are smaller and larger versions of it. Expect the first run to take a while.</p>
+                <div data-install>
+                  <!-- fallback:start (server-rendered Workstation bundle for readers without JavaScript) -->
+                  <p class="bundle-summary">Workstation bundle: the usual day-one rebuild for daily work. 53 formulae, 47 casks, 3 App Store apps.</p>
+                  <figure class="cmd">
+                    <div class="cmd-bar"><figcaption>Workstation bundle</figcaption><button type="button" class="copy">Copy</button></div>
+                    <pre><code><span class="ln">brew install bash wget vim uv tig htop tree tmux jq gh mas fzf ripgrep-all dust ncdu watch gping jdupes go volta mise pipx pandoc shellcheck git-cliff git-filter-repo git-lfs cmake hugo forgejo-cli colima docker docker-compose ollama llama.cpp whisper.cpp whisperkit-cli llmfit opencode herdr rtk qpdf poppler tesseract weasyprint pango ffmpeg yt-dlp gallery-dl gitleaks syft grype ykman</span><span class="ln">brew install --cask iterm2 github google-chrome google-chrome@canary vivaldi comet duckduckgo visual-studio-code codex claude antigravity antigravity-cli lm-studio codexbar hive-app supacode t3-code meetily keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta spotify slack discord telegram-desktop typora markedit zotero anki libreoffice drawio yed excalidrawz microsoft-edge microsoft-teams skim adobe-acrobat-reader shottr vlc blackhole-2ch blender bitwarden keepassxc</span><span class="ln c"># App Store: Microsoft Word, Microsoft Excel, Windows App</span><span class="ln">mas install 462054704 462058435 1295203466</span></code></pre>
+                  </figure>
+                  <p class="muted">Turn on JavaScript to choose the Minimal or Full bundle here, or use the <a href="homebrew.html">Homebrew catalogue</a>.</p>
+                  <!-- fallback:end -->
+                </div>
+                <p>Casks that install drivers, such as Karabiner-Elements and BlackHole, ask for your password and for approval in System Settings the first time they run. Every group, with its own command and notes, is in the <a href="homebrew.html">Homebrew catalogue</a>.</p>
+              </div>
+            </li>
+
+            <li class="step" id="terminal" data-step="5">
+              <div class="step-head">
+                <span class="step-num" aria-hidden="true">5</span>
+                <h2>Set up the shell and terminal</h2>
+                <label class="step-done"><input type="checkbox" data-step-done aria-label="Mark step 5 done"> Done</label>
+              </div>
+              <div class="step-body">
+                <p>Keep zsh plain and portable. Add these lines to <code>~/.zshrc</code>. Homebrew's own line lives in <code>~/.zprofile</code> from step 3, so it loads first.</p>
+                <figure class="cmd cmd-file">
+                  <div class="cmd-bar"><figcaption>~/.zshrc</figcaption><button type="button" class="copy">Copy</button></div>
+                  <pre><code><span class="ln"># Volta: Node.js versions</span><span class="ln">export VOLTA_HOME="$HOME/.volta"</span><span class="ln">export PATH="$VOLTA_HOME/bin:$PATH"</span><span class="ln"></span><span class="ln"># Rust, only if rustup is installed</span><span class="ln">[ -f "$HOME/.cargo/env" ] &amp;&amp; . "$HOME/.cargo/env"</span><span class="ln"></span><span class="ln"># mise: other runtimes. Activate after the PATH changes above.</span><span class="ln">command -v mise &gt;/dev/null &amp;&amp; eval "$(mise activate zsh)"</span><span class="ln"></span><span class="ln"># ~/bin: personal scripts, including update-mac</span><span class="ln">export PATH="$HOME/bin:$PATH"</span></code></pre>
+                </figure>
+                <ul class="list">
+                  <li>If you use Oh My Zsh, keep the plugin list to <code>plugins=(git)</code>.</li>
+                  <li>Do not add back <code>autojump</code>, <code>zsh-syntax-highlighting</code> or <code>pnpm</code>.</li>
+                  <li>In iTerm2, use a dark profile at about 20% transparency, and set Settings &gt; Profiles &gt; Keys &gt; Key Mappings &gt; Presets to Natural Text Editing so Option-arrow moves by word.</li>
+                </ul>
+              </div>
+            </li>
+
+            <li class="step" id="macos-defaults" data-step="6">
+              <div class="step-head">
+                <span class="step-num" aria-hidden="true">6</span>
+                <h2>Apply macOS settings</h2>
+                <label class="step-done"><input type="checkbox" data-step-done aria-label="Mark step 6 done"> Done</label>
+              </div>
+              <div class="step-body">
+                <h3 id="tap-to-click">Tap to click</h3>
+                <p>System Settings &gt; Trackpad &gt; Point &amp; Click &gt; Tap to click, or run this and log out and back in:</p>
+                <figure class="cmd">
+                  <div class="cmd-bar"><figcaption>Turn on tap to click</figcaption><button type="button" class="copy">Copy</button></div>
+                  <pre><code><span class="ln">defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true</span><span class="ln">defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true</span><span class="ln">defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1</span><span class="ln">defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1</span></code></pre>
+                </figure>
+
+                <h3 id="three-finger-drag">Three-finger drag</h3>
+                <p>System Settings &gt; Accessibility &gt; Pointer Control &gt; Trackpad Options. Turn on <strong>Use trackpad for dragging</strong> and set Dragging style to <strong>Three Finger Drag</strong>.</p>
+
+                <h3 id="dock">Dock</h3>
+                <p>Show the hidden Dock without the delay. From the repo, <code>./scripts/apply-macos-defaults.sh</code> applies the same settings.</p>
+                <figure class="cmd">
+                  <div class="cmd-bar"><figcaption>Faster Dock auto-hide</figcaption><button type="button" class="copy">Copy</button></div>
+                  <pre><code><span class="ln">defaults write com.apple.dock autohide-time-modifier -float 0.5</span><span class="ln">defaults write com.apple.dock autohide-delay -int 0</span><span class="ln">killall Dock</span></code></pre>
+                </figure>
+
+                <h3 id="leave-off">Leave these off</h3>
+                <ul class="list">
+                  <li>App Exposé: System Settings &gt; Trackpad &gt; More Gestures &gt; App Exposé.</li>
+                  <li>The Spotlight shortcut, if Keyboard Maestro needs Command-Space: System Settings &gt; Keyboard &gt; Keyboard Shortcuts &gt; Spotlight.</li>
+                  <li>The old Launchpad grid tweak. macOS 26 replaced Launchpad with Apps in Spotlight, so <code>springboard-columns</code> and <code>springboard-rows</code> no longer change anything.</li>
+                </ul>
+              </div>
+            </li>
+
+            <li class="step" id="browser-and-profiles" data-step="7">
+              <div class="step-head">
+                <span class="step-num" aria-hidden="true">7</span>
+                <h2>Set up the browser and coding tools</h2>
+                <label class="step-done"><input type="checkbox" data-step-done aria-label="Mark step 7 done"> Done</label>
+              </div>
+              <div class="step-body">
+                <h3 id="browser">Browser</h3>
+                <ul class="list">
+                  <li>Make Vivaldi the default browser in System Settings &gt; Desktop &amp; Dock &gt; Default web browser.</li>
+                  <li>In Vivaldi, set DuckDuckGo as the default search engine.</li>
+                  <li>Sign in to Vivaldi Sync and check that workspaces, bookmarks and extensions come back.</li>
+                  <li>Chrome, Chrome Canary and Edge are for compatibility testing, not daily browsing.</li>
+                </ul>
+
+                <h3 id="coding">Coding tools</h3>
+                <ul class="list">
+                  <li>Sign in to VS Code and turn on Settings Sync. The Homebrew cask puts <code>code</code> on your PATH.</li>
+                  <li>Sign in to Codex, Claude and Antigravity.</li>
+                  <li>Containers run in colima with the plain docker CLI. Docker Desktop and OrbStack are not part of this setup.</li>
+                </ul>
+                <figure class="cmd">
+                  <div class="cmd-bar"><figcaption>Sign in and start the toolchain</figcaption><button type="button" class="copy">Copy</button></div>
+                  <pre><code><span class="ln">gh auth login</span><span class="ln">colima start</span><span class="ln">volta install node</span></code></pre>
+                </figure>
+              </div>
+            </li>
+
+            <li class="step" id="restore-state" data-step="8">
+              <div class="step-head">
+                <span class="step-num" aria-hidden="true">8</span>
+                <h2>Restore app state and licences</h2>
+                <label class="step-done"><input type="checkbox" data-step-done aria-label="Mark step 8 done"> Done</label>
+              </div>
+              <div class="step-body">
+                <p>This is the part most often forgotten. Open the password managers first so every other sign-in is quick.</p>
+                <ul class="list">
+                  <li>Open the KeePassXC database and sign in to Bitwarden.</li>
+                  <li>Keyboard Maestro: enter the licence, then import or sync macros and check the launcher and clipboard shortcuts.</li>
+                  <li>Rectangle Pro: enter the licence and restore the window shortcuts.</li>
+                  <li>Karabiner-Elements: restore the rules and approve its driver when macOS asks.</li>
+                  <li>BetterDisplay: restore presets for external monitors.</li>
+                  <li>Obsidian and Logseq: reopen the vaults and graphs.</li>
+                  <li>MailMate: restore accounts, IMAP settings and rules.</li>
+                  <li>Slack, Discord, Telegram and Teams: sign in.</li>
+                  <li>Word, Excel and Windows App: sign in with the Microsoft account.</li>
+                  <li>Ollama and LM Studio: download your local models again. They are large, so start early.</li>
+                  <li>Shottr: set the output folder and shortcuts.</li>
+                </ul>
+                <p class="aside">Keep licence keys in the password manager and app exports in a private backup, never in this repo.</p>
+              </div>
+            </li>
+
+            <li class="step" id="verify" data-step="9">
+              <div class="step-head">
+                <span class="step-num" aria-hidden="true">9</span>
+                <h2>Check the machine</h2>
+                <label class="step-done"><input type="checkbox" data-step-done aria-label="Mark step 9 done"> Done</label>
+              </div>
+              <div class="step-body">
+                <p>From the repo folder, pass the bundle you installed: <code>minimal</code>, <code>workstation</code> or <code>all</code>. The script lists any missing formula or cask and any Dock setting that does not match.</p>
+                <figure class="cmd">
+                  <div class="cmd-bar"><figcaption>Verify the Workstation bundle</figcaption><button type="button" class="copy">Copy</button></div>
+                  <pre><code><span class="ln">./scripts/verify-setup.sh workstation</span></code></pre>
+                </figure>
+                <p>Turn Time Machine back on for this Mac in System Settings &gt; General &gt; Time Machine, then check by hand:</p>
+                <ul class="list">
+                  <li>Tap to click and three-finger drag work.</li>
+                  <li>Links open in Vivaldi, and searches go to DuckDuckGo.</li>
+                  <li>Keyboard Maestro shortcuts fire.</li>
+                  <li><code>docker run --rm hello-world</code> prints its greeting.</li>
+                  <li>The first Time Machine backup has finished.</li>
+                </ul>
+              </div>
+            </li>
+          </ol>
+
+          <section class="part" id="keep-updated">
+            <h2>Already set up? Keep it updated</h2>
+            <p class="part-lead">Three scripts in the repo: one updates everything, one shows what has drifted from the repo, and one checks a bundle is complete.</p>
+
+            <div class="step-body">
+              <h3 id="update-mac">Update everything</h3>
+              <p>Install the updater once:</p>
+              <figure class="cmd">
+                <div class="cmd-bar"><figcaption>Install update-mac</figcaption><button type="button" class="copy">Copy</button></div>
+                <pre><code><span class="ln">mkdir -p ~/bin</span><span class="ln">cp ~/Development/setup-a-mac-for-me/scripts/update-mac.sh ~/bin/update-mac</span><span class="ln">chmod +x ~/bin/update-mac</span></code></pre>
+              </figure>
+              <p>Preview first, then run it:</p>
+              <figure class="cmd">
+                <div class="cmd-bar"><figcaption>Preview, then update</figcaption><button type="button" class="copy">Copy</button></div>
+                <pre><code><span class="ln">update-mac --dry-run</span><span class="ln">update-mac</span></code></pre>
+              </figure>
+              <p>It starts with a summary: macOS version, free disk space, the last Time Machine backup, and an upgrade plan that flags major version jumps, beta and canary channels, pinned formulae and macOS updates that need a restart.</p>
+              <p>It changes nothing unless Time Machine has a backup from the last 7 days and the destination is reachable. Then it asks once per tool: Yes, No, Skip, All or Quit. It covers Homebrew, npm globals, App Store apps through <code>mas</code>, <code>uv</code>, <code>pipx</code>, Volta, <code>rustup</code>, <code>mise</code> and macOS updates, and prints install instructions for any tool that is missing.</p>
+              <p>When a macOS update is pending, install it and restart first, then run <code>update-mac</code> again.</p>
+              <ul class="list">
+                <li><code>--dry-run</code> shows what every tool would do and changes nothing. It skips the Time Machine check.</li>
+                <li><code>--yes</code> runs without prompts. It does not stop for a pending macOS update.</li>
+                <li><code>--greedy-casks</code> also upgrades casks that update themselves.</li>
+                <li><code>--skip-macos</code> lists macOS updates but does not install them.</li>
+                <li><code>--skip-backup-check</code> skips the Time Machine check, for when your terminal lacks Full Disk Access.</li>
+              </ul>
+
+              <h3 id="drift">See what changed since setup</h3>
+              <p>Compares what is installed (Homebrew formulae, casks and App Store apps) with the repo. It lists what you added by hand, what is missing, and the commands to close each gap. It only reads; it changes nothing.</p>
+              <figure class="cmd">
+                <div class="cmd-bar"><figcaption>Report drift from the repo</figcaption><button type="button" class="copy">Copy</button></div>
+                <pre><code><span class="ln">./scripts/drift-report.sh</span></code></pre>
+              </figure>
+              <ul class="list">
+                <li><code>--bundle workstation</code> compares against one bundle instead of every group.</li>
+                <li><code>--ignore FILE</code> skips tools you keep out of the repo on purpose. It reads <code>~/.config/mac-drift-ignore</code> by default when that file exists.</li>
+                <li><code>--json</code> prints one JSON object for scripts. The exit status is 1 when it finds drift, so it works from cron or launchd.</li>
+              </ul>
+
+              <h3 id="verify-later">Check a bundle is complete</h3>
+              <p>Run <code>./scripts/verify-setup.sh workstation</code> from the repo folder, as in <a href="#verify">step 9</a>.</p>
+
+              <h3 id="repo-maintenance">After changing the repo</h3>
+              <p>Edit <code>data/install-groups.json</code>, then regenerate the Brewfiles, the site data and the search index:</p>
+              <figure class="cmd">
+                <div class="cmd-bar"><figcaption>Regenerate and check</figcaption><button type="button" class="copy">Copy</button></div>
+                <pre><code><span class="ln">python3 scripts/generate_brew_artifacts.py</span><span class="ln">python3 scripts/build_search_index.py</span><span class="ln">python3 scripts/check_docs.py</span></code></pre>
+              </figure>
             </div>
-            <pre>brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta ffmpeg</pre>
           </section>
-          <section class="panel command-block">
-            <div class="command-meta">
-              <div><h2>Casks</h2></div>
-              <button type="button" class="button button-subtle" data-copy-text="brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord microsoft-edge microsoft-office microsoft-teams onedrive microsoft-outlook microsoft-remote-desktop skim adobe-acrobat-reader pdf-expert shottr kap">Copy</button>
+
+          <section class="part" id="stack-notes">
+            <h2>Decisions and exclusions</h2>
+            <p class="part-lead">Why the list looks the way it does.</p>
+            <div class="step-body">
+              <ul class="list">
+                <li>Keyboard Maestro replaces Alfred, Raycast and separate clipboard managers.</li>
+                <li>colima and the docker CLI replace Docker Desktop and OrbStack: free, scriptable, no licence.</li>
+                <li>Volta manages Node.js and mise handles other runtimes. <code>pnpm</code> stays out.</li>
+                <li>KeePassXC replaced KeeWeb, whose desktop releases stalled.</li>
+                <li>MailMate stays on <code>mailmate@beta</code> because the stable cask needs Rosetta 2.</li>
+                <li>Word, Excel and Windows App come from the App Store. Windows App replaces Microsoft Remote Desktop, whose cask is gone.</li>
+                <li>OpenTofu is used instead of Terraform.</li>
+                <li>App Exposé stays off.</li>
+              </ul>
+              <p>Everything dropped from the rebuild, with the reason, is listed at the end of the <a href="homebrew.html#retired">Homebrew catalogue</a>.</p>
             </div>
-            <pre>brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord microsoft-edge microsoft-office microsoft-teams onedrive microsoft-outlook microsoft-remote-desktop skim adobe-acrobat-reader pdf-expert shottr kap</pre>
           </section>
-        </section>
-
-        <section id="install-options" class="section reveal" data-delay="2">
-          <div class="section-heading">
-            <h2>Optional Variants</h2>
-            <p>Only use these if the default workstation is too small or too large.</p>
-          </div>
-          <div class="wiki-list">
-            <article class="wiki-item">
-              <h3>Minimal</h3>
-              <p>Enough to browse, code, and get back into the repo quickly.</p>
-              <pre>brew install bash wget vim uv tig htop tree tmux jq ncurses gh
-brew install --cask iterm2 google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord</pre>
-            </article>
-            <article class="wiki-item">
-              <h3>Full</h3>
-              <p>Workstation plus the network and support tools.</p>
-              <pre>brew install bash wget vim uv tig htop tree tmux jq ncurses gh go pandoc jira-cli volta ffmpeg telnet rclone ipmitool openssl lftp mtr nmap net-snmp
-brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord microsoft-edge microsoft-office microsoft-teams onedrive microsoft-outlook microsoft-remote-desktop skim adobe-acrobat-reader pdf-expert shottr kap tailscale-app little-snitch rustdesk netspot</pre>
-            </article>
-          </div>
-        </section>
-
-        <section id="macos-defaults" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>macOS Defaults</h2>
-            <p>Use the command when one exists. Otherwise follow the short path.</p>
-          </div>
-          <div class="wiki-list">
-            <article class="wiki-item">
-              <h3>Tap to Click</h3>
-              <pre>defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1</pre>
-            </article>
-            <article class="wiki-item">
-              <h3>Three-Finger Drag</h3>
-              <pre>System Settings -> Accessibility -> Pointer Control -> Trackpad Options -> enable "Use trackpad for dragging" and choose "three finger drag"</pre>
-            </article>
-            <article class="wiki-item">
-              <h3>Dock Autohide Speed</h3>
-              <pre>defaults write com.apple.dock autohide-time-modifier -float 0.5
-defaults write com.apple.dock autohide-delay -int 0
-killall Dock</pre>
-            </article>
-            <article class="wiki-item">
-              <h3>Launchpad 10x8</h3>
-              <pre>defaults write com.apple.dock springboard-columns -int 10
-defaults write com.apple.dock springboard-rows -int 8
-killall Dock</pre>
-            </article>
-            <article class="wiki-item">
-              <h3>Leave off</h3>
-              <p>Keep App Expose disabled. Free the Spotlight shortcut if Keyboard Maestro is taking it.</p>
-            </article>
-          </div>
-        </section>
-
-        <section id="browser-and-profiles" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Browser and Profiles</h2>
-            <p>Keep the browser defaults tight so the machine feels right immediately.</p>
-          </div>
-          <ul class="checklist">
-            <li>Set Vivaldi as the macOS default browser.</li>
-            <li>Set DuckDuckGo as the default search engine inside Vivaldi.</li>
-            <li>Restore the Vivaldi profile and confirm workspaces, bookmarks, and extensions are back.</li>
-            <li>Chrome, Chrome Canary, and Edge are installed for compatibility work. They are not the main browser path.</li>
-            <li>Pin the core sites and sign back into the tabs that matter daily.</li>
-          </ul>
-        </section>
-
-        <section id="terminal" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Terminal</h2>
-            <p>Keep the shell boring and portable.</p>
-          </div>
-          <div class="wiki-list">
-            <article class="wiki-item">
-              <h3>Minimal plugin list</h3>
-              <pre>plugins=(git)</pre>
-            </article>
-            <article class="wiki-item">
-              <h3>Do not reintroduce</h3>
-              <p>No <code>autojump</code>, no <code>zsh-syntax-highlighting</code>, and no <code>pnpm</code> in the shell bootstrap path.</p>
-            </article>
-            <article class="wiki-item">
-              <h3>Look</h3>
-              <p>Use a dark terminal profile with about 20% transparency and keep familiar word-wise editing bindings.</p>
-            </article>
-            <article class="wiki-item">
-              <h3>.zshrc — tool environment lines</h3>
-              <p>Add these after the Homebrew PATH block. Order matters: PATH first, then mise activate.</p>
-              <pre># Volta (Node version manager) — added by Volta installer
-export PATH="$HOME/.volta/bin:$PATH"
-
-# Rust
-. "$HOME/.cargo/env"
-
-# mise — activate after PATH, before any mise-managed tool
-eval "$(mise activate zsh)"
-
-# ~/bin — personal scripts including update-mac
-export PATH="$HOME/bin:$PATH"</pre>
-            </article>
-          </div>
-        </section>
-
-        <section id="coding" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Coding</h2>
-            <p>Install the tools, sign in, then let sync do the heavy lifting.</p>
-          </div>
-          <ul class="checklist">
-            <li>Install VS Code and enable Settings Sync.</li>
-            <li>Reconnect Codex and Claude.</li>
-            <li>Restore Antigravity only if it is still part of the current loop.</li>
-            <li>Use OrbStack for the local container path instead of Docker Desktop.</li>
-            <li>Keep Node.js version management on Volta.</li>
-            <li>Confirm the <code>code</code> command is back in the shell.</li>
-          </ul>
-        </section>
-
-        <section id="stack-notes" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Apps, Exclusions, and Watchlist</h2>
-            <p>The useful part is the decisions, not the marketing copy.</p>
-          </div>
-          <div class="wiki-list">
-            <article class="wiki-item">
-              <h3>Main app groups</h3>
-              <p>Productivity includes Keyboard Maestro, Rectangle Pro, Karabiner-Elements, BetterDisplay, Obsidian, Logseq, MailMate beta, KeePassXC, Spotify, Slack, and Discord. Microsoft and PDF apps sit in their own install groups.</p>
-            </article>
-            <article class="wiki-item">
-              <h3>Explicit exclusions</h3>
-              <p>App Expose is off. Alfred and Raycast are out. <code>pnpm</code> is out. Dropover, iBar, Whimsical, and Notion are out of the default rebuild.</p>
-            </article>
-            <article class="wiki-item">
-              <h3>Replacements and watchlist</h3>
-              <p>KeeWeb was replaced by KeePassXC. MailMate stays on <code>mailmate@beta</code> on Apple Silicon. Kap stays because it still has a clear niche. Logseq stays as the secondary knowledge tool next to Obsidian.</p>
-            </article>
-          </div>
-        </section>
-
-        <section id="restore-state" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Restore State</h2>
-            <p>This is the part most likely to be forgotten.</p>
-          </div>
-          <ul class="timeline">
-            <li>Sign into Vivaldi and confirm sync brings back workspaces, bookmarks, and extensions.</li>
-            <li>Sign into VS Code and enable Settings Sync.</li>
-            <li>Reconnect Codex, Claude, and Antigravity if they are part of the current workflow.</li>
-            <li>Import or sync Keyboard Maestro macros and reconnect launcher and clipboard shortcuts.</li>
-            <li>Activate Rectangle Pro and restore the expected window movement shortcuts.</li>
-            <li>Reconnect Karabiner-Elements rules if the keyboard layer matters.</li>
-            <li>Restore BetterDisplay presets if external monitor layouts and brightness mappings matter.</li>
-            <li>Reconnect Obsidian vaults and Logseq graphs.</li>
-            <li>Restore MailMate accounts, IMAP settings, and message rules.</li>
-            <li>Sign into Slack, Discord, Teams, Outlook, OneDrive, and Remote Desktop if the work setup needs them.</li>
-            <li>Check Shottr and Kap preferences if output folders or shortcuts matter.</li>
-          </ul>
-          <div class="wiki-list">
-            <article class="wiki-item">
-              <h3>Keep outside this repo</h3>
-              <p>Keyboard Maestro and Rectangle Pro license material should live in a password manager. Keep exports for Keyboard Maestro, browser backups, Logseq graphs, Karabiner profiles, and Little Snitch rules in a separate private backup path.</p>
-            </article>
-          </div>
-        </section>
-
-        <section id="backup" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Backup</h2>
-            <p>Keep this simple unless there is a real gap.</p>
-          </div>
-          <div class="notice"><strong>Default answer:</strong> if Time Machine to TrueNAS or NFS already gives a full backup and a restore path you trust, there is no need to add Kopia.</div>
-          <ul class="checklist">
-            <li>Use Time Machine with the TrueNAS or NFS destination.</li>
-            <li>Run <code>tmutil latestbackup</code> and confirm the latest snapshot exists.</li>
-            <li>Run <code>tmutil destinationinfo</code> and confirm the destination is the one you expect.</li>
-            <li>Protect the state that Homebrew cannot recreate: Keyboard Maestro exports, Obsidian vaults, Logseq graphs, MailMate settings, dotfiles, SSH material, repo clones, and small preference folders that are annoying to rebuild.</li>
-            <li>Skip caches, <code>node_modules</code>, derived build output, downloaded dependencies, and media you can re-fetch.</li>
-            <li>Add Kopia only if you still need an extra encrypted offsite or repository-style backup layer.</li>
-          </ul>
-        </section>
-
-        <section id="keep-updated" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Keep Updated</h2>
-            <p>Copy the updater into <code>~/bin</code> and run it when the backup path is available.</p>
-          </div>
-          <section class="panel command-block">
-            <div class="command-meta">
-              <div><h2>Install update helper</h2></div>
-              <button type="button" class="button button-subtle" data-copy-text="cp scripts/update-mac.sh ~/bin/update-mac&#10;chmod +x ~/bin/update-mac">Copy</button>
-            </div>
-            <pre>cp scripts/update-mac.sh ~/bin/update-mac
-chmod +x ~/bin/update-mac</pre>
-          </section>
-          <section class="panel command-block">
-            <div class="command-meta">
-              <div><h2>Run updates</h2></div>
-              <button type="button" class="button button-subtle" data-copy-text="update-mac">Copy</button>
-            </div>
-            <pre>update-mac</pre>
-          </section>
-          <section class="panel command-block">
-            <div class="command-meta">
-              <div><h2>Preview only</h2></div>
-              <button type="button" class="button button-subtle" data-copy-text="update-mac --dry-run">Copy</button>
-            </div>
-            <pre>update-mac --dry-run</pre>
-          </section>
-          <div class="wiki-list">
-            <article class="wiki-item">
-              <h3>What it does</h3>
-              <p>Opens with a pre-flight summary: macOS version, free disk, the last Time Machine backup and its age, then a grouped, risk-annotated upgrade plan. The plan uses local checks only (no network) to flag <code>!!</code> major version jumps and macOS updates needing a restart, <code>~</code> pre-release channels like <code>@beta</code> or <code>@canary</code>, and pinned formulae that will not upgrade; everything else is summarized as routine. Then it checks Time Machine with <code>tmutil latestbackup</code> and <code>tmutil destinationinfo</code>. If backup is not available, it stops before any upgrades. If backup is available, it previews what it can, then asks <strong>once per tool</strong> with <code>Yes</code>, <code>No</code>, <code>Skip</code>, <code>All</code>, or <code>Quit</code> — choose <code>All</code> to approve that tool and every remaining one without further prompts. It covers Homebrew, npm globals, App Store apps through <code>mas</code>, <code>uv</code>, <code>pipx</code>, Volta, <code>rustup</code>, <code>mise</code>, and macOS software updates when those tools exist.</p>
-            </article>
-            <article class="wiki-item">
-              <h3>Preview first</h3>
-              <p>Run <code>update-mac --dry-run</code> to print the summary and show what every tool would do without changing anything. It skips the Time Machine gate because nothing is mutated, making it the safe way to see what an update would touch.</p>
-            </article>
-            <article class="wiki-item">
-              <h3>Missing tools</h3>
-              <p>If one of those tools is not installed, the script prints the install command and the upstream docs link instead of failing the whole run.</p>
-            </article>
-            <article class="wiki-item">
-              <h3>Run without prompts</h3>
-              <p>Default behavior is interactive. Only use <code>update-mac --yes</code> if you want it to run straight through without stopping at each mutating step.</p>
-            </article>
-            <article class="wiki-item">
-              <h3>Greedy casks</h3>
-              <p>Default behavior leaves auto-updating casks alone. Only use <code>update-mac --greedy-casks</code> if you want Homebrew to force them too.</p>
-            </article>
-          </div>
-        </section>
-
-        <section id="verify" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Verify</h2>
-            <p>Use the generated check script and a short manual pass.</p>
-          </div>
-          <section class="panel command-block">
-            <div class="command-meta">
-              <div><h2>Verify workstation</h2></div>
-              <button type="button" class="button button-subtle" data-copy-text="./scripts/verify-setup.sh workstation">Copy</button>
-            </div>
-            <pre>./scripts/verify-setup.sh workstation</pre>
-          </section>
-          <div class="wiki-list">
-            <article class="wiki-item">
-              <h3>Manual pass</h3>
-              <p>Tap to Click and three-finger drag work. Vivaldi opens as default and uses DuckDuckGo. Keyboard Maestro shortcuts fire correctly. VS Code, Codex, Claude, OrbStack, Slack, Discord, and Microsoft apps all launch and sign in correctly. If Time Machine is the backup path, <code>tmutil latestbackup</code> returns the expected snapshot.</p>
-            </article>
-            <article class="wiki-item">
-              <h3>Repo maintenance</h3>
-              <p>Only if you changed the repo itself: run <code>python3 scripts/generate_brew_artifacts.py</code>, <code>python3 scripts/build_search_index.py</code>, and <code>python3 scripts/check_docs.py</code>.</p>
-            </article>
-          </div>
-        </section>
-
-        <section id="references" class="section reveal" data-delay="3">
-          <div class="section-heading">
-            <h2>Remaining Separate Pages</h2>
-            <p>Everything else collapsed into this page.</p>
-          </div>
-          <div class="inline-links">
-            <a href="homebrew.html">Homebrew</a>
-            <a href="factory-reset.html">Factory Reset</a>
-            <a href="search.html">Search</a>
-          </div>
-        </section>
-      </main>
-
-      <div data-site-shell="footer"></div>
+        </main>
+      </div>
     </div>
+
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <p>Commands come from <a href="https://github.com/joanmarcriera/setup-a-mac-for-me/blob/main/data/install-groups.json">data/install-groups.json</a>, which also generates the Brewfiles.</p>
+        <p>By <a href="https://riera.co.uk/">Joan Marc Riera</a></p>
+      </div>
+    </footer>
   </body>
 </html>

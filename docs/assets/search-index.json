@@ -4,91 +4,91 @@
     "title": "Apps | mac.riera.co.uk",
     "url": "apps.html",
     "summary": "",
-    "body": "Apps | mac.riera.co.uk Moved to ."
+    "body": "Apps | mac.riera.co.uk Moved to in the rebuild guide."
   },
   {
     "kind": "page",
     "title": "Audit | mac.riera.co.uk",
     "url": "audit.html",
     "summary": "",
-    "body": "Audit | mac.riera.co.uk Moved to ."
+    "body": "Audit | mac.riera.co.uk Moved to in the rebuild guide."
   },
   {
     "kind": "page",
     "title": "Backup | mac.riera.co.uk",
     "url": "backup.html",
     "summary": "",
-    "body": "Backup | mac.riera.co.uk Moved to ."
+    "body": "Backup | mac.riera.co.uk Moved to in the rebuild guide."
   },
   {
     "kind": "page",
     "title": "Browser | mac.riera.co.uk",
     "url": "browser.html",
     "summary": "",
-    "body": "Browser | mac.riera.co.uk Moved to ."
+    "body": "Browser | mac.riera.co.uk Moved to in the rebuild guide."
   },
   {
     "kind": "page",
     "title": "Coding | mac.riera.co.uk",
     "url": "coding.html",
     "summary": "",
-    "body": "Coding | mac.riera.co.uk Moved to ."
+    "body": "Coding | mac.riera.co.uk Moved to in the rebuild guide."
   },
   {
     "kind": "page",
-    "title": "Factory Reset | mac.riera.co.uk",
+    "title": "Back up and erase | mac.riera.co.uk",
     "url": "factory-reset.html",
-    "summary": "How to back up a MacBook Pro and reset it to factory settings before starting over.",
-    "body": "Back up the whole machine, then erase it cleanly. Pre-Wipe Backup Stack 1. Time Machine first 2. Optional selective exports 3. Export the awkward bits 4. Sync the cloud tools Time Machine Checklist Verify latest Time Machine backup Factory Reset On Apple Silicon If Erase Assistant Is Unavailable Older Intel-only route Stay connected After The Wipe Factory Reset | mac.riera.co.uk Factory Reset Back up the whole machine, then erase it cleanly. This is the path to use before selling a Mac, handing it to someone else, or deliberately starting over. The backup here is full-machine first, selective exports second. The reset path follows current Apple-silicon guidance. Short version: run a fresh Time Machine backup, verify it, then use Erase Assistant from System Settings. Pre-Wipe Backup Stack Use a full-system backup plus the app-state backups that matter to this setup. 1. Time Machine first Use Time Machine as the safety net for the entire Mac. That is the backup Apple points to before erasing a machine. 2. Optional selective exports Export the few awkward bits you would rather restore selectively. This does not require Kopia if Time Machine already covers the machine. 3. Export the awkward bits Export Keyboard Maestro macros, keep Karabiner and Little Snitch exports close, and make sure Obsidian, Logseq, and MailMate state is where you expect it. 4. Sync the cloud tools Confirm Vivaldi, VS Code, and any other account-backed tools have finished syncing before the wipe starts. Time Machine Checklist This is the fastest whole-machine backup path before a reset. Connect an external backup disk or mount the Time Machine network destination. Open Time Machine settings and add the backup disk if it is not already configured. Start a backup and wait for it to complete before you erase the Mac. Run tmutil latestbackup in Terminal to confirm the most recent backup exists. If the wipe is precautionary rather than urgent, spot-check that the latest backup contains the files you care about most. Verify latest Time Machine backup A quick CLI check before Erase Assistant. Factory Reset On Apple Silicon This is the normal path for a current MacBook Pro. Open System Settings . Go to General \u2192 Transfer or Reset . Choose Erase All Content and Settings . Enter the administrator password and review what will be removed. Continue through Erase Assistant and let the Mac reboot to the Hello screen. Apple says Erase Assistant signs you out of Apple services, turns off Find My and Activation Lock, removes apps you installed, erases all volumes, and deletes all user accounts and their data. If Erase Assistant Is Unavailable This is the fallback path, not the normal one for Apple-silicon MacBook Pros. Older Intel-only route Apple documents a separate Recovery-based erase-and-reinstall flow for Intel Macs without the T2 chip. Keep it as a reference, but do not reach for it first on modern MacBook Pros. Stay connected If you do end up in Recovery, Apple calls out two basics: keep the Mac online and keep a laptop on power while reinstalling macOS. After The Wipe Choose the restore path based on whether you want a clean rebuild or a fast migration. If the goal is a clean rebuild, set the Mac up as new and follow this site from the beginning. If the goal is a faster return, use Migration Assistant to pull accounts, apps, files, and settings from a Time Machine backup. Keep any app exports you made available even if you migrate, because selective restore is often cleaner than moving everything back."
+    "summary": "How to back up an Apple silicon Mac with Time Machine, check the backup, and erase it with Erase All Content and Settings on macOS 26.",
+    "body": "Back up and erase a Mac Make a fresh Time Machine backup Export what you want to restore by hand Let the cloud tools finish syncing Erase the Mac If Erase All Content and Settings is unavailable After the wipe Back up and erase | mac.riera.co.uk Back up and erase a Mac Use this before selling or handing on a Mac, or when you want to start again from nothing. Back up the whole machine, check the backup, then erase it. Written for macOS 26 Tahoe on Apple silicon. 1 Make a fresh Time Machine backup Connect the backup disk or mount the network share. If it is not set up yet, add it in System Settings > General > Time Machine. Then start a backup and wait for it to finish: tmutil startbackup --block tmutil latestbackup tmutil needs Full Disk Access for your terminal app. If you have time, open the backup and spot-check the files you care about most. 2 Export what you want to restore by hand Time Machine covers everything, but these are easier to restore one at a time than to dig out of a backup: Keyboard Maestro macros and Karabiner-Elements rules A copy of the KeePassXC database Obsidian vaults, Logseq graphs and MailMate settings, wherever they live Dotfiles and SSH keys 3 Let the cloud tools finish syncing Check that Vivaldi Sync, VS Code Settings Sync and iCloud Drive have no uploads pending, and push any unpushed git work. 4 Erase the Mac Open System Settings > General > Transfer or Reset. Choose Erase All Content and Settings and enter your administrator password. Follow Erase Assistant. The Mac restarts, activates, and opens Setup Assistant. Erase Assistant signs you out of Apple services, turns off Find My and Activation Lock, removes the apps you installed, and deletes every user account and its data. If Erase All Content and Settings is unavailable Use macOS Recovery instead. Shut the Mac down, press and hold the power button until you see the startup options, and choose Options. Erase the disk in Disk Utility, then reinstall macOS. Keep the Mac online and plugged in while it reinstalls. After the wipe For a clean rebuild, set the Mac up as new and follow the from step 2. For a faster return, use Migration Assistant in Setup Assistant to bring accounts, apps and files back from the Time Machine backup. Keep the exports from step 2 either way. Restoring one app at a time is often cleaner than moving everything back. Commands come from , which also generates the Brewfiles. By"
   },
   {
     "kind": "page",
-    "title": "Homebrew | mac.riera.co.uk",
+    "title": "Homebrew catalogue | mac.riera.co.uk",
     "url": "homebrew.html",
-    "summary": "Copy-paste Homebrew commands for the mac.riera.co.uk setup.",
-    "body": "Copy the command you want, then keep scrolling. Table of Contents Default Bundles Individual Groups Notes Homebrew | mac.riera.co.uk Homebrew Copy the command you want, then keep scrolling. This page is intentionally linear. The default bundles come first, then the smaller groups, then the notes. Table of Contents Default Bundles Use one of these if you want the usual setup in one go. Default: Workstation Individual Groups Use these when you want only part of the stack. Notes Short reminders that still matter during install."
+    "summary": "Every Homebrew bundle and group in the mac.riera.co.uk rebuild, with copyable install commands, notes, and the apps that were dropped.",
+    "body": "Homebrew catalogue Bundles Groups Dropped from the rebuild Homebrew catalogue | mac.riera.co.uk Homebrew catalogue Every bundle and group in the rebuild, each with its own install command. Use a bundle for a full install, or a single group to add one part of the stack. Last reviewed . Generated from data/install-groups.json . Jump to , or . This catalogue is built in the browser from . Without JavaScript, copy the commands from on GitHub, or use the Workstation command on the . Bundles Start with Workstation unless you know you need less or more. Groups Bundles are made of these. Install one on its own to add part of the stack. Dropped from the rebuild Apps and tools that used to be here, and why they went. Commands come from , which also generates the Brewfiles. By"
   },
   {
     "kind": "page",
-    "title": "mac.riera.co.uk",
+    "title": "Rebuild a Mac | mac.riera.co.uk",
     "url": "index.html",
-    "summary": "Direct Mac rebuild notes for Joan Marc Riera.",
-    "body": "One page. Copy the commands. Restore the state. Stop. Table of Contents Install Homebrew Homebrew installer Install the Default Workstation Formulae Casks Optional Variants Minimal Full macOS Defaults Tap to Click Three-Finger Drag Dock Autohide Speed Launchpad 10x8 Leave off Browser and Profiles Terminal Minimal plugin list Do not reintroduce Look .zshrc \u2014 tool environment lines Coding Apps, Exclusions, and Watchlist Main app groups Explicit exclusions Replacements and watchlist Restore State Keep outside this repo Backup Keep Updated Install update helper Run updates Preview only What it does Preview first Missing tools Run without prompts Greedy casks Verify Verify workstation Manual pass Repo maintenance Remaining Separate Pages mac.riera.co.uk Setup One page. Copy the commands. Restore the state. Stop. This is the main rebuild guide. It replaces most of the smaller pages. The only separate pages still worth keeping are the full Homebrew catalog, factory reset steps, and search. Table of Contents Install Homebrew Run this once on a fresh Mac. Homebrew installer Install the Default Workstation This is the default path. Formulae Casks Optional Variants Only use these if the default workstation is too small or too large. Minimal Enough to browse, code, and get back into the repo quickly. Full Workstation plus the network and support tools. macOS Defaults Use the command when one exists. Otherwise follow the short path. Tap to Click Three-Finger Drag Dock Autohide Speed Launchpad 10x8 Leave off Keep App Expose disabled. Free the Spotlight shortcut if Keyboard Maestro is taking it. Browser and Profiles Keep the browser defaults tight so the machine feels right immediately. Set Vivaldi as the macOS default browser. Set DuckDuckGo as the default search engine inside Vivaldi. Restore the Vivaldi profile and confirm workspaces, bookmarks, and extensions are back. Chrome, Chrome Canary, and Edge are installed for compatibility work. They are not the main browser path. Pin the core sites and sign back into the tabs that matter daily. Terminal Keep the shell boring and portable. Minimal plugin list Do not reintroduce No autojump , no zsh-syntax-highlighting , and no pnpm in the shell bootstrap path. Look Use a dark terminal profile with about 20% transparency and keep familiar word-wise editing bindings. .zshrc \u2014 tool environment lines Add these after the Homebrew PATH block. Order matters: PATH first, then mise activate. Coding Install the tools, sign in, then let sync do the heavy lifting. Install VS Code and enable Settings Sync. Reconnect Codex and Claude. Restore Antigravity only if it is still part of the current loop. Use OrbStack for the local container path instead of Docker Desktop. Keep Node.js version management on Volta. Confirm the code command is back in the shell. Apps, Exclusions, and Watchlist The useful part is the decisions, not the marketing copy. Main app groups Productivity includes Keyboard Maestro, Rectangle Pro, Karabiner-Elements, BetterDisplay, Obsidian, Logseq, MailMate beta, KeePassXC, Spotify, Slack, and Discord. Microsoft and PDF apps sit in their own install groups. Explicit exclusions App Expose is off. Alfred and Raycast are out. pnpm is out. Dropover, iBar, Whimsical, and Notion are out of the default rebuild. Replacements and watchlist KeeWeb was replaced by KeePassXC. MailMate stays on mailmate@beta on Apple Silicon. Kap stays because it still has a clear niche. Logseq stays as the secondary knowledge tool next to Obsidian. Restore State This is the part most likely to be forgotten. Sign into Vivaldi and confirm sync brings back workspaces, bookmarks, and extensions. Sign into VS Code and enable Settings Sync. Reconnect Codex, Claude, and Antigravity if they are part of the current workflow. Import or sync Keyboard Maestro macros and reconnect launcher and clipboard shortcuts. Activate Rectangle Pro and restore the expected window movement shortcuts. Reconnect Karabiner-Elements rules if the keyboard layer matters. Restore BetterDisplay presets if external monitor layouts and brightness mappings matter. Reconnect Obsidian vaults and Logseq graphs. Restore MailMate accounts, IMAP settings, and message rules. Sign into Slack, Discord, Teams, Outlook, OneDrive, and Remote Desktop if the work setup needs them. Check Shottr and Kap preferences if output folders or shortcuts matter. Keep outside this repo Keyboard Maestro and Rectangle Pro license material should live in a password manager. Keep exports for Keyboard Maestro, browser backups, Logseq graphs, Karabiner profiles, and Little Snitch rules in a separate private backup path. Backup Keep this simple unless there is a real gap. Default answer: Use Time Machine with the TrueNAS or NFS destination. Run tmutil latestbackup and confirm the latest snapshot exists. Run tmutil destinationinfo and confirm the destination is the one you expect. Protect the state that Homebrew cannot recreate: Keyboard Maestro exports, Obsidian vaults, Logseq graphs, MailMate settings, dotfiles, SSH material, repo clones, and small preference folders that are annoying to rebuild. Skip caches, node_modules , derived build output, downloaded dependencies, and media you can re-fetch. Add Kopia only if you still need an extra encrypted offsite or repository-style backup layer. Keep Updated Copy the updater into ~/bin and run it when the backup path is available. Install update helper Run updates Preview only What it does Opens with a pre-flight summary: macOS version, free disk, the last Time Machine backup and its age, then a grouped, risk-annotated upgrade plan. The plan uses local checks only (no network) to flag !! major version jumps and macOS updates needing a restart, ~ pre-release channels like @beta or @canary , and pinned formulae that will not upgrade; everything else is summarized as routine. Then it checks Time Machine with tmutil latestbackup and tmutil destinationinfo . If backup is not available, it stops before any upgrades. If backup is available, it previews what it can, then asks once per tool with Yes , No , Skip , All , or Quit \u2014 choose All to approve that tool and every remaining one without further prompts. It covers Homebrew, npm globals, App Store apps through mas , uv , pipx , Volta, rustup , mise , and macOS software updates when those tools exist. Preview first Run update-mac --dry-run to print the summary and show what every tool would do without changing anything. It skips the Time Machine gate because nothing is mutated, making it the safe way to see what an update would touch. Missing tools If one of those tools is not installed, the script prints the install command and the upstream docs link instead of failing the whole run. Run without prompts Default behavior is interactive. Only use update-mac --yes if you want it to run straight through without stopping at each mutating step. Greedy casks Default behavior leaves auto-updating casks alone. Only use update-mac --greedy-casks if you want Homebrew to force them too. Verify Use the generated check script and a short manual pass. Verify workstation Manual pass Tap to Click and three-finger drag work. Vivaldi opens as default and uses DuckDuckGo. Keyboard Maestro shortcuts fire correctly. VS Code, Codex, Claude, OrbStack, Slack, Discord, and Microsoft apps all launch and sign in correctly. If Time Machine is the backup path, tmutil latestbackup returns the expected snapshot. Repo maintenance Only if you changed the repo itself: run python3 scripts/generate_brew_artifacts.py , python3 scripts/build_search_index.py , and python3 scripts/check_docs.py . Remaining Separate Pages Everything else collapsed into this page."
+    "summary": "Step-by-step runbook for rebuilding a Mac on macOS 26 Tahoe with Apple silicon and Homebrew: back up, install, configure, restore, verify, then keep it updated.",
+    "body": "Rebuild path Already set up Rebuild a Mac, from erased to working Back up first Go through Setup Assistant Install Homebrew and get the scripts Install the apps Set up the shell and terminal Apply macOS settings Tap to click Three-finger drag Dock Leave these off Set up the browser and coding tools Browser Coding tools Restore app state and licences Check the machine Already set up? Keep it updated Update everything See what changed since setup Check a bundle is complete After changing the repo Decisions and exclusions Rebuild a Mac | mac.riera.co.uk Jump to a step Rebuild path 1 Back up first 2 Setup Assistant 3 Homebrew and scripts 4 Install the apps 5 Shell and terminal 6 macOS settings 7 Browser and coding 8 Restore app state 9 Check the machine Already set up Rebuild a Mac, from erased to working The steps, commands and settings I use to turn a freshly erased Mac into my daily workstation. Work top to bottom, copy each command, and tick each step off as you go. Written for macOS 26 Tahoe on Apple silicon. App list last reviewed . Mac already set up? Go to . 1 Back up first Skip this on a brand-new Mac. On a Mac you are about to erase, make sure a recent Time Machine backup exists and points where you expect. tmutil latestbackup tmutil destinationinfo If either command says it is not permitted, give your terminal app Full Disk Access in System Settings > Privacy & Security > Full Disk Access. Homebrew cannot recreate these, so check they are in the backup or exported somewhere private: Keyboard Maestro macros and Karabiner-Elements rules Obsidian vaults and Logseq graphs MailMate accounts and rules Dotfiles, SSH keys and repo clones with unpushed work Leave out caches, node_modules , build output and anything you can download again. The full erase procedure is on . 2 Go through Setup Assistant Choose set up as new for a clean rebuild. Migration Assistant from Time Machine is faster, but it brings the old clutter back with it. Sign in with your Apple Account so iCloud, the App Store and Find My are ready. Turn on FileVault when asked. Apple Intelligence is offered during setup. You can change it later in System Settings > Apple Intelligence & Siri. Before installing anything else, install pending updates from System Settings > General > Software Update and restart. Homebrew then installs against the current system. 3 Install Homebrew and get the scripts The installer also installs Apple's Command Line Tools, which include git . It asks for your password. /bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\" Put brew on your PATH. The installer prints these lines when it finishes; on Apple silicon they are: echo 'eval \"$(/opt/homebrew/bin/brew shellenv)\"' >> ~/.zprofile eval \"$(/opt/homebrew/bin/brew shellenv)\" brew doctor Then clone this repo. Later steps run its scripts from the repo folder. mkdir -p ~/Development git clone https://github.com/joanmarcriera/setup-a-mac-for-me.git ~/Development/setup-a-mac-for-me cd ~/Development/setup-a-mac-for-me 4 Install the apps Pick a bundle and run its commands. Workstation is the usual day-one install; Minimal and Full are smaller and larger versions of it. Expect the first run to take a while. Workstation bundle: the usual day-one rebuild for daily work. 53 formulae, 47 casks, 3 App Store apps. brew install bash wget vim uv tig htop tree tmux jq gh mas fzf ripgrep-all dust ncdu watch gping jdupes go volta mise pipx pandoc shellcheck git-cliff git-filter-repo git-lfs cmake hugo forgejo-cli colima docker docker-compose ollama llama.cpp whisper.cpp whisperkit-cli llmfit opencode herdr rtk qpdf poppler tesseract weasyprint pango ffmpeg yt-dlp gallery-dl gitleaks syft grype ykman brew install --cask iterm2 github google-chrome google-chrome@canary vivaldi comet duckduckgo visual-studio-code codex claude antigravity antigravity-cli lm-studio codexbar hive-app supacode t3-code meetily keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta spotify slack discord telegram-desktop typora markedit zotero anki libreoffice drawio yed excalidrawz microsoft-edge microsoft-teams skim adobe-acrobat-reader shottr vlc blackhole-2ch blender bitwarden keepassxc # App Store: Microsoft Word, Microsoft Excel, Windows App mas install 462054704 462058435 1295203466 Turn on JavaScript to choose the Minimal or Full bundle here, or use the . Casks that install drivers, such as Karabiner-Elements and BlackHole, ask for your password and for approval in System Settings the first time they run. Every group, with its own command and notes, is in the . 5 Set up the shell and terminal Keep zsh plain and portable. Add these lines to ~/.zshrc . Homebrew's own line lives in ~/.zprofile from step 3, so it loads first. # Volta: Node.js versions export VOLTA_HOME=\"$HOME/.volta\" export PATH=\"$VOLTA_HOME/bin:$PATH\" # Rust, only if rustup is installed [ -f \"$HOME/.cargo/env\" ] && . \"$HOME/.cargo/env\" # mise: other runtimes. Activate after the PATH changes above. command -v mise >/dev/null && eval \"$(mise activate zsh)\" # ~/bin: personal scripts, including update-mac export PATH=\"$HOME/bin:$PATH\" If you use Oh My Zsh, keep the plugin list to plugins=(git) . Do not add back autojump , zsh-syntax-highlighting or pnpm . In iTerm2, use a dark profile at about 20% transparency, and set Settings > Profiles > Keys > Key Mappings > Presets to Natural Text Editing so Option-arrow moves by word. 6 Apply macOS settings Tap to click System Settings > Trackpad > Point & Click > Tap to click, or run this and log out and back in: defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1 Three-finger drag System Settings > Accessibility > Pointer Control > Trackpad Options. Turn on Use trackpad for dragging and set Dragging style to Three Finger Drag . Dock Show the hidden Dock without the delay. From the repo, ./scripts/apply-macos-defaults.sh applies the same settings. defaults write com.apple.dock autohide-time-modifier -float 0.5 defaults write com.apple.dock autohide-delay -int 0 killall Dock Leave these off App Expos\u00e9: System Settings > Trackpad > More Gestures > App Expos\u00e9. The Spotlight shortcut, if Keyboard Maestro needs Command-Space: System Settings > Keyboard > Keyboard Shortcuts > Spotlight. The old Launchpad grid tweak. macOS 26 replaced Launchpad with Apps in Spotlight, so springboard-columns and springboard-rows no longer change anything. 7 Set up the browser and coding tools Browser Make Vivaldi the default browser in System Settings > Desktop & Dock > Default web browser. In Vivaldi, set DuckDuckGo as the default search engine. Sign in to Vivaldi Sync and check that workspaces, bookmarks and extensions come back. Chrome, Chrome Canary and Edge are for compatibility testing, not daily browsing. Coding tools Sign in to VS Code and turn on Settings Sync. The Homebrew cask puts code on your PATH. Sign in to Codex, Claude and Antigravity. Containers run in colima with the plain docker CLI. Docker Desktop and OrbStack are not part of this setup. gh auth login colima start volta install node 8 Restore app state and licences This is the part most often forgotten. Open the password managers first so every other sign-in is quick. Open the KeePassXC database and sign in to Bitwarden. Keyboard Maestro: enter the licence, then import or sync macros and check the launcher and clipboard shortcuts. Rectangle Pro: enter the licence and restore the window shortcuts. Karabiner-Elements: restore the rules and approve its driver when macOS asks. BetterDisplay: restore presets for external monitors. Obsidian and Logseq: reopen the vaults and graphs. MailMate: restore accounts, IMAP settings and rules. Slack, Discord, Telegram and Teams: sign in. Word, Excel and Windows App: sign in with the Microsoft account. Ollama and LM Studio: download your local models again. They are large, so start early. Shottr: set the output folder and shortcuts. Keep licence keys in the password manager and app exports in a private backup, never in this repo. 9 Check the machine From the repo folder, pass the bundle you installed: minimal , workstation or all . The script lists any missing formula or cask and any Dock setting that does not match. ./scripts/verify-setup.sh workstation Turn Time Machine back on for this Mac in System Settings > General > Time Machine, then check by hand: Tap to click and three-finger drag work. Links open in Vivaldi, and searches go to DuckDuckGo. Keyboard Maestro shortcuts fire. docker run --rm hello-world prints its greeting. The first Time Machine backup has finished. Already set up? Keep it updated Three scripts in the repo: one updates everything, one shows what has drifted from the repo, and one checks a bundle is complete. Update everything Install the updater once: mkdir -p ~/bin cp ~/Development/setup-a-mac-for-me/scripts/update-mac.sh ~/bin/update-mac chmod +x ~/bin/update-mac Preview first, then run it: update-mac --dry-run update-mac It starts with a summary: macOS version, free disk space, the last Time Machine backup, and an upgrade plan that flags major version jumps, beta and canary channels, pinned formulae and macOS updates that need a restart. It changes nothing unless Time Machine has a backup from the last 7 days and the destination is reachable. Then it asks once per tool: Yes, No, Skip, All or Quit. It covers Homebrew, npm globals, App Store apps through mas , uv , pipx , Volta, rustup , mise and macOS updates, and prints install instructions for any tool that is missing. When a macOS update is pending, install it and restart first, then run update-mac again. --dry-run shows what every tool would do and changes nothing. It skips the Time Machine check. --yes runs without prompts. It does not stop for a pending macOS update. --greedy-casks also upgrades casks that update themselves. --skip-macos lists macOS updates but does not install them. --skip-backup-check skips the Time Machine check, for when your terminal lacks Full Disk Access. See what changed since setup Compares what is installed (Homebrew formulae, casks and App Store apps) with the repo. It lists what you added by hand, what is missing, and the commands to close each gap. It only reads; it changes nothing. ./scripts/drift-report.sh --bundle workstation compares against one bundle instead of every group. --ignore FILE skips tools you keep out of the repo on purpose. It reads ~/.config/mac-drift-ignore by default when that file exists. --json prints one JSON object for scripts. The exit status is 1 when it finds drift, so it works from cron or launchd. Check a bundle is complete Run ./scripts/verify-setup.sh workstation from the repo folder, as in . After changing the repo Edit data/install-groups.json , then regenerate the Brewfiles, the site data and the search index: python3 scripts/generate_brew_artifacts.py python3 scripts/build_search_index.py python3 scripts/check_docs.py Decisions and exclusions Why the list looks the way it does. Keyboard Maestro replaces Alfred, Raycast and separate clipboard managers. colima and the docker CLI replace Docker Desktop and OrbStack: free, scriptable, no licence. Volta manages Node.js and mise handles other runtimes. pnpm stays out. KeePassXC replaced KeeWeb, whose desktop releases stalled. MailMate stays on mailmate@beta because the stable cask needs Rosetta 2. Word, Excel and Windows App come from the App Store. Windows App replaces Microsoft Remote Desktop, whose cask is gone. OpenTofu is used instead of Terraform. App Expos\u00e9 stays off. Everything dropped from the rebuild, with the reason, is listed at the end of the . Commands come from , which also generates the Brewfiles. By"
   },
   {
     "kind": "page",
-    "title": "macOS Defaults | mac.riera.co.uk",
+    "title": "macOS settings | mac.riera.co.uk",
     "url": "macos-defaults.html",
     "summary": "",
-    "body": "macOS Defaults | mac.riera.co.uk Moved to ."
+    "body": "macOS settings | mac.riera.co.uk Moved to in the rebuild guide."
   },
   {
     "kind": "page",
-    "title": "Post-Install | mac.riera.co.uk",
+    "title": "Post-install | mac.riera.co.uk",
     "url": "post-install.html",
     "summary": "",
-    "body": "Post-Install | mac.riera.co.uk Moved to ."
+    "body": "Post-install | mac.riera.co.uk Moved to in the rebuild guide."
   },
   {
     "kind": "page",
-    "title": "Restore State | mac.riera.co.uk",
+    "title": "Restore state | mac.riera.co.uk",
     "url": "restore-state.html",
     "summary": "",
-    "body": "Restore State | mac.riera.co.uk Moved to ."
+    "body": "Restore state | mac.riera.co.uk Moved to in the rebuild guide."
   },
   {
     "kind": "page",
     "title": "Search | mac.riera.co.uk",
     "url": "search.html",
-    "summary": "Search the mac.riera.co.uk setup guide.",
-    "body": "Search the setup by page, bundle, group, or package name. Results Search | mac.riera.co.uk Search Search the setup by page, bundle, group, or package name. The index covers site pages plus the generated Homebrew package catalog, so queries like mailmate , kopia , keepassxc , and backup work the way they should. Shortcut: press / anywhere on the site to focus the header search field. Results"
+    "summary": "Search the mac.riera.co.uk rebuild guide by step, bundle, group or package name.",
+    "body": "Search Search | mac.riera.co.uk Search Find a step, a bundle, a group or a package by name, for example mailmate , colima or time machine . Press on any page to jump to search. Search runs in your browser and needs JavaScript. The lists every package. Commands come from , which also generates the Brewfiles. By"
   },
   {
     "kind": "page",
     "title": "Terminal | mac.riera.co.uk",
     "url": "terminal.html",
     "summary": "",
-    "body": "Terminal | mac.riera.co.uk Moved to ."
+    "body": "Terminal | mac.riera.co.uk Moved to in the rebuild guide."
   },
   {
     "kind": "bundle",
@@ -102,524 +102,937 @@
     "title": "Workstation",
     "url": "homebrew.html",
     "summary": "The usual day-one rebuild for daily work.",
-    "body": "cli dev browsers-ai productivity microsoft pdf capture"
+    "body": "cli dev containers browsers-ai ai-local productivity docs-diagrams microsoft pdf capture security"
   },
   {
     "kind": "bundle",
     "title": "Full",
     "url": "homebrew.html",
-    "summary": "Daily rebuild plus network and support tools.",
-    "body": "cli dev browsers-ai productivity microsoft pdf capture network"
+    "summary": "Daily rebuild plus cloud, mobile, backup, network and support tools.",
+    "body": "cli dev containers browsers-ai ai-local productivity docs-diagrams microsoft pdf capture security cloud mobile backup network"
   },
   {
     "kind": "group",
     "title": "CLI",
     "url": "homebrew.html",
     "summary": "Core shell and terminal tools for day one.",
-    "body": "bash wget vim uv tig htop tree tmux jq ncurses gh iterm2 zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+    "body": "bash wget vim uv tig htop tree tmux jq gh mas fzf ripgrep-all dust ncdu watch gping jdupes iterm2 zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
   },
   {
     "kind": "formula",
     "title": "bash",
     "url": "homebrew.html",
     "summary": "Homebrew formula in CLI",
-    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
   },
   {
     "kind": "formula",
     "title": "wget",
     "url": "homebrew.html",
     "summary": "Homebrew formula in CLI",
-    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
   },
   {
     "kind": "formula",
     "title": "vim",
     "url": "homebrew.html",
     "summary": "Homebrew formula in CLI",
-    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
   },
   {
     "kind": "formula",
     "title": "uv",
     "url": "homebrew.html",
     "summary": "Homebrew formula in CLI",
-    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
   },
   {
     "kind": "formula",
     "title": "tig",
     "url": "homebrew.html",
     "summary": "Homebrew formula in CLI",
-    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
   },
   {
     "kind": "formula",
     "title": "htop",
     "url": "homebrew.html",
     "summary": "Homebrew formula in CLI",
-    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
   },
   {
     "kind": "formula",
     "title": "tree",
     "url": "homebrew.html",
     "summary": "Homebrew formula in CLI",
-    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
   },
   {
     "kind": "formula",
     "title": "tmux",
     "url": "homebrew.html",
     "summary": "Homebrew formula in CLI",
-    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
   },
   {
     "kind": "formula",
     "title": "jq",
     "url": "homebrew.html",
     "summary": "Homebrew formula in CLI",
-    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting."
-  },
-  {
-    "kind": "formula",
-    "title": "ncurses",
-    "url": "homebrew.html",
-    "summary": "Homebrew formula in CLI",
-    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
   },
   {
     "kind": "formula",
     "title": "gh",
     "url": "homebrew.html",
     "summary": "Homebrew formula in CLI",
-    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
+  },
+  {
+    "kind": "formula",
+    "title": "mas",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in CLI",
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
+  },
+  {
+    "kind": "formula",
+    "title": "fzf",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in CLI",
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
+  },
+  {
+    "kind": "formula",
+    "title": "ripgrep-all",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in CLI",
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
+  },
+  {
+    "kind": "formula",
+    "title": "dust",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in CLI",
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
+  },
+  {
+    "kind": "formula",
+    "title": "ncdu",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in CLI",
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
+  },
+  {
+    "kind": "formula",
+    "title": "watch",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in CLI",
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
+  },
+  {
+    "kind": "formula",
+    "title": "gping",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in CLI",
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
+  },
+  {
+    "kind": "formula",
+    "title": "jdupes",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in CLI",
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
   },
   {
     "kind": "cask",
     "title": "iterm2",
     "url": "homebrew.html",
     "summary": "Homebrew cask in CLI",
-    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+    "body": "Core shell and terminal tools for day one. zsh stays minimal: no autojump and no zsh-syntax-highlighting. mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it. ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
   },
   {
     "kind": "group",
     "title": "Dev",
     "url": "homebrew.html",
     "summary": "Coding and writing tools that belong on every workstation rebuild.",
-    "body": "go pandoc jira-cli volta orbstack Node.js version management goes through Volta. pnpm is intentionally excluded. OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
+    "body": "go volta mise pipx pandoc shellcheck git-cliff git-filter-repo git-lfs cmake hugo forgejo-cli github Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
   },
   {
     "kind": "formula",
     "title": "go",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Dev",
-    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded. OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
-  },
-  {
-    "kind": "formula",
-    "title": "pandoc",
-    "url": "homebrew.html",
-    "summary": "Homebrew formula in Dev",
-    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded. OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
-  },
-  {
-    "kind": "formula",
-    "title": "jira-cli",
-    "url": "homebrew.html",
-    "summary": "Homebrew formula in Dev",
-    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded. OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
   },
   {
     "kind": "formula",
     "title": "volta",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Dev",
-    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded. OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
+  },
+  {
+    "kind": "formula",
+    "title": "mise",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Dev",
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
+  },
+  {
+    "kind": "formula",
+    "title": "pipx",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Dev",
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
+  },
+  {
+    "kind": "formula",
+    "title": "pandoc",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Dev",
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
+  },
+  {
+    "kind": "formula",
+    "title": "shellcheck",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Dev",
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
+  },
+  {
+    "kind": "formula",
+    "title": "git-cliff",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Dev",
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
+  },
+  {
+    "kind": "formula",
+    "title": "git-filter-repo",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Dev",
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
+  },
+  {
+    "kind": "formula",
+    "title": "git-lfs",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Dev",
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
+  },
+  {
+    "kind": "formula",
+    "title": "cmake",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Dev",
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
+  },
+  {
+    "kind": "formula",
+    "title": "hugo",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Dev",
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
+  },
+  {
+    "kind": "formula",
+    "title": "forgejo-cli",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Dev",
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
   },
   {
     "kind": "cask",
-    "title": "orbstack",
+    "title": "github",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Dev",
-    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta. pnpm is intentionally excluded. OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
+    "body": "Coding and writing tools that belong on every workstation rebuild. Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded. jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow. git-cliff generates changelogs from Conventional Commits."
+  },
+  {
+    "kind": "group",
+    "title": "Containers",
+    "url": "homebrew.html",
+    "summary": "Local containers without Docker Desktop: colima VM plus the docker CLI.",
+    "body": "colima docker docker-compose Docker Desktop and OrbStack were replaced by colima + the docker CLI + docker-compose (free, scriptable, no licence). Start the VM with `colima start`; the docker CLI then works unchanged."
+  },
+  {
+    "kind": "formula",
+    "title": "colima",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Containers",
+    "body": "Local containers without Docker Desktop: colima VM plus the docker CLI. Docker Desktop and OrbStack were replaced by colima + the docker CLI + docker-compose (free, scriptable, no licence). Start the VM with `colima start`; the docker CLI then works unchanged."
+  },
+  {
+    "kind": "formula",
+    "title": "docker",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Containers",
+    "body": "Local containers without Docker Desktop: colima VM plus the docker CLI. Docker Desktop and OrbStack were replaced by colima + the docker CLI + docker-compose (free, scriptable, no licence). Start the VM with `colima start`; the docker CLI then works unchanged."
+  },
+  {
+    "kind": "formula",
+    "title": "docker-compose",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Containers",
+    "body": "Local containers without Docker Desktop: colima VM plus the docker CLI. Docker Desktop and OrbStack were replaced by colima + the docker CLI + docker-compose (free, scriptable, no licence). Start the VM with `colima start`; the docker CLI then works unchanged."
   },
   {
     "kind": "group",
     "title": "Browsers + AI",
     "url": "homebrew.html",
-    "summary": "Browser and coding assistants used in the daily workflow.",
-    "body": "google-chrome google-chrome@canary vivaldi duckduckgo visual-studio-code github codex claude antigravity Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
+    "summary": "Browsers and coding assistants used in the daily workflow.",
+    "body": "google-chrome google-chrome@canary vivaldi comet duckduckgo visual-studio-code codex claude antigravity Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. Comet (Perplexity's AI browser) is the newest addition and is in daily use. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
   },
   {
     "kind": "cask",
     "title": "google-chrome",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Browsers + AI",
-    "body": "Browser and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
+    "body": "Browsers and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. Comet (Perplexity's AI browser) is the newest addition and is in daily use. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
   },
   {
     "kind": "cask",
     "title": "google-chrome@canary",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Browsers + AI",
-    "body": "Browser and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
+    "body": "Browsers and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. Comet (Perplexity's AI browser) is the newest addition and is in daily use. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
   },
   {
     "kind": "cask",
     "title": "vivaldi",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Browsers + AI",
-    "body": "Browser and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
+    "body": "Browsers and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. Comet (Perplexity's AI browser) is the newest addition and is in daily use. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
+  },
+  {
+    "kind": "cask",
+    "title": "comet",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Browsers + AI",
+    "body": "Browsers and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. Comet (Perplexity's AI browser) is the newest addition and is in daily use. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
   },
   {
     "kind": "cask",
     "title": "duckduckgo",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Browsers + AI",
-    "body": "Browser and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
+    "body": "Browsers and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. Comet (Perplexity's AI browser) is the newest addition and is in daily use. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
   },
   {
     "kind": "cask",
     "title": "visual-studio-code",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Browsers + AI",
-    "body": "Browser and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
-  },
-  {
-    "kind": "cask",
-    "title": "github",
-    "url": "homebrew.html",
-    "summary": "Homebrew cask in Browsers + AI",
-    "body": "Browser and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
+    "body": "Browsers and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. Comet (Perplexity's AI browser) is the newest addition and is in daily use. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
   },
   {
     "kind": "cask",
     "title": "codex",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Browsers + AI",
-    "body": "Browser and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
+    "body": "Browsers and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. Comet (Perplexity's AI browser) is the newest addition and is in daily use. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
   },
   {
     "kind": "cask",
     "title": "claude",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Browsers + AI",
-    "body": "Browser and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
+    "body": "Browsers and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. Comet (Perplexity's AI browser) is the newest addition and is in daily use. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
   },
   {
     "kind": "cask",
     "title": "antigravity",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Browsers + AI",
-    "body": "Browser and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
+    "body": "Browsers and coding assistants used in the daily workflow. Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing. Comet (Perplexity's AI browser) is the newest addition and is in daily use. DuckDuckGo is the search-first companion. Antigravity is part of the current AI toolchain."
+  },
+  {
+    "kind": "group",
+    "title": "AI + Local LLM",
+    "url": "homebrew.html",
+    "summary": "Local models, speech-to-text and agent tooling that run on Apple Silicon.",
+    "body": "ollama llama.cpp whisper.cpp whisperkit-cli llmfit opencode herdr rtk antigravity-cli lm-studio codexbar hive-app supacode t3-code meetily Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "formula",
+    "title": "ollama",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "formula",
+    "title": "llama.cpp",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "formula",
+    "title": "whisper.cpp",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "formula",
+    "title": "whisperkit-cli",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "formula",
+    "title": "llmfit",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "formula",
+    "title": "opencode",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "formula",
+    "title": "herdr",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "formula",
+    "title": "rtk",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "cask",
+    "title": "antigravity-cli",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "cask",
+    "title": "lm-studio",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "cask",
+    "title": "codexbar",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "cask",
+    "title": "hive-app",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "cask",
+    "title": "supacode",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "cask",
+    "title": "t3-code",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "cask",
+    "title": "meetily",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in AI + Local LLM",
+    "body": "Local models, speech-to-text and agent tooling that run on Apple Silicon. Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware. antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18). rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar. Meetily records and transcribes meetings locally."
+  },
+  {
+    "kind": "group",
+    "title": "Cloud + IaC",
+    "url": "homebrew.html",
+    "summary": "Infrastructure-as-code and cloud CLIs.",
+    "body": "opentofu oci-cli googleworkspace-cli gcloud-cli OpenTofu is used instead of Terraform. oci-cli and gcloud-cli cover Oracle Cloud and Google Cloud; googleworkspace-cli drives Drive, Gmail and Calendar from scripts."
+  },
+  {
+    "kind": "formula",
+    "title": "opentofu",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Cloud + IaC",
+    "body": "Infrastructure-as-code and cloud CLIs. OpenTofu is used instead of Terraform. oci-cli and gcloud-cli cover Oracle Cloud and Google Cloud; googleworkspace-cli drives Drive, Gmail and Calendar from scripts."
+  },
+  {
+    "kind": "formula",
+    "title": "oci-cli",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Cloud + IaC",
+    "body": "Infrastructure-as-code and cloud CLIs. OpenTofu is used instead of Terraform. oci-cli and gcloud-cli cover Oracle Cloud and Google Cloud; googleworkspace-cli drives Drive, Gmail and Calendar from scripts."
+  },
+  {
+    "kind": "formula",
+    "title": "googleworkspace-cli",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Cloud + IaC",
+    "body": "Infrastructure-as-code and cloud CLIs. OpenTofu is used instead of Terraform. oci-cli and gcloud-cli cover Oracle Cloud and Google Cloud; googleworkspace-cli drives Drive, Gmail and Calendar from scripts."
+  },
+  {
+    "kind": "cask",
+    "title": "gcloud-cli",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Cloud + IaC",
+    "body": "Infrastructure-as-code and cloud CLIs. OpenTofu is used instead of Terraform. oci-cli and gcloud-cli cover Oracle Cloud and Google Cloud; googleworkspace-cli drives Drive, Gmail and Calendar from scripts."
+  },
+  {
+    "kind": "group",
+    "title": "Apple + Android Dev",
+    "url": "homebrew.html",
+    "summary": "Toolchains for shipping Apple and Android apps.",
+    "body": "openjdk@21 gradle xcodegen swiftlint android-studio android-commandlinetools android-platform-tools Xcode and the Apple Developer app come from the Mac App Store (mas), not Homebrew. Optional on a minimal machine; install when an app build is needed."
+  },
+  {
+    "kind": "formula",
+    "title": "openjdk@21",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Apple + Android Dev",
+    "body": "Toolchains for shipping Apple and Android apps. Xcode and the Apple Developer app come from the Mac App Store (mas), not Homebrew. Optional on a minimal machine; install when an app build is needed."
+  },
+  {
+    "kind": "formula",
+    "title": "gradle",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Apple + Android Dev",
+    "body": "Toolchains for shipping Apple and Android apps. Xcode and the Apple Developer app come from the Mac App Store (mas), not Homebrew. Optional on a minimal machine; install when an app build is needed."
+  },
+  {
+    "kind": "formula",
+    "title": "xcodegen",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Apple + Android Dev",
+    "body": "Toolchains for shipping Apple and Android apps. Xcode and the Apple Developer app come from the Mac App Store (mas), not Homebrew. Optional on a minimal machine; install when an app build is needed."
+  },
+  {
+    "kind": "formula",
+    "title": "swiftlint",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Apple + Android Dev",
+    "body": "Toolchains for shipping Apple and Android apps. Xcode and the Apple Developer app come from the Mac App Store (mas), not Homebrew. Optional on a minimal machine; install when an app build is needed."
+  },
+  {
+    "kind": "cask",
+    "title": "android-studio",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Apple + Android Dev",
+    "body": "Toolchains for shipping Apple and Android apps. Xcode and the Apple Developer app come from the Mac App Store (mas), not Homebrew. Optional on a minimal machine; install when an app build is needed."
+  },
+  {
+    "kind": "cask",
+    "title": "android-commandlinetools",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Apple + Android Dev",
+    "body": "Toolchains for shipping Apple and Android apps. Xcode and the Apple Developer app come from the Mac App Store (mas), not Homebrew. Optional on a minimal machine; install when an app build is needed."
+  },
+  {
+    "kind": "cask",
+    "title": "android-platform-tools",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Apple + Android Dev",
+    "body": "Toolchains for shipping Apple and Android apps. Xcode and the Apple Developer app come from the Mac App Store (mas), not Homebrew. Optional on a minimal machine; install when an app build is needed."
+  },
+  {
+    "kind": "group",
+    "title": "Security + Audit",
+    "url": "homebrew.html",
+    "summary": "Secret scanning, SBOM and vulnerability scans, hardware keys, password managers.",
+    "body": "gitleaks syft grype ykman bitwarden keepassxc gitleaks scans repos for secrets before commit; syft builds SBOMs and grype scans them for CVEs. ykman manages YubiKeys. john-jumbo is installed but deliberately left out of the rebuild (one-off recovery tool). Little Snitch was dropped: it is not installed any more."
+  },
+  {
+    "kind": "formula",
+    "title": "gitleaks",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Security + Audit",
+    "body": "Secret scanning, SBOM and vulnerability scans, hardware keys, password managers. gitleaks scans repos for secrets before commit; syft builds SBOMs and grype scans them for CVEs. ykman manages YubiKeys. john-jumbo is installed but deliberately left out of the rebuild (one-off recovery tool). Little Snitch was dropped: it is not installed any more."
+  },
+  {
+    "kind": "formula",
+    "title": "syft",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Security + Audit",
+    "body": "Secret scanning, SBOM and vulnerability scans, hardware keys, password managers. gitleaks scans repos for secrets before commit; syft builds SBOMs and grype scans them for CVEs. ykman manages YubiKeys. john-jumbo is installed but deliberately left out of the rebuild (one-off recovery tool). Little Snitch was dropped: it is not installed any more."
+  },
+  {
+    "kind": "formula",
+    "title": "grype",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Security + Audit",
+    "body": "Secret scanning, SBOM and vulnerability scans, hardware keys, password managers. gitleaks scans repos for secrets before commit; syft builds SBOMs and grype scans them for CVEs. ykman manages YubiKeys. john-jumbo is installed but deliberately left out of the rebuild (one-off recovery tool). Little Snitch was dropped: it is not installed any more."
+  },
+  {
+    "kind": "formula",
+    "title": "ykman",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Security + Audit",
+    "body": "Secret scanning, SBOM and vulnerability scans, hardware keys, password managers. gitleaks scans repos for secrets before commit; syft builds SBOMs and grype scans them for CVEs. ykman manages YubiKeys. john-jumbo is installed but deliberately left out of the rebuild (one-off recovery tool). Little Snitch was dropped: it is not installed any more."
+  },
+  {
+    "kind": "cask",
+    "title": "bitwarden",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Security + Audit",
+    "body": "Secret scanning, SBOM and vulnerability scans, hardware keys, password managers. gitleaks scans repos for secrets before commit; syft builds SBOMs and grype scans them for CVEs. ykman manages YubiKeys. john-jumbo is installed but deliberately left out of the rebuild (one-off recovery tool). Little Snitch was dropped: it is not installed any more."
+  },
+  {
+    "kind": "cask",
+    "title": "keepassxc",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Security + Audit",
+    "body": "Secret scanning, SBOM and vulnerability scans, hardware keys, password managers. gitleaks scans repos for secrets before commit; syft builds SBOMs and grype scans them for CVEs. ykman manages YubiKeys. john-jumbo is installed but deliberately left out of the rebuild (one-off recovery tool). Little Snitch was dropped: it is not installed any more."
   },
   {
     "kind": "group",
     "title": "Productivity",
     "url": "homebrew.html",
     "summary": "Window management, keyboard automation, notes, and personal utilities.",
-    "body": "keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta keepassxc spotify slack discord Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+    "body": "keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta spotify slack discord telegram-desktop Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path. KeePassXC moved to the Security group."
   },
   {
     "kind": "cask",
     "title": "keyboard-maestro",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path. KeePassXC moved to the Security group."
   },
   {
     "kind": "cask",
     "title": "rectangle-pro",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path. KeePassXC moved to the Security group."
   },
   {
     "kind": "cask",
     "title": "karabiner-elements",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path. KeePassXC moved to the Security group."
   },
   {
     "kind": "cask",
     "title": "betterdisplay",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path. KeePassXC moved to the Security group."
   },
   {
     "kind": "cask",
     "title": "obsidian",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path. KeePassXC moved to the Security group."
   },
   {
     "kind": "cask",
     "title": "logseq",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path. KeePassXC moved to the Security group."
   },
   {
     "kind": "cask",
     "title": "mailmate@beta",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
-  },
-  {
-    "kind": "cask",
-    "title": "keepassxc",
-    "url": "homebrew.html",
-    "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path. KeePassXC moved to the Security group."
   },
   {
     "kind": "cask",
     "title": "spotify",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path. KeePassXC moved to the Security group."
   },
   {
     "kind": "cask",
     "title": "slack",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path. KeePassXC moved to the Security group."
   },
   {
     "kind": "cask",
     "title": "discord",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Productivity",
-    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled. Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path. KeePassXC moved to the Security group."
+  },
+  {
+    "kind": "cask",
+    "title": "telegram-desktop",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Productivity",
+    "body": "Window management, keyboard automation, notes, and personal utilities. Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers. Keyboard Maestro and Rectangle Pro still require paid licenses after install. BetterDisplay stays because external monitor scaling and brightness control keep coming up. MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2. Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path. KeePassXC moved to the Security group."
+  },
+  {
+    "kind": "group",
+    "title": "Writing + Diagrams",
+    "url": "homebrew.html",
+    "summary": "Markdown editing, reference management, flashcards and diagramming.",
+    "body": "typora markedit zotero anki libreoffice drawio yed excalidrawz Typora and MarkEdit are the Markdown editors; Zotero holds research references; Anki is for spaced repetition. LibreOffice is the non-Microsoft fallback for office files."
+  },
+  {
+    "kind": "cask",
+    "title": "typora",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Writing + Diagrams",
+    "body": "Markdown editing, reference management, flashcards and diagramming. Typora and MarkEdit are the Markdown editors; Zotero holds research references; Anki is for spaced repetition. LibreOffice is the non-Microsoft fallback for office files."
+  },
+  {
+    "kind": "cask",
+    "title": "markedit",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Writing + Diagrams",
+    "body": "Markdown editing, reference management, flashcards and diagramming. Typora and MarkEdit are the Markdown editors; Zotero holds research references; Anki is for spaced repetition. LibreOffice is the non-Microsoft fallback for office files."
+  },
+  {
+    "kind": "cask",
+    "title": "zotero",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Writing + Diagrams",
+    "body": "Markdown editing, reference management, flashcards and diagramming. Typora and MarkEdit are the Markdown editors; Zotero holds research references; Anki is for spaced repetition. LibreOffice is the non-Microsoft fallback for office files."
+  },
+  {
+    "kind": "cask",
+    "title": "anki",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Writing + Diagrams",
+    "body": "Markdown editing, reference management, flashcards and diagramming. Typora and MarkEdit are the Markdown editors; Zotero holds research references; Anki is for spaced repetition. LibreOffice is the non-Microsoft fallback for office files."
+  },
+  {
+    "kind": "cask",
+    "title": "libreoffice",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Writing + Diagrams",
+    "body": "Markdown editing, reference management, flashcards and diagramming. Typora and MarkEdit are the Markdown editors; Zotero holds research references; Anki is for spaced repetition. LibreOffice is the non-Microsoft fallback for office files."
+  },
+  {
+    "kind": "cask",
+    "title": "drawio",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Writing + Diagrams",
+    "body": "Markdown editing, reference management, flashcards and diagramming. Typora and MarkEdit are the Markdown editors; Zotero holds research references; Anki is for spaced repetition. LibreOffice is the non-Microsoft fallback for office files."
+  },
+  {
+    "kind": "cask",
+    "title": "yed",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Writing + Diagrams",
+    "body": "Markdown editing, reference management, flashcards and diagramming. Typora and MarkEdit are the Markdown editors; Zotero holds research references; Anki is for spaced repetition. LibreOffice is the non-Microsoft fallback for office files."
+  },
+  {
+    "kind": "cask",
+    "title": "excalidrawz",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Writing + Diagrams",
+    "body": "Markdown editing, reference management, flashcards and diagramming. Typora and MarkEdit are the Markdown editors; Zotero holds research references; Anki is for spaced repetition. LibreOffice is the non-Microsoft fallback for office files."
   },
   {
     "kind": "group",
     "title": "Microsoft",
     "url": "homebrew.html",
     "summary": "Microsoft apps that are common enough to keep ready on a work machine.",
-    "body": "microsoft-edge microsoft-office microsoft-teams onedrive microsoft-outlook microsoft-remote-desktop Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
+    "body": "microsoft-edge microsoft-teams Word and Excel come from the Mac App Store (mas) rather than the microsoft-office cask; the machine runs the App Store builds. Windows App (mas 1295203466) replaces the microsoft-remote-desktop cask, which no longer exists in Homebrew. Dropped: microsoft-office, microsoft-outlook and onedrive casks (not installed; Outlook and OneDrive are no longer used). Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows."
   },
   {
     "kind": "cask",
     "title": "microsoft-edge",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Microsoft",
-    "body": "Microsoft apps that are common enough to keep ready on a work machine. Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
-  },
-  {
-    "kind": "cask",
-    "title": "microsoft-office",
-    "url": "homebrew.html",
-    "summary": "Homebrew cask in Microsoft",
-    "body": "Microsoft apps that are common enough to keep ready on a work machine. Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
+    "body": "Microsoft apps that are common enough to keep ready on a work machine. Word and Excel come from the Mac App Store (mas) rather than the microsoft-office cask; the machine runs the App Store builds. Windows App (mas 1295203466) replaces the microsoft-remote-desktop cask, which no longer exists in Homebrew. Dropped: microsoft-office, microsoft-outlook and onedrive casks (not installed; Outlook and OneDrive are no longer used). Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows."
   },
   {
     "kind": "cask",
     "title": "microsoft-teams",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Microsoft",
-    "body": "Microsoft apps that are common enough to keep ready on a work machine. Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
-  },
-  {
-    "kind": "cask",
-    "title": "onedrive",
-    "url": "homebrew.html",
-    "summary": "Homebrew cask in Microsoft",
-    "body": "Microsoft apps that are common enough to keep ready on a work machine. Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
-  },
-  {
-    "kind": "cask",
-    "title": "microsoft-outlook",
-    "url": "homebrew.html",
-    "summary": "Homebrew cask in Microsoft",
-    "body": "Microsoft apps that are common enough to keep ready on a work machine. Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
-  },
-  {
-    "kind": "cask",
-    "title": "microsoft-remote-desktop",
-    "url": "homebrew.html",
-    "summary": "Homebrew cask in Microsoft",
-    "body": "Microsoft apps that are common enough to keep ready on a work machine. Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows. Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
+    "body": "Microsoft apps that are common enough to keep ready on a work machine. Word and Excel come from the Mac App Store (mas) rather than the microsoft-office cask; the machine runs the App Store builds. Windows App (mas 1295203466) replaces the microsoft-remote-desktop cask, which no longer exists in Homebrew. Dropped: microsoft-office, microsoft-outlook and onedrive casks (not installed; Outlook and OneDrive are no longer used). Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows."
   },
   {
     "kind": "group",
     "title": "PDF",
     "url": "homebrew.html",
-    "summary": "PDF readers and editors kept ready for paperwork, review, and annotation.",
-    "body": "skim adobe-acrobat-reader pdf-expert Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. PDF Expert covers editing and annotation."
+    "summary": "PDF readers and command-line PDF and OCR tooling.",
+    "body": "qpdf poppler tesseract weasyprint pango skim adobe-acrobat-reader Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. qpdf, poppler and tesseract handle splitting, text extraction and OCR; weasyprint renders HTML/Markdown to PDF. PDF Expert was dropped: not installed; Skim plus Acrobat cover annotation."
+  },
+  {
+    "kind": "formula",
+    "title": "qpdf",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in PDF",
+    "body": "PDF readers and command-line PDF and OCR tooling. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. qpdf, poppler and tesseract handle splitting, text extraction and OCR; weasyprint renders HTML/Markdown to PDF. PDF Expert was dropped: not installed; Skim plus Acrobat cover annotation."
+  },
+  {
+    "kind": "formula",
+    "title": "poppler",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in PDF",
+    "body": "PDF readers and command-line PDF and OCR tooling. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. qpdf, poppler and tesseract handle splitting, text extraction and OCR; weasyprint renders HTML/Markdown to PDF. PDF Expert was dropped: not installed; Skim plus Acrobat cover annotation."
+  },
+  {
+    "kind": "formula",
+    "title": "tesseract",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in PDF",
+    "body": "PDF readers and command-line PDF and OCR tooling. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. qpdf, poppler and tesseract handle splitting, text extraction and OCR; weasyprint renders HTML/Markdown to PDF. PDF Expert was dropped: not installed; Skim plus Acrobat cover annotation."
+  },
+  {
+    "kind": "formula",
+    "title": "weasyprint",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in PDF",
+    "body": "PDF readers and command-line PDF and OCR tooling. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. qpdf, poppler and tesseract handle splitting, text extraction and OCR; weasyprint renders HTML/Markdown to PDF. PDF Expert was dropped: not installed; Skim plus Acrobat cover annotation."
+  },
+  {
+    "kind": "formula",
+    "title": "pango",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in PDF",
+    "body": "PDF readers and command-line PDF and OCR tooling. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. qpdf, poppler and tesseract handle splitting, text extraction and OCR; weasyprint renders HTML/Markdown to PDF. PDF Expert was dropped: not installed; Skim plus Acrobat cover annotation."
   },
   {
     "kind": "cask",
     "title": "skim",
     "url": "homebrew.html",
     "summary": "Homebrew cask in PDF",
-    "body": "PDF readers and editors kept ready for paperwork, review, and annotation. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. PDF Expert covers editing and annotation."
+    "body": "PDF readers and command-line PDF and OCR tooling. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. qpdf, poppler and tesseract handle splitting, text extraction and OCR; weasyprint renders HTML/Markdown to PDF. PDF Expert was dropped: not installed; Skim plus Acrobat cover annotation."
   },
   {
     "kind": "cask",
     "title": "adobe-acrobat-reader",
     "url": "homebrew.html",
     "summary": "Homebrew cask in PDF",
-    "body": "PDF readers and editors kept ready for paperwork, review, and annotation. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. PDF Expert covers editing and annotation."
-  },
-  {
-    "kind": "cask",
-    "title": "pdf-expert",
-    "url": "homebrew.html",
-    "summary": "Homebrew cask in PDF",
-    "body": "PDF readers and editors kept ready for paperwork, review, and annotation. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. PDF Expert covers editing and annotation."
+    "body": "PDF readers and command-line PDF and OCR tooling. Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. qpdf, poppler and tesseract handle splitting, text extraction and OCR; weasyprint renders HTML/Markdown to PDF. PDF Expert was dropped: not installed; Skim plus Acrobat cover annotation."
   },
   {
     "kind": "group",
     "title": "Backup",
     "url": "homebrew.html",
-    "summary": "Optional backup extras if Time Machine to TrueNAS is not enough.",
-    "body": "kopia kopiaui google-drive If Time Machine to the TrueNAS or NFS target already gives a complete backup and clean restore path, skip this group. Kopia stays optional for cases where an extra encrypted offsite copy or repository-style verification is still useful."
-  },
-  {
-    "kind": "formula",
-    "title": "kopia",
-    "url": "homebrew.html",
-    "summary": "Homebrew formula in Backup",
-    "body": "Optional backup extras if Time Machine to TrueNAS is not enough. If Time Machine to the TrueNAS or NFS target already gives a complete backup and clean restore path, skip this group. Kopia stays optional for cases where an extra encrypted offsite copy or repository-style verification is still useful."
-  },
-  {
-    "kind": "cask",
-    "title": "kopiaui",
-    "url": "homebrew.html",
-    "summary": "Homebrew cask in Backup",
-    "body": "Optional backup extras if Time Machine to TrueNAS is not enough. If Time Machine to the TrueNAS or NFS target already gives a complete backup and clean restore path, skip this group. Kopia stays optional for cases where an extra encrypted offsite copy or repository-style verification is still useful."
+    "summary": "Optional cloud sync; Time Machine to TrueNAS is the real backup.",
+    "body": "google-drive If Time Machine to the TrueNAS or NFS target already gives a complete backup and clean restore path, this group is all you need. Kopia and KopiaUI were dropped: not installed. Replication is handled server-side (ZFS) and with rclone."
   },
   {
     "kind": "cask",
     "title": "google-drive",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Backup",
-    "body": "Optional backup extras if Time Machine to TrueNAS is not enough. If Time Machine to the TrueNAS or NFS target already gives a complete backup and clean restore path, skip this group. Kopia stays optional for cases where an extra encrypted offsite copy or repository-style verification is still useful."
+    "body": "Optional cloud sync; Time Machine to TrueNAS is the real backup. If Time Machine to the TrueNAS or NFS target already gives a complete backup and clean restore path, this group is all you need. Kopia and KopiaUI were dropped: not installed. Replication is handled server-side (ZFS) and with rclone."
   },
   {
     "kind": "group",
-    "title": "Capture",
+    "title": "Capture + Media",
     "url": "homebrew.html",
-    "summary": "Screenshot, recording, and media tooling.",
-    "body": "ffmpeg shottr kap Shottr and Kap stay in the default workstation because they are used often."
+    "summary": "Screenshot, recording, download and media tooling.",
+    "body": "ffmpeg yt-dlp gallery-dl shottr vlc blackhole-2ch blender Shottr is installed directly from its website on the current machine; the cask is the repeatable path. Kap was dropped: not installed; screen recording uses macOS built-ins. BlackHole 2ch is the virtual audio device for routing and recording system audio."
   },
   {
     "kind": "formula",
     "title": "ffmpeg",
     "url": "homebrew.html",
-    "summary": "Homebrew formula in Capture",
-    "body": "Screenshot, recording, and media tooling. Shottr and Kap stay in the default workstation because they are used often."
+    "summary": "Homebrew formula in Capture + Media",
+    "body": "Screenshot, recording, download and media tooling. Shottr is installed directly from its website on the current machine; the cask is the repeatable path. Kap was dropped: not installed; screen recording uses macOS built-ins. BlackHole 2ch is the virtual audio device for routing and recording system audio."
+  },
+  {
+    "kind": "formula",
+    "title": "yt-dlp",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Capture + Media",
+    "body": "Screenshot, recording, download and media tooling. Shottr is installed directly from its website on the current machine; the cask is the repeatable path. Kap was dropped: not installed; screen recording uses macOS built-ins. BlackHole 2ch is the virtual audio device for routing and recording system audio."
+  },
+  {
+    "kind": "formula",
+    "title": "gallery-dl",
+    "url": "homebrew.html",
+    "summary": "Homebrew formula in Capture + Media",
+    "body": "Screenshot, recording, download and media tooling. Shottr is installed directly from its website on the current machine; the cask is the repeatable path. Kap was dropped: not installed; screen recording uses macOS built-ins. BlackHole 2ch is the virtual audio device for routing and recording system audio."
   },
   {
     "kind": "cask",
     "title": "shottr",
     "url": "homebrew.html",
-    "summary": "Homebrew cask in Capture",
-    "body": "Screenshot, recording, and media tooling. Shottr and Kap stay in the default workstation because they are used often."
+    "summary": "Homebrew cask in Capture + Media",
+    "body": "Screenshot, recording, download and media tooling. Shottr is installed directly from its website on the current machine; the cask is the repeatable path. Kap was dropped: not installed; screen recording uses macOS built-ins. BlackHole 2ch is the virtual audio device for routing and recording system audio."
   },
   {
     "kind": "cask",
-    "title": "kap",
+    "title": "vlc",
     "url": "homebrew.html",
-    "summary": "Homebrew cask in Capture",
-    "body": "Screenshot, recording, and media tooling. Shottr and Kap stay in the default workstation because they are used often."
+    "summary": "Homebrew cask in Capture + Media",
+    "body": "Screenshot, recording, download and media tooling. Shottr is installed directly from its website on the current machine; the cask is the repeatable path. Kap was dropped: not installed; screen recording uses macOS built-ins. BlackHole 2ch is the virtual audio device for routing and recording system audio."
+  },
+  {
+    "kind": "cask",
+    "title": "blackhole-2ch",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Capture + Media",
+    "body": "Screenshot, recording, download and media tooling. Shottr is installed directly from its website on the current machine; the cask is the repeatable path. Kap was dropped: not installed; screen recording uses macOS built-ins. BlackHole 2ch is the virtual audio device for routing and recording system audio."
+  },
+  {
+    "kind": "cask",
+    "title": "blender",
+    "url": "homebrew.html",
+    "summary": "Homebrew cask in Capture + Media",
+    "body": "Screenshot, recording, download and media tooling. Shottr is installed directly from its website on the current machine; the cask is the repeatable path. Kap was dropped: not installed; screen recording uses macOS built-ins. BlackHole 2ch is the virtual audio device for routing and recording system audio."
   },
   {
     "kind": "group",
     "title": "Network",
     "url": "homebrew.html",
     "summary": "Diagnostics, remote access, and support tooling kept out of the default rebuild.",
-    "body": "telnet rclone ipmitool openssl lftp mtr nmap net-snmp tailscale-app little-snitch rustdesk netspot Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
-  },
-  {
-    "kind": "formula",
-    "title": "telnet",
-    "url": "homebrew.html",
-    "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
+    "body": "rclone mtr nmap tailscale-app netspot Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale. The machine runs Tailscale.app installed outside Homebrew. Dropped: telnet, lftp, ipmitool, net-snmp, openssl (a dependency; macOS and Homebrew already provide it), little-snitch and rustdesk (none installed any more)."
   },
   {
     "kind": "formula",
     "title": "rclone",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
-  },
-  {
-    "kind": "formula",
-    "title": "ipmitool",
-    "url": "homebrew.html",
-    "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
-  },
-  {
-    "kind": "formula",
-    "title": "openssl",
-    "url": "homebrew.html",
-    "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
-  },
-  {
-    "kind": "formula",
-    "title": "lftp",
-    "url": "homebrew.html",
-    "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale. The machine runs Tailscale.app installed outside Homebrew. Dropped: telnet, lftp, ipmitool, net-snmp, openssl (a dependency; macOS and Homebrew already provide it), little-snitch and rustdesk (none installed any more)."
   },
   {
     "kind": "formula",
     "title": "mtr",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale. The machine runs Tailscale.app installed outside Homebrew. Dropped: telnet, lftp, ipmitool, net-snmp, openssl (a dependency; macOS and Homebrew already provide it), little-snitch and rustdesk (none installed any more)."
   },
   {
     "kind": "formula",
     "title": "nmap",
     "url": "homebrew.html",
     "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
-  },
-  {
-    "kind": "formula",
-    "title": "net-snmp",
-    "url": "homebrew.html",
-    "summary": "Homebrew formula in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale. The machine runs Tailscale.app installed outside Homebrew. Dropped: telnet, lftp, ipmitool, net-snmp, openssl (a dependency; macOS and Homebrew already provide it), little-snitch and rustdesk (none installed any more)."
   },
   {
     "kind": "cask",
     "title": "tailscale-app",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
-  },
-  {
-    "kind": "cask",
-    "title": "little-snitch",
-    "url": "homebrew.html",
-    "summary": "Homebrew cask in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
-  },
-  {
-    "kind": "cask",
-    "title": "rustdesk",
-    "url": "homebrew.html",
-    "summary": "Homebrew cask in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale. The machine runs Tailscale.app installed outside Homebrew. Dropped: telnet, lftp, ipmitool, net-snmp, openssl (a dependency; macOS and Homebrew already provide it), little-snitch and rustdesk (none installed any more)."
   },
   {
     "kind": "cask",
     "title": "netspot",
     "url": "homebrew.html",
     "summary": "Homebrew cask in Network",
-    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale."
+    "body": "Diagnostics, remote access, and support tooling kept out of the default rebuild. Useful when the Mac is doubling as a support or network box. The current Homebrew cask token is tailscale-app, not tailscale. The machine runs Tailscale.app installed outside Homebrew. Dropped: telnet, lftp, ipmitool, net-snmp, openssl (a dependency; macOS and Homebrew already provide it), little-snitch and rustdesk (none installed any more)."
   }
 ]
