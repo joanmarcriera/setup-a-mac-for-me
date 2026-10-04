@@ -1,20 +1,30 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="refresh" content="0; url=index.html">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Redirecting | mac.riera.co.uk</title>
-    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="assets/style.css">
+    <meta name="robots" content="noindex">
+    <meta name="color-scheme" content="light dark">
+    <title>Page not found | mac.riera.co.uk</title>
+    <!-- GitHub Pages serves this file at any depth, so links are absolute and styles inline. -->
+    <style>
+      :root { --paper: #eceef0; --ink: #1a1f24; --ink-2: #4b545d; --accent: #8a5300; }
+      @media (prefers-color-scheme: dark) {
+        :root { --paper: #171a1e; --ink: #e4e8ec; --ink-2: #a7b1bb; --accent: #f2b233; }
+      }
+      body { margin: 0; background: var(--paper); color: var(--ink); font: 1.0625rem/1.55 system-ui, -apple-system, sans-serif; }
+      main { max-width: 36rem; margin: 0 auto; padding: 4rem 16px; }
+      h1 { font-size: 2rem; line-height: 1.15; margin: 0 0 1rem; }
+      p { margin: 0 0 0.75rem; color: var(--ink-2); }
+      a { color: var(--ink); text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 0.18em; }
+      a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    </style>
   </head>
   <body>
-    <div class="site-frame">
-      <main class="panel">
-        <span class="eyebrow">404</span>
-        <h1>Redirecting to the overview.</h1>
-        <p>If the redirect does not happen automatically, <a href="index.html">open the homepage</a>.</p>
-      </main>
-    </div>
+    <main>
+      <h1>There is no page at this address</h1>
+      <p>The guide is one page now, so older links may point to a page that no longer exists.</p>
+      <p>Go to the <a href="https://mac.riera.co.uk/">rebuild guide</a> or <a href="https://mac.riera.co.uk/search.html">search</a>.</p>
+    </main>
   </body>
 </html>

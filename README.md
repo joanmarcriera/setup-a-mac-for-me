@@ -2,6 +2,21 @@
 
 Opinionated MacBook Pro rebuild notes for Joan Marc Riera.
 
+## Usage
+
+This repo publishes a reusable Mac setup guide and Homebrew installer. Visit [mac.riera.co.uk](https://mac.riera.co.uk/) for the interactive site, or copy install commands directly from `brew/README.md`.
+
+To rebuild a Mac:
+1. Install Homebrew: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+2. Copy the install commands you need from `brew/README.md` (or the site)
+3. Run the verify script: `./scripts/verify-setup.sh workstation`
+4. To keep your Mac updated: `cp scripts/update-mac.sh ~/bin/update-mac && chmod +x ~/bin/update-mac && update-mac`
+
+To develop or customize:
+- Edit `data/install-groups.json` with your app list
+- Run `python3 scripts/generate_brew_artifacts.py && python3 scripts/build_search_index.py && python3 scripts/check_docs.py`
+- Preview the site: `python3 -m http.server --directory docs 8000` → http://127.0.0.1:8000
+
 This repo now serves two jobs:
 
 - a public GitHub Pages site under `docs/`
@@ -14,8 +29,9 @@ The repo is now organized around one source of truth for install groups:
 - `data/install-groups.json`: Homebrew groups and presets
 - `brew/`: generated `Brewfile.*` files and copy/paste commands
 - `docs/`: static GitHub Pages site with raw Homebrew commands and direct macOS preference commands
-- `scripts/apply-macos-defaults.sh`: optional helper for the same Dock and Launchpad defaults shown on the site
-- `scripts/verify-setup.sh`: checks installed apps plus the scripted macOS defaults
+- `scripts/apply-macos-defaults.sh`: optional helper for the Tap to Click, Dock and Launchpad defaults shown on the site (`--dry-run`, `--check`, `--reset`)
+- `scripts/verify-setup.sh`: data-driven check of a bundle's taps, formulae, casks (and Mac App Store apps if listed) plus the scripted macOS defaults
+- `scripts/drift-report.sh`: read-only "what changed since I set this up" report (installed vs `data/install-groups.json`)
 - `scripts/generate_brew_artifacts.py`: regenerates `brew/` files and the installer data used by the site
 - `scripts/check_docs.py`: validates local site links and required Pages files
 
@@ -44,6 +60,23 @@ brew install --cask iterm2 orbstack google-chrome google-chrome@canary vivaldi d
 ./scripts/verify-setup.sh workstation
 ```
 
+## Verify, Defaults And Drift
+
+All three scripts are read-only unless stated, work with macOS `/bin/bash` 3.2, and need only `python3`.
+
+```sh
+./scripts/verify-setup.sh [bundle]        # default bundle: workstation; --list shows bundle ids
+./scripts/apply-macos-defaults.sh --dry-run   # print the defaults commands, change nothing
+./scripts/apply-macos-defaults.sh             # apply (writes defaults, restarts the Dock)
+./scripts/apply-macos-defaults.sh --check     # read-only compare, exit 1 on mismatch
+./scripts/apply-macos-defaults.sh --reset     # delete the keys it manages (supports --dry-run)
+./scripts/drift-report.sh [--json] [--bundle ID] [--ignore FILE] [--no-mas]
+```
+
+- `verify-setup.sh` builds its expected list from `data/install-groups.json` (a tap-qualified name matches the installed short name) and gets the defaults from `apply-macos-defaults.sh --check`, so there are no hardcoded app lists. Exit 0 = good, 1 = something missing, 2 = usage error.
+- `apply-macos-defaults.sh` is the one place the defaults live. Launchpad was replaced by the Apps view in macOS 26, so the `springboard-*` grid keys are skipped there.
+- `drift-report.sh` prints three things: installed but not in the repo (Homebrew leaves, casks, Mac App Store apps), in the repo but not installed, and copy/paste suggestions. `--json` gives one JSON object. Exit code is 0 when there is no drift, 1 when there is, 2 on error, so it works from cron or launchd (`drift-report.sh --json > ~/drift.json || osascript -e 'display notification "Mac setup drifted"'`). Put names you deliberately keep out of the repo in `~/.config/mac-drift-ignore` (one per line, `#` comments) to silence them.
+
 ## Keep The Mac Updated
 
 If you want a small `~/bin` helper, copy the updater script from this repo:
@@ -57,20 +90,22 @@ It updates:
 
 - Homebrew formulae and casks
 - npm global packages
-- uv, pipx, Volta, rustup, and mise if they are installed
+- uv tools, pipx, Volta, rustup, and mise if they are installed
 - macOS software updates
 - Mac App Store apps if `mas` is installed
 
-It refuses to run upgrades unless Time Machine reports both a latest backup and a visible destination, so it only upgrades when the backup path is available.
+It refuses to run upgrades unless Time Machine reports both a latest backup and a visible destination, and that backup must be under 7 days old (a warning appears after 2 days). `--skip-backup-check` bypasses the gate.
 
-It starts with a **pre-flight summary**: macOS version, free disk, the last Time Machine backup and its age, followed by a grouped, risk-annotated **upgrade plan** of what would change. The plan flags, using local checks only (no network, no CVE lookups):
+It starts with a **pre-flight summary**: macOS version, free disk, the last Time Machine backup and its age, the Xcode and Command Line Tools versions, followed by a grouped, risk-annotated **upgrade plan** of what would change. The plan flags, using local checks only (no network, no CVE lookups):
 
 - `!!` **major version jumps** (leading version number changed, or a `0.x` minor bump) — the ones most likely to break something, so review release notes first
 - `!!` a **macOS update that requires a restart**
 - `~` **pre-release channels** (auto-updating `@beta` / `@canary` / nightly software)
 - **pinned** formulae that will not upgrade
 
-Everything else is summarized as routine counts. If `python3` is unavailable the plan degrades to a compact per-tool count line.
+The plan covers Homebrew formulae and casks, npm globals, uv tools, Mac App Store apps (`mas`) and mise tools. Everything else is summarized as routine counts. If `python3` is unavailable the plan degrades to a compact per-tool count line.
+
+When a macOS update is pending, the summary also prints a **recommended order**: install the macOS update first, reboot, then re-run `update-mac` for Homebrew and everything else. A macOS update can change the Command Line Tools and system libraries that Homebrew links against, so upgrading brew on the fresh system avoids mismatches. The note reminds you to back up with Time Machine first and shows your last backup. Only genuine macOS system updates trigger it — XProtect config data, Safari and the Command Line Tools do not. It is advisory: the run order is unchanged, so the note also states that this run still does Homebrew first (and, under `--yes`, that it will not stop to let you change your mind).
 
 By default it runs step by step:
 
@@ -91,6 +126,14 @@ By default it does **not** force auto-updating casks. If you want that behavior 
 ```sh
 update-mac --greedy-casks
 ```
+
+If a major macOS upgrade (for example 26 to 27) is listed, `update-mac` says so; `softwareupdate -i -a` runs at the end, so pass `--skip-macos` to leave the OS alone and do it by hand:
+
+```sh
+update-mac --skip-macos
+```
+
+`brew doctor`, `mise doctor` and the final `rustup check` are informational: their warnings are shown but do not count as failed steps.
 
 If you want it to run straight through without prompts, use:
 

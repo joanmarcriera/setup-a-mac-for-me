@@ -3,7 +3,10 @@
     "title": "mac.riera.co.uk",
     "owner": "Joan Marc Riera",
     "description": "Opinionated MacBook Pro rebuild guide and Homebrew installer.",
-    "tagline": "A clean, repeatable Mac setup for Joan Marc Riera's actual daily stack."
+    "tagline": "A clean, repeatable Mac setup for Joan Marc Riera's actual daily stack.",
+    "generated": "2026-10-04",
+    "last_reviewed": "2026-10-04",
+    "reviewed_against": "macOS 26.7 arm64, Homebrew leaves + casks + mas list"
   },
   "groups": [
     {
@@ -20,14 +23,23 @@
         "tree",
         "tmux",
         "jq",
-        "ncurses",
-        "gh"
+        "gh",
+        "mas",
+        "fzf",
+        "ripgrep-all",
+        "dust",
+        "ncdu",
+        "watch",
+        "gping",
+        "jdupes"
       ],
       "casks": [
         "iterm2"
       ],
       "notes": [
-        "zsh stays minimal: no autojump and no zsh-syntax-highlighting."
+        "zsh stays minimal: no autojump and no zsh-syntax-highlighting.",
+        "mas (Mac App Store CLI) is here because the rebuild installs Word, Excel, Xcode and others through it.",
+        "ncurses was dropped from the explicit list: it is only a dependency and Homebrew pulls it in when needed."
       ]
     },
     {
@@ -36,38 +48,162 @@
       "description": "Coding and writing tools that belong on every workstation rebuild.",
       "formulae": [
         "go",
+        "volta",
+        "mise",
+        "pipx",
         "pandoc",
-        "jira-cli",
-        "volta"
+        "shellcheck",
+        "git-cliff",
+        "git-filter-repo",
+        "git-lfs",
+        "cmake",
+        "hugo",
+        "forgejo-cli"
       ],
       "casks": [
-        "orbstack"
+        "github"
       ],
       "notes": [
-        "Node.js version management goes through Volta. pnpm is intentionally excluded.",
-        "OrbStack is the local container and Linux path. Docker Desktop stays out of the default rebuild."
+        "Node.js version management goes through Volta; mise covers the other runtimes. pnpm is intentionally excluded.",
+        "jira-cli was dropped: no longer installed or used. forgejo-cli replaces it for the self-hosted Forgejo workflow.",
+        "git-cliff generates changelogs from Conventional Commits."
+      ]
+    },
+    {
+      "id": "containers",
+      "label": "Containers",
+      "description": "Local containers without Docker Desktop: colima VM plus the docker CLI.",
+      "formulae": [
+        "colima",
+        "docker",
+        "docker-compose"
+      ],
+      "casks": [],
+      "notes": [
+        "Docker Desktop and OrbStack were replaced by colima + the docker CLI + docker-compose (free, scriptable, no licence).",
+        "Start the VM with `colima start`; the docker CLI then works unchanged."
       ]
     },
     {
       "id": "browsers-ai",
       "label": "Browsers + AI",
-      "description": "Browser and coding assistants used in the daily workflow.",
+      "description": "Browsers and coding assistants used in the daily workflow.",
       "formulae": [],
       "casks": [
         "google-chrome",
         "google-chrome@canary",
         "vivaldi",
+        "comet",
         "duckduckgo",
         "visual-studio-code",
-        "github",
         "codex",
         "claude",
         "antigravity"
       ],
       "notes": [
         "Chrome, Chrome Canary, and Vivaldi all stay available because they each cover a different browser role during setup and testing.",
+        "Comet (Perplexity's AI browser) is the newest addition and is in daily use.",
         "DuckDuckGo is the search-first companion.",
         "Antigravity is part of the current AI toolchain."
+      ]
+    },
+    {
+      "id": "ai-local",
+      "label": "AI + Local LLM",
+      "description": "Local models, speech-to-text and agent tooling that run on Apple Silicon.",
+      "formulae": [
+        "ollama",
+        "llama.cpp",
+        "whisper.cpp",
+        "whisperkit-cli",
+        "llmfit",
+        "opencode",
+        "herdr",
+        "rtk"
+      ],
+      "casks": [
+        "antigravity-cli",
+        "lm-studio",
+        "codexbar",
+        "hive-app",
+        "supacode",
+        "t3-code",
+        "meetily"
+      ],
+      "notes": [
+        "Local-first: Ollama and LM Studio serve models, llama.cpp is the raw runtime, whisper.cpp and WhisperKit do speech-to-text, llmfit checks what fits the hardware.",
+        "antigravity-cli replaces gemini-cli, which Homebrew has deprecated as unsupported upstream (disabled 2026-12-18).",
+        "rtk is a CLI proxy that trims LLM token use; herdr, hive-app, supacode and t3-code manage parallel coding agents; codexbar shows Codex/Claude usage in the menu bar.",
+        "Meetily records and transcribes meetings locally."
+      ]
+    },
+    {
+      "id": "cloud",
+      "label": "Cloud + IaC",
+      "description": "Infrastructure-as-code and cloud CLIs.",
+      "formulae": [
+        "opentofu",
+        "oci-cli",
+        "googleworkspace-cli"
+      ],
+      "casks": [
+        "gcloud-cli"
+      ],
+      "notes": [
+        "OpenTofu is used instead of Terraform.",
+        "oci-cli and gcloud-cli cover Oracle Cloud and Google Cloud; googleworkspace-cli drives Drive, Gmail and Calendar from scripts."
+      ]
+    },
+    {
+      "id": "mobile",
+      "label": "Apple + Android Dev",
+      "description": "Toolchains for shipping Apple and Android apps.",
+      "formulae": [
+        "openjdk@21",
+        "gradle",
+        "xcodegen",
+        "swiftlint"
+      ],
+      "casks": [
+        "android-studio",
+        "android-commandlinetools",
+        "android-platform-tools"
+      ],
+      "mas": [
+        {
+          "id": 497799835,
+          "name": "Xcode"
+        },
+        {
+          "id": 640199958,
+          "name": "Developer"
+        }
+      ],
+      "notes": [
+        "Xcode and the Apple Developer app come from the Mac App Store (mas), not Homebrew.",
+        "Optional on a minimal machine; install when an app build is needed."
+      ]
+    },
+    {
+      "id": "security",
+      "label": "Security + Audit",
+      "description": "Secret scanning, SBOM and vulnerability scans, hardware keys, password managers.",
+      "formulae": [
+        "gitleaks",
+        "syft",
+        "grype",
+        "ykman"
+      ],
+      "casks": [
+        "tailscale-app",
+        "bitwarden",
+        "keepassxc"
+      ],
+      "notes": [
+        "gitleaks scans repos for secrets before commit; syft builds SBOMs and grype scans them for CVEs.",
+        "ykman manages YubiKeys. john-jumbo is installed but deliberately left out of the rebuild (one-off recovery tool).",
+        "Little Snitch was dropped: it is not installed any more.",
+        "Tailscale is a must on every workstation, so it lives here (in the workstation bundle) rather than in the all-only network group."
       ]
     },
     {
@@ -83,18 +219,38 @@
         "obsidian",
         "logseq",
         "mailmate@beta",
-        "keepassxc",
         "spotify",
         "slack",
-        "discord"
+        "discord",
+        "telegram-desktop"
       ],
       "notes": [
         "Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers.",
         "Keyboard Maestro and Rectangle Pro still require paid licenses after install.",
         "BetterDisplay stays because external monitor scaling and brightness control keep coming up.",
         "MailMate beta is the default on Apple Silicon because the stable cask currently requires Rosetta 2.",
-        "KeeWeb was intentionally replaced with KeePassXC because KeeWeb's desktop releases have stalled.",
-        "Slack and Discord stay in productivity because they are part of the day-to-day communications path, not a special-case install."
+        "Slack, Discord and Telegram stay in productivity because they are part of the day-to-day communications path.",
+        "KeePassXC moved to the Security group."
+      ]
+    },
+    {
+      "id": "docs-diagrams",
+      "label": "Writing + Diagrams",
+      "description": "Markdown editing, reference management, flashcards and diagramming.",
+      "formulae": [],
+      "casks": [
+        "typora",
+        "markedit",
+        "zotero",
+        "anki",
+        "libreoffice",
+        "drawio",
+        "yed",
+        "excalidrawz"
+      ],
+      "notes": [
+        "Typora and MarkEdit are the Markdown editors; Zotero holds research references; Anki is for spaced repetition.",
+        "LibreOffice is the non-Microsoft fallback for office files."
       ]
     },
     {
@@ -104,60 +260,82 @@
       "formulae": [],
       "casks": [
         "microsoft-edge",
-        "microsoft-office",
-        "microsoft-teams",
-        "onedrive",
-        "microsoft-outlook",
-        "microsoft-remote-desktop"
+        "microsoft-teams"
+      ],
+      "mas": [
+        {
+          "id": 462054704,
+          "name": "Microsoft Word"
+        },
+        {
+          "id": 462058435,
+          "name": "Microsoft Excel"
+        },
+        {
+          "id": 1295203466,
+          "name": "Windows App"
+        }
       ],
       "notes": [
-        "Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows.",
-        "Office, Outlook, Teams, OneDrive, and Remote Desktop all stay together because they usually arrive as a package deal in work environments."
+        "Word and Excel come from the Mac App Store (mas) rather than the microsoft-office cask; the machine runs the App Store builds.",
+        "Windows App (mas 1295203466) replaces the microsoft-remote-desktop cask, which no longer exists in Homebrew.",
+        "Dropped: microsoft-office, microsoft-outlook and onedrive casks (not installed; Outlook and OneDrive are no longer used).",
+        "Vivaldi can still be the main browser even when Edge is installed for compatibility work and Microsoft account flows."
       ]
     },
     {
       "id": "pdf",
       "label": "PDF",
-      "description": "PDF readers and editors kept ready for paperwork, review, and annotation.",
-      "formulae": [],
+      "description": "PDF readers and command-line PDF and OCR tooling.",
+      "formulae": [
+        "qpdf",
+        "poppler",
+        "tesseract",
+        "weasyprint",
+        "pango"
+      ],
       "casks": [
         "skim",
-        "adobe-acrobat-reader",
-        "pdf-expert"
+        "adobe-acrobat-reader"
       ],
       "notes": [
-        "Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases. PDF Expert covers editing and annotation."
+        "Skim is the fast lightweight reader. Acrobat Reader covers the Adobe-heavy edge cases.",
+        "qpdf, poppler and tesseract handle splitting, text extraction and OCR; weasyprint renders HTML/Markdown to PDF.",
+        "PDF Expert was dropped: not installed; Skim plus Acrobat cover annotation."
       ]
     },
     {
       "id": "backup",
       "label": "Backup",
-      "description": "Optional backup extras if Time Machine to TrueNAS is not enough.",
-      "formulae": [
-        "kopia"
-      ],
+      "description": "Optional cloud sync; Time Machine to TrueNAS is the real backup.",
+      "formulae": [],
       "casks": [
-        "kopiaui",
         "google-drive"
       ],
       "notes": [
-        "If Time Machine to the TrueNAS or NFS target already gives a complete backup and clean restore path, skip this group.",
-        "Kopia stays optional for cases where an extra encrypted offsite copy or repository-style verification is still useful."
+        "If Time Machine to the TrueNAS or NFS target already gives a complete backup and clean restore path, this group is all you need.",
+        "Kopia and KopiaUI were dropped: not installed. Replication is handled server-side (ZFS) and with rclone."
       ]
     },
     {
       "id": "capture",
-      "label": "Capture",
-      "description": "Screenshot, recording, and media tooling.",
+      "label": "Capture + Media",
+      "description": "Screenshot, recording, download and media tooling.",
       "formulae": [
-        "ffmpeg"
+        "ffmpeg",
+        "yt-dlp",
+        "gallery-dl"
       ],
       "casks": [
         "shottr",
-        "kap"
+        "vlc",
+        "blackhole-2ch",
+        "blender"
       ],
       "notes": [
-        "Shottr and Kap stay in the default workstation because they are used often."
+        "Shottr is installed directly from its website on the current machine; the cask is the repeatable path.",
+        "Kap was dropped: not installed; screen recording uses macOS built-ins.",
+        "BlackHole 2ch is the virtual audio device for routing and recording system audio."
       ]
     },
     {
@@ -165,24 +343,17 @@
       "label": "Network",
       "description": "Diagnostics, remote access, and support tooling kept out of the default rebuild.",
       "formulae": [
-        "telnet",
         "rclone",
-        "ipmitool",
-        "openssl",
-        "lftp",
         "mtr",
-        "nmap",
-        "net-snmp"
+        "nmap"
       ],
       "casks": [
-        "tailscale-app",
-        "little-snitch",
-        "rustdesk",
         "netspot"
       ],
       "notes": [
         "Useful when the Mac is doubling as a support or network box.",
-        "The current Homebrew cask token is tailscale-app, not tailscale."
+        "The current Homebrew cask token is tailscale-app, not tailscale. The machine runs Tailscale.app installed outside Homebrew.",
+        "Dropped: telnet, lftp, ipmitool, net-snmp, openssl (a dependency; macOS and Homebrew already provide it), little-snitch and rustdesk (none installed any more)."
       ]
     }
   ],
@@ -204,27 +375,140 @@
       "include": [
         "cli",
         "dev",
+        "containers",
         "browsers-ai",
+        "ai-local",
         "productivity",
+        "docs-diagrams",
         "microsoft",
         "pdf",
-        "capture"
+        "capture",
+        "security"
       ]
     },
     {
       "id": "all",
       "label": "Full",
-      "description": "Daily rebuild plus network and support tools.",
+      "description": "Daily rebuild plus cloud, mobile, backup, network and support tools.",
       "include": [
         "cli",
         "dev",
+        "containers",
         "browsers-ai",
+        "ai-local",
         "productivity",
+        "docs-diagrams",
         "microsoft",
         "pdf",
         "capture",
+        "security",
+        "cloud",
+        "mobile",
+        "backup",
         "network"
       ]
+    }
+  ],
+  "retired": [
+    {
+      "name": "orbstack",
+      "kind": "cask",
+      "reason": "Replaced by colima + docker CLI."
+    },
+    {
+      "name": "jira-cli",
+      "kind": "formula",
+      "reason": "No longer installed or used."
+    },
+    {
+      "name": "kopia",
+      "kind": "formula",
+      "reason": "Not needed; Time Machine covers backups."
+    },
+    {
+      "name": "kopiaui",
+      "kind": "cask",
+      "reason": "Not needed; Time Machine covers backups."
+    },
+    {
+      "name": "lftp",
+      "kind": "formula",
+      "reason": "Not installed."
+    },
+    {
+      "name": "telnet",
+      "kind": "formula",
+      "reason": "Not installed."
+    },
+    {
+      "name": "ipmitool",
+      "kind": "formula",
+      "reason": "Not installed."
+    },
+    {
+      "name": "net-snmp",
+      "kind": "formula",
+      "reason": "Not installed."
+    },
+    {
+      "name": "ncurses",
+      "kind": "formula",
+      "reason": "Dependency only; not a deliberate install."
+    },
+    {
+      "name": "openssl",
+      "kind": "formula",
+      "reason": "Dependency only; not a deliberate install."
+    },
+    {
+      "name": "little-snitch",
+      "kind": "cask",
+      "reason": "Not needed; network activity is visible without it."
+    },
+    {
+      "name": "rustdesk",
+      "kind": "cask",
+      "reason": "Not installed; Tailscale + Windows App cover remote access."
+    },
+    {
+      "name": "kap",
+      "kind": "cask",
+      "reason": "Not installed."
+    },
+    {
+      "name": "pdf-expert",
+      "kind": "cask",
+      "reason": "Only worth adding if there is no alternative; Skim and Acrobat Reader cover it."
+    },
+    {
+      "name": "microsoft-office",
+      "kind": "cask",
+      "reason": "Replaced by Word and Excel from the Mac App Store."
+    },
+    {
+      "name": "microsoft-outlook",
+      "kind": "cask",
+      "reason": "Not installed; MailMate is the mail client."
+    },
+    {
+      "name": "onedrive",
+      "kind": "cask",
+      "reason": "Not installed."
+    },
+    {
+      "name": "microsoft-remote-desktop",
+      "kind": "cask",
+      "reason": "Cask removed from Homebrew; replaced by Windows App (mas)."
+    },
+    {
+      "name": "gemini-cli",
+      "kind": "formula",
+      "reason": "Deprecated upstream (disabled 2026-12-18); use antigravity-cli."
+    },
+    {
+      "name": "john-jumbo",
+      "kind": "formula",
+      "reason": "One-off recovery tool; intentionally not in the rebuild."
     }
   ]
 }

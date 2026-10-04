@@ -1,0 +1,9 @@
+# Secret scanning, SBOM and vulnerability scans, hardware keys, password managers.
+brew "gitleaks"
+brew "syft"
+brew "grype"
+brew "ykman"
+
+cask "tailscale-app"
+cask "bitwarden"
+cask "keepassxc"

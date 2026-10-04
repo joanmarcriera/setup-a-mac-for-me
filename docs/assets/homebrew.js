@@ -1,120 +1,96 @@
-function unique(items) {
-  return [...new Set(items)];
-}
+/*
+ * Homebrew catalogue (homebrew.html).
+ *
+ * Renders every bundle, group and retired entry from assets/install-groups.json.
+ * Depends on window.macSite from app.js (both are loaded with `defer`, app.js first).
+ * Copy buttons are handled by app.js's delegated click handler.
+ */
 
-function collectItems(groupIds, groupsById) {
-  const formulae = [];
-  const casks = [];
-  const notes = [];
+(() => {
+  "use strict";
 
-  groupIds.forEach((groupId) => {
-    const group = groupsById[groupId];
-    formulae.push(...group.formulae);
-    casks.push(...group.casks);
-    notes.push(...(group.notes || []));
-  });
-
-  return {
-    formulae: unique(formulae),
-    casks: unique(casks),
-    notes: unique(notes)
-  };
-}
-
-function brewCommands(formulae, casks) {
-  const commands = [];
-
-  if (formulae.length > 0) {
-    commands.push(`brew install ${formulae.join(" ")}`);
-  }
-
-  if (casks.length > 0) {
-    commands.push(`brew install --cask ${casks.join(" ")}`);
-  }
-
-  return commands.join("\n");
-}
-
-function renderItems(items) {
-  return items
-    .map((item) => {
-      const commandText = brewCommands(item.formulae, item.casks);
-      const detail = item.includeLabels ? item.includeLabels.join(", ") : item.packageSummary;
-
-      return `
-        <article class="wiki-item">
-          <div class="command-meta">
-            <div>
-              <h3>${item.label}</h3>
-              <p class="muted">${item.description}</p>
-            </div>
-            <button type="button" class="button button-subtle" data-copy-value="${encodeURIComponent(commandText)}">Copy</button>
-          </div>
-          <p class="muted">${detail}</p>
-          <pre>${commandText}</pre>
-        </article>
-      `;
-    })
-    .join("");
-}
-
-async function initHomebrewPage() {
+  const site = window.macSite;
   const bundlesNode = document.querySelector("[data-homebrew='bundles']");
   const groupsNode = document.querySelector("[data-homebrew='groups']");
-  const notesNode = document.querySelector("[data-homebrew='notes']");
+  const retiredNode = document.querySelector("[data-homebrew='retired']");
 
-  if (!bundlesNode || !groupsNode || !notesNode) {
+  if (!site || !bundlesNode || !groupsNode) {
     return;
   }
 
-  const response = await fetch("assets/install-groups.json");
-  if (!response.ok) {
-    throw new Error("Unable to load Homebrew data.");
+  const { escapeHtml, collect, commandLines, commandBlock, countText, noteHtml, BREWFILE_BASE } = site;
+
+  function notesList(notes) {
+    if (!notes.length) {
+      return "";
+    }
+    return `<ul class="list tight">${notes.map((note) => `<li>${noteHtml(note)}</li>`).join("")}</ul>`;
   }
 
-  const data = await response.json();
-  const groups = data.groups || [];
-  const bundles = data.bundles || [];
-  const groupsById = Object.fromEntries(groups.map((group) => [group.id, group]));
+  function showError(message) {
+    const html = `<li><p class="aside warn">${escapeHtml(message)} The same commands are in <a href="https://github.com/joanmarcriera/setup-a-mac-for-me/blob/main/brew/README.md">brew/README.md</a> on GitHub.</p></li>`;
+    bundlesNode.innerHTML = html;
+  }
 
-  const bundleItems = bundles.map((bundle) => {
-    const items = collectItems(bundle.include, groupsById);
-    return {
-      label: bundle.label,
-      description: bundle.description,
-      includeLabels: bundle.include.map((groupId) => groupsById[groupId].label),
-      formulae: items.formulae,
-      casks: items.casks
-    };
-  });
+  site
+    .loadInstallData()
+    .then((data) => {
+      const groups = data.groups || [];
+      const bundles = data.bundles || [];
+      const groupsById = Object.fromEntries(groups.map((group) => [group.id, group]));
 
-  const groupItems = groups.map((group) => ({
-    label: group.label,
-    description: group.description,
-    packageSummary: `${group.formulae.length} formulae, ${group.casks.length} casks`,
-    formulae: group.formulae,
-    casks: group.casks
-  }));
+      bundlesNode.innerHTML = bundles
+        .map((bundle) => {
+          const set = collect(bundle.include, groupsById);
+          const groupLinks = bundle.include
+            .filter((id) => groupsById[id])
+            .map((id) => `<a href="#group-${escapeHtml(id)}">${escapeHtml(groupsById[id].label)}</a>`)
+            .join(", ");
+          return `
+            <li id="bundle-${escapeHtml(bundle.id)}">
+              <h3>${escapeHtml(bundle.label)}</h3>
+              <p>${escapeHtml(bundle.description)} ${escapeHtml(countText(set))}.</p>
+              <p class="muted">Groups: ${groupLinks}.</p>
+              ${commandBlock(commandLines(set), `${bundle.label} bundle`)}
+              ${commandBlock([`curl -fsSL ${BREWFILE_BASE}${bundle.id} | brew bundle --file=-`], `Brewfile.${bundle.id}, re-runnable`)}
+            </li>`;
+        })
+        .join("");
 
-  bundlesNode.innerHTML = renderItems(bundleItems);
-  groupsNode.innerHTML = renderItems(groupItems);
+      groupsNode.innerHTML = groups
+        .map((group) => {
+          const set = collect([group.id], groupsById);
+          const inBundles = bundles.filter((b) => b.include.includes(group.id)).map((b) => b.label);
+          return `
+            <li id="group-${escapeHtml(group.id)}">
+              <h3>${escapeHtml(group.label)}</h3>
+              <p>${escapeHtml(group.description)} ${escapeHtml(countText(set))}.</p>
+              <p class="muted">${inBundles.length ? `In ${escapeHtml(inBundles.join(", "))}.` : "Not in any bundle; install it on its own."}</p>
+              ${commandBlock(commandLines(set), `${group.label} group`)}
+              ${notesList(group.notes || [])}
+            </li>`;
+        })
+        .join("");
 
-  const notes = unique(groups.flatMap((group) => group.notes || []));
-  notesNode.innerHTML = `<ul class="stacked-list">${notes.map((note) => `<li>${note}</li>`).join("")}</ul>`;
+      if (retiredNode) {
+        const retired = data.retired || [];
+        retiredNode.innerHTML = retired.length
+          ? retired
+              .map(
+                (item) =>
+                  `<li><code>${escapeHtml(item.name)}</code> (${escapeHtml(item.kind || "package")}): ${noteHtml(item.reason || "")}</li>`
+              )
+              .join("")
+          : "<li>Nothing has been dropped yet.</li>";
+      }
 
-  document.querySelectorAll("[data-copy-value]").forEach((button) => {
-    button.addEventListener("click", async () => {
-      const value = decodeURIComponent(button.dataset.copyValue || "");
-      await navigator.clipboard.writeText(value);
-      const original = button.textContent;
-      button.textContent = "Copied";
-      window.setTimeout(() => {
-        button.textContent = original;
-      }, 1200);
+      // Re-apply a deep link such as homebrew.html#group-cli now that the target exists.
+      if (window.location.hash) {
+        document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ behavior: "instant" });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      showError("The catalogue data did not load.");
     });
-  });
-}
-
-initHomebrewPage().catch((error) => {
-  console.error(error);
-});
+})();

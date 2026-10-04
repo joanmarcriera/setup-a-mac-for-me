@@ -1,7 +1,15 @@
 # Coding and writing tools that belong on every workstation rebuild.
 brew "go"
-brew "pandoc"
-brew "jira-cli"
 brew "volta"
+brew "mise"
+brew "pipx"
+brew "pandoc"
+brew "shellcheck"
+brew "git-cliff"
+brew "git-filter-repo"
+brew "git-lfs"
+brew "cmake"
+brew "hugo"
+brew "forgejo-cli"
 
-cask "orbstack"
+cask "github"
