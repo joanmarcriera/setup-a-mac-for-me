@@ -195,13 +195,15 @@
         "ykman"
       ],
       "casks": [
+        "tailscale-app",
         "bitwarden",
         "keepassxc"
       ],
       "notes": [
         "gitleaks scans repos for secrets before commit; syft builds SBOMs and grype scans them for CVEs.",
         "ykman manages YubiKeys. john-jumbo is installed but deliberately left out of the rebuild (one-off recovery tool).",
-        "Little Snitch was dropped: it is not installed any more."
+        "Little Snitch was dropped: it is not installed any more.",
+        "Tailscale is a must on every workstation, so it lives here (in the workstation bundle) rather than in the all-only network group."
       ]
     },
     {
@@ -346,7 +348,6 @@
         "nmap"
       ],
       "casks": [
-        "tailscale-app",
         "netspot"
       ],
       "notes": [
@@ -422,12 +423,12 @@
     {
       "name": "kopia",
       "kind": "formula",
-      "reason": "Not installed; backups handled by Time Machine, ZFS replication and rclone."
+      "reason": "Not needed; Time Machine covers backups."
     },
     {
       "name": "kopiaui",
       "kind": "cask",
-      "reason": "Not installed; see kopia."
+      "reason": "Not needed; Time Machine covers backups."
     },
     {
       "name": "lftp",
@@ -462,7 +463,7 @@
     {
       "name": "little-snitch",
       "kind": "cask",
-      "reason": "Not installed."
+      "reason": "Not needed; network activity is visible without it."
     },
     {
       "name": "rustdesk",
@@ -477,7 +478,7 @@
     {
       "name": "pdf-expert",
       "kind": "cask",
-      "reason": "Not installed."
+      "reason": "Only worth adding if there is no alternative; Skim and Acrobat Reader cover it."
     },
     {
       "name": "microsoft-office",

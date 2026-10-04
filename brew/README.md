@@ -23,7 +23,7 @@ The usual day-one rebuild for daily work.
 
 ```sh
 brew install bash wget vim uv tig htop tree tmux jq gh mas fzf ripgrep-all dust ncdu watch gping jdupes go volta mise pipx pandoc shellcheck git-cliff git-filter-repo git-lfs cmake hugo forgejo-cli colima docker docker-compose ollama llama.cpp whisper.cpp whisperkit-cli llmfit opencode herdr rtk qpdf poppler tesseract weasyprint pango ffmpeg yt-dlp gallery-dl gitleaks syft grype ykman
-brew install --cask iterm2 github google-chrome google-chrome@canary vivaldi comet duckduckgo visual-studio-code codex claude antigravity antigravity-cli lm-studio codexbar hive-app supacode t3-code meetily keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta spotify slack discord telegram-desktop typora markedit zotero anki libreoffice drawio yed excalidrawz microsoft-edge microsoft-teams skim adobe-acrobat-reader shottr vlc blackhole-2ch blender bitwarden keepassxc
+brew install --cask iterm2 github google-chrome google-chrome@canary vivaldi comet duckduckgo visual-studio-code codex claude antigravity antigravity-cli lm-studio codexbar hive-app supacode t3-code meetily keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta spotify slack discord telegram-desktop typora markedit zotero anki libreoffice drawio yed excalidrawz microsoft-edge microsoft-teams skim adobe-acrobat-reader shottr vlc blackhole-2ch blender tailscale-app bitwarden keepassxc
 mas install 462054704  # Microsoft Word
 mas install 462058435  # Microsoft Excel
 mas install 1295203466  # Windows App
@@ -35,7 +35,7 @@ Daily rebuild plus cloud, mobile, backup, network and support tools.
 
 ```sh
 brew install bash wget vim uv tig htop tree tmux jq gh mas fzf ripgrep-all dust ncdu watch gping jdupes go volta mise pipx pandoc shellcheck git-cliff git-filter-repo git-lfs cmake hugo forgejo-cli colima docker docker-compose ollama llama.cpp whisper.cpp whisperkit-cli llmfit opencode herdr rtk qpdf poppler tesseract weasyprint pango ffmpeg yt-dlp gallery-dl gitleaks syft grype ykman opentofu oci-cli googleworkspace-cli openjdk@21 gradle xcodegen swiftlint rclone mtr nmap
-brew install --cask iterm2 github google-chrome google-chrome@canary vivaldi comet duckduckgo visual-studio-code codex claude antigravity antigravity-cli lm-studio codexbar hive-app supacode t3-code meetily keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta spotify slack discord telegram-desktop typora markedit zotero anki libreoffice drawio yed excalidrawz microsoft-edge microsoft-teams skim adobe-acrobat-reader shottr vlc blackhole-2ch blender bitwarden keepassxc gcloud-cli android-studio android-commandlinetools android-platform-tools google-drive tailscale-app netspot
+brew install --cask iterm2 github google-chrome google-chrome@canary vivaldi comet duckduckgo visual-studio-code codex claude antigravity antigravity-cli lm-studio codexbar hive-app supacode t3-code meetily keyboard-maestro rectangle-pro karabiner-elements betterdisplay obsidian logseq mailmate@beta spotify slack discord telegram-desktop typora markedit zotero anki libreoffice drawio yed excalidrawz microsoft-edge microsoft-teams skim adobe-acrobat-reader shottr vlc blackhole-2ch blender tailscale-app bitwarden keepassxc gcloud-cli android-studio android-commandlinetools android-platform-tools google-drive netspot
 mas install 462054704  # Microsoft Word
 mas install 462058435  # Microsoft Excel
 mas install 1295203466  # Windows App
@@ -114,7 +114,7 @@ Secret scanning, SBOM and vulnerability scans, hardware keys, password managers.
 
 ```sh
 brew install gitleaks syft grype ykman
-brew install --cask bitwarden keepassxc
+brew install --cask tailscale-app bitwarden keepassxc
 ```
 
 ### Productivity
@@ -176,7 +176,7 @@ Diagnostics, remote access, and support tooling kept out of the default rebuild.
 
 ```sh
 brew install rclone mtr nmap
-brew install --cask tailscale-app netspot
+brew install --cask netspot
 ```
 
 ## Retired
@@ -185,18 +185,18 @@ Previously listed, no longer part of the rebuild:
 
 - `orbstack` (cask): Replaced by colima + docker CLI.
 - `jira-cli` (formula): No longer installed or used.
-- `kopia` (formula): Not installed; backups handled by Time Machine, ZFS replication and rclone.
-- `kopiaui` (cask): Not installed; see kopia.
+- `kopia` (formula): Not needed; Time Machine covers backups.
+- `kopiaui` (cask): Not needed; Time Machine covers backups.
 - `lftp` (formula): Not installed.
 - `telnet` (formula): Not installed.
 - `ipmitool` (formula): Not installed.
 - `net-snmp` (formula): Not installed.
 - `ncurses` (formula): Dependency only; not a deliberate install.
 - `openssl` (formula): Dependency only; not a deliberate install.
-- `little-snitch` (cask): Not installed.
+- `little-snitch` (cask): Not needed; network activity is visible without it.
 - `rustdesk` (cask): Not installed; Tailscale + Windows App cover remote access.
 - `kap` (cask): Not installed.
-- `pdf-expert` (cask): Not installed.
+- `pdf-expert` (cask): Only worth adding if there is no alternative; Skim and Acrobat Reader cover it.
 - `microsoft-office` (cask): Replaced by Word and Excel from the Mac App Store.
 - `microsoft-outlook` (cask): Not installed; MailMate is the mail client.
 - `onedrive` (cask): Not installed.
@@ -229,6 +229,7 @@ Previously listed, no longer part of the rebuild:
 - gitleaks scans repos for secrets before commit; syft builds SBOMs and grype scans them for CVEs.
 - ykman manages YubiKeys. john-jumbo is installed but deliberately left out of the rebuild (one-off recovery tool).
 - Little Snitch was dropped: it is not installed any more.
+- Tailscale is a must on every workstation, so it lives here (in the workstation bundle) rather than in the all-only network group.
 - Keyboard Maestro replaces Alfred, Raycast, and standalone clipboard managers.
 - Keyboard Maestro and Rectangle Pro still require paid licenses after install.
 - BetterDisplay stays because external monitor scaling and brightness control keep coming up.

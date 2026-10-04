@@ -4,5 +4,6 @@ brew "syft"
 brew "grype"
 brew "ykman"
 
+cask "tailscale-app"
 cask "bitwarden"
 cask "keepassxc"

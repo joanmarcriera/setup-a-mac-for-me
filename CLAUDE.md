@@ -31,6 +31,7 @@ Opinionated MacBook Pro rebuild guide and Homebrew installer (mac.riera.co.uk). 
 2. **Regenerate derived files** (Brewfiles, docs asset, search index):
    ```sh
    python3 scripts/generate_brew_artifacts.py
+   python3 scripts/render_index_fallback.py
    python3 scripts/build_search_index.py
    python3 scripts/check_docs.py
    ```

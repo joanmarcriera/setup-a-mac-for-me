@@ -3,5 +3,4 @@ brew "rclone"
 brew "mtr"
 brew "nmap"
 
-cask "tailscale-app"
 cask "netspot"

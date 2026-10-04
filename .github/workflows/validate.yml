@@ -16,6 +16,9 @@ jobs:
       - name: Check generated artifacts
         run: python3 scripts/generate_brew_artifacts.py --check
 
+      - name: Check index fallback block
+        run: python3 scripts/render_index_fallback.py --check
+
       - name: Check search index
         run: python3 scripts/build_search_index.py --check
 

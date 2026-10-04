@@ -98,6 +98,7 @@ cask "shottr"
 cask "vlc"
 cask "blackhole-2ch"
 cask "blender"
+cask "tailscale-app"
 cask "bitwarden"
 cask "keepassxc"
 
