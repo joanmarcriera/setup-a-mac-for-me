@@ -1,0 +1,9 @@
+# Markdown editing, reference management, flashcards and diagramming.
+cask "typora"
+cask "markedit"
+cask "zotero"
+cask "anki"
+cask "libreoffice"
+cask "drawio"
+cask "yed"
+cask "excalidrawz"

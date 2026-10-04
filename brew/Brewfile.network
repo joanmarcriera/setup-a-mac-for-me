@@ -1,14 +1,7 @@
 # Diagnostics, remote access, and support tooling kept out of the default rebuild.
-brew "telnet"
 brew "rclone"
-brew "ipmitool"
-brew "openssl"
-brew "lftp"
 brew "mtr"
 brew "nmap"
-brew "net-snmp"
 
 cask "tailscale-app"
-cask "little-snitch"
-cask "rustdesk"
 cask "netspot"

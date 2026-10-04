@@ -1,0 +1,17 @@
+# Local models, speech-to-text and agent tooling that run on Apple Silicon.
+brew "ollama"
+brew "llama.cpp"
+brew "whisper.cpp"
+brew "whisperkit-cli"
+brew "llmfit"
+brew "opencode"
+brew "herdr"
+brew "rtk"
+
+cask "antigravity-cli"
+cask "lm-studio"
+cask "codexbar"
+cask "hive-app"
+cask "supacode"
+cask "t3-code"
+cask "meetily"

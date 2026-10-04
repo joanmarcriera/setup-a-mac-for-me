@@ -1,0 +1,4 @@
+# Local containers without Docker Desktop: colima VM plus the docker CLI.
+brew "colima"
+brew "docker"
+brew "docker-compose"

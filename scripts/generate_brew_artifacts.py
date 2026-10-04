@@ -38,38 +38,57 @@ def unique(items: list[str]) -> list[str]:
     return list(OrderedDict.fromkeys(items))
 
 
-def brewfile_contents(label: str, description: str, formulae: list[str], casks: list[str]) -> str:
+def brewfile_contents(
+    label: str,
+    description: str,
+    formulae: list[str],
+    casks: list[str],
+    mas: list[dict] | None = None,
+) -> str:
+    """Render a Brewfile; `mas` entries are {"id": int, "name": str} (Mac App Store)."""
     lines = [f"# {description}"]
-    if formulae:
-        for formula in formulae:
-            lines.append(f'brew "{formula}"')
+    for formula in formulae:
+        lines.append(f'brew "{formula}"')
     if casks:
         if formulae:
             lines.append("")
         for cask in casks:
             lines.append(f'cask "{cask}"')
+    if mas:
+        if formulae or casks:
+            lines.append("")
+        for app in mas:
+            lines.append(f'mas "{app["name"]}", id: {app["id"]}')
     lines.append("")
     return "\n".join(lines)
 
 
-def collect_bundle_items(bundle: dict, groups_by_id: dict[str, dict]) -> tuple[list[str], list[str]]:
+def collect_bundle_items(
+    bundle: dict, groups_by_id: dict[str, dict]
+) -> tuple[list[str], list[str], list[dict]]:
     formulae: list[str] = []
     casks: list[str] = []
+    mas: list[dict] = []
 
     for group_id in bundle["include"]:
         group = groups_by_id[group_id]
         formulae.extend(group["formulae"])
         casks.extend(group["casks"])
+        mas.extend(group.get("mas", []))
 
-    return unique(formulae), unique(casks)
+    seen: set[int] = set()
+    unique_mas = [a for a in mas if not (a["id"] in seen or seen.add(a["id"]))]
+    return unique(formulae), unique(casks), unique_mas
 
 
-def brew_commands(formulae: list[str], casks: list[str]) -> list[str]:
+def brew_commands(formulae: list[str], casks: list[str], mas: list[dict] | None = None) -> list[str]:
     commands: list[str] = []
     if formulae:
         commands.append(f"brew install {' '.join(formulae)}")
     if casks:
         commands.append(f"brew install --cask {' '.join(casks)}")
+    for app in mas or []:
+        commands.append(f"mas install {app['id']}  # {app['name']}")
     return commands
 
 
@@ -93,7 +112,7 @@ def render_brew_readme(data: dict) -> str:
     groups_by_id = {group["id"]: group for group in groups}
 
     for bundle in bundles:
-        formulae, casks = collect_bundle_items(bundle, groups_by_id)
+        formulae, casks, mas = collect_bundle_items(bundle, groups_by_id)
         sections.extend(
             [
                 f"### {bundle['label']}",
@@ -101,7 +120,7 @@ def render_brew_readme(data: dict) -> str:
                 bundle["description"],
                 "",
                 "```sh",
-                "\n".join(brew_commands(formulae, casks)),
+                "\n".join(brew_commands(formulae, casks, mas)),
                 "```",
                 "",
             ]
@@ -118,7 +137,7 @@ def render_brew_readme(data: dict) -> str:
                 "",
             ]
         )
-        sections.extend(["```sh", "\n".join(brew_commands(group["formulae"], group["casks"])), "```", ""])
+        sections.extend(["```sh", "\n".join(brew_commands(group["formulae"], group["casks"], group.get("mas"))), "```", ""])
 
     notes = unique(
         [
@@ -132,6 +151,13 @@ def render_brew_readme(data: dict) -> str:
             "Alfred, Raycast, `pnpm`, Dropover, iBar, Whimsical, and Notion are intentionally excluded."
         ]
     )
+
+    retired = data.get("retired", [])
+    if retired:
+        sections.extend(["## Retired", "", "Previously listed, no longer part of the rebuild:", ""])
+        for item in retired:
+            sections.append(f"- `{item['name']}` ({item['kind']}): {item['reason']}")
+        sections.append("")
 
     sections.extend(["## Notes", ""])
     for note in unique(notes):
@@ -151,15 +177,17 @@ def build_targets(data: dict) -> dict[pathlib.Path, str]:
             group["description"],
             group["formulae"],
             group["casks"],
+            group.get("mas"),
         )
 
     for bundle in data["bundles"]:
-        formulae, casks = collect_bundle_items(bundle, groups_by_id)
+        formulae, casks, mas = collect_bundle_items(bundle, groups_by_id)
         targets[BREW_DIR / f"Brewfile.{bundle['id']}"] = brewfile_contents(
             bundle["label"],
             bundle["description"],
             formulae,
             casks,
+            mas,
         )
 
     targets[BREW_DIR / "README.md"] = render_brew_readme(data)
