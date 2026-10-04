@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+#
+# update-mac: safe, incremental upgrade of a Mac built from this repo.
+#
+# Usage:  update-mac [--dry-run] [--greedy-casks] [--yes] [--skip-backup-check] [--skip-macos]
+#         (see --help for the full option list; README.md documents the behaviour)
+#
+# Works with macOS /bin/bash 3.2 (no associative arrays, no mapfile). Copy to ~/bin to use:
+#   cp scripts/update-mac.sh ~/bin/update-mac && chmod +x ~/bin/update-mac
 
 set -u
 set -o pipefail
@@ -7,6 +15,7 @@ failures=0
 use_greedy_casks=false
 assume_yes=false
 skip_backup_check=false
+skip_macos=false
 dry_run=false
 
 # Captured once by the pre-flight summary and reused by the macOS step so the
@@ -16,11 +25,12 @@ softwareupdate_list_captured=false
 
 usage() {
   cat <<'EOF'
-Usage: update-mac [--dry-run] [--greedy-casks] [--yes] [--skip-backup-check]
+Usage: update-mac [--dry-run] [--greedy-casks] [--yes] [--skip-backup-check] [--skip-macos]
 
 Default behavior:
 - Prints a pre-flight summary (system status + pending update counts) before touching anything.
-- Refuses to upgrade anything unless Time Machine has a latest backup and a visible destination.
+- Refuses to upgrade anything unless Time Machine has a latest backup (not older than 7 days)
+  and a visible destination.
 - Asks once per tool (Homebrew, npm, ...) with Yes / No / Skip / All / Quit.
 - Shows a preview first when the tool has a useful non-mutating check.
 - Updates Homebrew without forcing auto-updating casks.
@@ -32,6 +42,8 @@ Options:
   -y, --yes            Run mutating steps without interactive approval.
   --skip-backup-check  Skip the Time Machine safety gate. Use when Terminal lacks
                        Full Disk Access and tmutil latestbackup cannot run.
+  --skip-macos         Do not run (or offer) `softwareupdate -i -a`; still lists what is pending.
+                       Useful when a major macOS upgrade is listed and you want to do it by hand.
   -h, --help           Show this help.
 
 At any prompt, choose [A]ll to approve this and every remaining tool without further prompts.
@@ -56,6 +68,21 @@ run_step() {
   else
     printf 'Failed: %s\n' "$label" >&2
     failures=$((failures + 1))
+  fi
+}
+
+# Like run_step, but a non-zero exit is reported without counting as a failure.
+# For diagnostics (brew doctor, mise doctor, rustup check) that exit non-zero to
+# *report* something rather than because the update broke.
+run_info() {
+  local label="$1"
+  shift
+
+  log "$label"
+  if "$@"; then
+    printf 'Done: %s\n' "$label"
+  else
+    printf 'Reported issues (exit %s, not counted as a failure): %s\n' "$?" "$label"
   fi
 }
 
@@ -216,6 +243,20 @@ require_time_machine_backup() {
 
   printf 'Latest backup: %s\n' "$latest_backup"
   printf 'Time Machine destination confirmed.\n'
+
+  # A "latest backup" from months ago is not a safety net. Warn after 2 days,
+  # refuse after 7. Skipped quietly if the timestamp cannot be parsed.
+  local stamp epoch age
+  stamp=$(basename "$latest_backup" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{6}' | tail -n1)
+  if [[ -n "$stamp" ]] && epoch=$(date -j -f '%Y-%m-%d-%H%M%S' "$stamp" '+%s' 2>/dev/null); then
+    age=$(( $(date '+%s') - epoch ))
+    if [[ "$age" -gt 604800 ]]; then
+      printf 'Failed: latest backup is %s old (limit 7 days). Run a backup first, or pass --skip-backup-check.\n' "$(format_age "$age")" >&2
+      return 1
+    elif [[ "$age" -gt 172800 ]]; then
+      printf 'Warning: latest backup is %s.\n' "$(format_age "$age")"
+    fi
+  fi
 }
 
 # Join the remaining arguments with the first argument as the separator.
@@ -360,6 +401,8 @@ import shutil
 import subprocess
 import sys
 
+KINDS = (("formula", "formulae"), ("cask", "casks"), ("npm", "npm"), ("uv", "uv"),
+         ("mas", "mas"), ("mise", "mise"))
 PRERELEASE = re.compile(r"(?i)(beta|canary|nightly|alpha|preview|insider|-rc[-.0-9])")
 
 
@@ -431,6 +474,27 @@ def collect():
             pre = bool(PRERELEASE.search(name) or PRERELEASE.search(latest))
             items.append((name, installed, latest, "uv", False, pre))
 
+    # Mac App Store: "<id>  <name>  (<installed> -> <latest>)"
+    for line in run(["mas", "outdated"]).splitlines():
+        m = re.match(r"\s*\d+\s+(.+?)\s+\(([^()]*?)\s*->\s*([^()]*?)\)\s*$", line)
+        if m:
+            name, installed, latest = m.group(1), m.group(2), m.group(3)
+            items.append((name, installed, latest, "mas", False, False))
+
+    # mise: `mise outdated --json` => {tool: {"current": .., "latest": ..}}
+    mise_raw = run(["mise", "outdated", "--json"])
+    if mise_raw.strip():
+        try:
+            mdata = json.loads(mise_raw)
+        except ValueError:
+            mdata = {}
+        if isinstance(mdata, dict):
+            for name, info in mdata.items():
+                if isinstance(info, dict):
+                    installed = info.get("current") or ""
+                    latest = info.get("latest") or ""
+                    items.append((name, installed, latest, "mise", False, bool(PRERELEASE.search(latest))))
+
     return items
 
 
@@ -455,7 +519,7 @@ def main():
         counts[kind] = counts.get(kind, 0) + 1
 
     head = []
-    for kind, label in (("formula", "formulae"), ("cask", "casks"), ("npm", "npm"), ("uv", "uv")):
+    for kind, label in KINDS:
         if counts.get(kind):
             head.append("%d %s" % (counts[kind], label))
     if macos_count:
@@ -475,7 +539,7 @@ def main():
         print("  !! major version jump (review release notes):")
         width = max(len(it[0]) for it in major)
         for name, installed, latest, kind, _, pre in major:
-            tags = kind if kind in ("cask", "npm", "uv") else ""
+            tags = kind if kind != "formula" else ""
             if pre:
                 tags = (tags + ", pre-release").lstrip(", ")
             suffix = "   (%s)" % tags if tags else ""
@@ -502,7 +566,7 @@ def main():
             rc[kind] = rc.get(kind, 0) + 1
         summary = ", ".join(
             "%d %s" % (rc[k], lbl)
-            for k, lbl in (("formula", "formulae"), ("cask", "casks"), ("npm", "npm"), ("uv", "uv"))
+            for k, lbl in KINDS
             if rc.get(k)
         )
         print("     routine (same major version): " + summary)
@@ -543,6 +607,13 @@ print_preflight_summary() {
   printf 'Host %s • macOS %s (%s) • disk free %s • TM backup %s\n' \
     "$host" "$macos_version" "$macos_build" "$disk_free" "$tm_line"
 
+  # Toolchain line: Homebrew builds against these, and a stale CLT after a macOS
+  # or Xcode update is the classic cause of "brew install" build failures.
+  local xcode_ver clt_ver
+  xcode_ver=$(xcodebuild -version 2>/dev/null | awk 'NR==1{v=$2} NR==2{b=$3} END{if(v) printf "%s (%s)", v, b}')
+  clt_ver=$(pkgutil --pkg-info=com.apple.pkg.CLTools_Executables 2>/dev/null | awk '/^version:/{print $2}')
+  printf 'Toolchain: Xcode %s • CLT %s • arch %s\n' "${xcode_ver:-none}" "${clt_ver:-none}" "$(uname -m)"
+
   # Prefer the grouped, risk-annotated plan. Fall back to a compact counts line
   # only if python3 is unavailable.
   if ! print_upgrade_plan; then
@@ -550,6 +621,7 @@ print_preflight_summary() {
     command -v brew >/dev/null 2>&1 && parts+=("brew $(count_lines brew outdated --quiet)")
     command -v npm >/dev/null 2>&1 && parts+=("npm $(count_lines npm outdated -g --depth=0 --parseable)")
     command -v mas >/dev/null 2>&1 && parts+=("mas $(count_lines mas outdated)")
+    command -v mise >/dev/null 2>&1 && parts+=("mise $(mise outdated --json 2>/dev/null | grep -c '"current"')")
     command -v uv >/dev/null 2>&1 && parts+=("uv $(count_lines uv tool list --outdated)")
     command -v softwareupdate >/dev/null 2>&1 && parts+=("macOS $(macos_update_count)")
 
@@ -569,6 +641,12 @@ print_preflight_summary() {
   if [[ "${#flags[@]}" -gt 0 ]]; then
     printf 'Active flags: %s\n' "${flags[*]}"
   fi
+}
+
+# Run mise from $HOME so the *global* config is used regardless of the cwd, without
+# a login shell (`bash -l` would source profile files and can hang or print noise).
+mise_in_home() {
+  (cd "$HOME" && mise "$@")
 }
 
 update_volta_defaults() {
@@ -606,6 +684,9 @@ while [[ "$#" -gt 0 ]]; do
       ;;
     --skip-backup-check)
       skip_backup_check=true
+      ;;
+    --skip-macos)
+      skip_macos=true
       ;;
     -h|--help)
       usage
@@ -649,7 +730,7 @@ if command -v brew >/dev/null 2>&1; then
       run_step "Homebrew upgrade formulae and standard casks" brew upgrade
       run_step "Homebrew greedy cask upgrade" brew upgrade --cask --greedy
       run_step "Homebrew cleanup" brew cleanup
-      run_step "Homebrew doctor" brew doctor
+      run_info "Homebrew doctor" brew doctor
     fi
   else
     note "Skipping greedy cask upgrades. Use --greedy-casks if you want to force auto-updating casks."
@@ -657,7 +738,7 @@ if command -v brew >/dev/null 2>&1; then
       run_step "Homebrew update" brew update
       run_step "Homebrew upgrade formulae and standard casks" brew upgrade
       run_step "Homebrew cleanup" brew cleanup
-      run_step "Homebrew doctor" brew doctor
+      run_info "Homebrew doctor" brew doctor
     fi
   fi
 else
@@ -683,7 +764,8 @@ else
 fi
 
 if command -v uv >/dev/null 2>&1; then
-  preview_step "uv processes currently running (cache may be locked by these)" bash -c 'pgrep -fl uv || true'
+  # -x: exact process name (a bare `pgrep -f uv` also matches this very command line).
+  preview_step "uv processes currently running (cache may be locked by these)" bash -c 'pgrep -lx uv || echo none'
   if begin_domain "uv" "tool upgrades, cache prune"; then
     run_step "uv tool upgrades" uv tool upgrade --all
     run_step "uv cache prune" uv cache prune
@@ -713,19 +795,20 @@ if command -v rustup >/dev/null 2>&1; then
   preview_step "rustup available updates" rustup check
   if begin_domain "rustup" "toolchain updates"; then
     run_step "rustup toolchain updates" rustup update
-    run_step "rustup check" rustup check
+    run_info "rustup check" rustup check
   fi
 else
   missing_tool "rustup" "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh" "https://www.rust-lang.org/tools/install"
 fi
 
 if command -v mise >/dev/null 2>&1; then
-  preview_step "mise current tools" bash -lc 'cd "$HOME" && mise list'
-  note "mise does not expose a single generic outdated summary here, so the current tool list is shown before upgrades."
+  preview_step "mise outdated tools" mise_in_home outdated
+  preview_step "mise current tools" mise_in_home list
+  note "mise: outdated tools and the current list are shown above before any upgrade."
   if begin_domain "mise" "tool upgrades, cache prune, doctor"; then
-    run_step "mise tool upgrades" bash -lc 'cd "$HOME" && mise upgrade'
+    run_step "mise tool upgrades" mise_in_home upgrade
     run_step "mise cache prune" mise cache prune
-    run_step "mise doctor" mise doctor
+    run_info "mise doctor" mise doctor
   fi
 else
   missing_tool "mise" "brew install mise" "https://mise.jdx.dev/getting-started.html"
@@ -733,14 +816,22 @@ fi
 
 if command -v softwareupdate >/dev/null 2>&1; then
   capture_softwareupdate_list
+  cur_major=""
   log "Available macOS software updates"
   if [[ -n "$softwareupdate_list_output" ]]; then
+    # A major jump (e.g. 26 -> 27) is a full OS upgrade, not a routine update.
+    cur_major=$(sw_vers -productVersion 2>/dev/null | cut -d. -f1)
+    if macos_system_update_lines | grep -oE 'Version:[[:space:]]*[0-9]+' | awk -v c="$cur_major" -F'[: ]+' '$NF!=c{f=1} END{exit !f}'; then
+      note "Note: a MAJOR macOS upgrade is listed (current major: ${cur_major:-?}). Do that deliberately, after a backup; use --skip-macos to leave it alone."
+    fi
     # The plan above already flags the count and any restart; show just the labels here.
     printf '%s\n' "$softwareupdate_list_output" | grep '\* Label:' || printf 'See the upgrade plan above.\n'
   else
     printf 'No pending changes reported.\n'
   fi
-  if begin_domain "macOS" "install all available software updates"; then
+  if [[ "$skip_macos" == true ]]; then
+    note "Skipped: --skip-macos was passed."
+  elif begin_domain "macOS" "install all available software updates"; then
     run_step "macOS software updates" softwareupdate -i -a
   fi
 else
