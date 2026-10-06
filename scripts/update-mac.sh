@@ -985,10 +985,9 @@ domain_info() {
   di_pre=0
   di_pinned=0
   di_restart=0
-  di_extra=""
   line=$(awk -F'\t' -v l="$1" '$1==l' "$scan_dir/summary.tsv" 2>/dev/null)
   if [[ -n "$line" ]]; then
-    IFS=$'\t' read -r _ di_count di_major di_pre di_pinned di_restart di_extra <<<"$line"
+    IFS=$'\t' read -r _ di_count di_major di_pre di_pinned di_restart _ <<<"$line"
   fi
 }
 
