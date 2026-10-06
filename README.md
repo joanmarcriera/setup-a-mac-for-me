@@ -103,11 +103,15 @@ It starts with a **pre-flight summary**: macOS version, free disk, the last Time
 - `pre-release` — beta / canary / nightly versions
 - `pinned` — formulae that will not upgrade
 
+Below the plan, a **Needs attention** table lists things that no longer work or are on the way out: Homebrew formulae/casks that upstream deprecated or disabled, deprecated global npm packages (with the registry's replacement hint), Volta packages whose files are gone, and dangling symlinks in `/opt/homebrew/bin`, `/usr/local/bin` and `~/.local/bin`. These are reported with a suggested fix; only broken Volta packages can be removed by `update-mac` itself, through the **Cleanup** entry on the selection screen (never by `--yes`).
+
+**Major version jumps are held back by default** (they show in the plan but are not applied): npm packages and Homebrew upgrades skip them, and Volta keeps Node/npm/Yarn/pnpm on their current major. Press `m` on the selection screen, or pass `--major`, to include them. Global npm packages are upgraded one at a time (`volta install <pkg>@latest` when Volta is present, since `npm update -g` fights Volta), so one broken package cannot abort the rest, and failures are listed at the end.
+
 Routine (same-major) updates are collapsed into one line per tool; add `--verbose` to list them. If `python3` is unavailable the plan degrades to a compact per-tool count line.
 
 When a macOS update is pending, the summary also prints a **recommended order**: install the macOS update first, reboot, then re-run `update-mac` for Homebrew and everything else. A macOS update can change the Command Line Tools and system libraries that Homebrew links against, so upgrading brew on the fresh system avoids mismatches. The note reminds you to back up with Time Machine first and shows your last backup. Only genuine macOS system updates trigger it — XProtect config data, Safari and the Command Line Tools do not. It is advisory: the run order is unchanged, so the note also states that this run still does Homebrew first (and, under `--yes`, that it will not stop to let you change your mind).
 
-Then a **selection screen** lets you choose what to go through: `↑/↓` or `j/k` move, `space` toggles a tool, `a` selects all, `n` none, `q` quits, and **`Enter` is the single approval**. The ticked tools then run one step at a time with no further prompts, and a results table is printed at the end. macOS is never pre-ticked. `--ask` restores the old per-tool `Yes/No/Skip/All/Quit` prompts.
+Then a **selection screen** lets you choose what to go through: `↑/↓` or `j/k` move, `space` toggles a tool, `a` selects all, `n` none, `m` toggles major jumps, `q` quits, and **`Enter` is the single approval**. The ticked tools then run one step at a time with no further prompts, and a results table is printed at the end. macOS is never pre-ticked. `--ask` restores the old per-tool `Yes/No/Skip/All/Quit` prompts.
 
 To preview everything without changing anything (and without the Time Machine gate), run:
 
