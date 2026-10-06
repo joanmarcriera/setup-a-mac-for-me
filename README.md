@@ -32,6 +32,7 @@ The repo is now organized around one source of truth for install groups:
 - `scripts/apply-macos-defaults.sh`: optional helper for the Tap to Click, Dock and Launchpad defaults shown on the site (`--dry-run`, `--check`, `--reset`)
 - `scripts/verify-setup.sh`: data-driven check of a bundle's taps, formulae, casks (and Mac App Store apps if listed) plus the scripted macOS defaults
 - `scripts/drift-report.sh`: read-only "what changed since I set this up" report (installed vs `data/install-groups.json`)
+- `scripts/cve-report.sh`: read-only CVE scan of the installed Homebrew packages (grype + syft)
 - `scripts/generate_brew_artifacts.py`: regenerates `brew/` files and the installer data used by the site
 - `scripts/check_docs.py`: validates local site links and required Pages files
 
@@ -142,6 +143,34 @@ If you want it to run straight through without prompts, use:
 ```sh
 update-mac --yes
 ```
+
+## Scan For Vulnerabilities (CVEs)
+
+`update-mac` tells you what is *outdated*; `scripts/cve-report.sh` tells you what is *vulnerable*, so you can prioritise the upgrades that actually close a security hole.
+
+```sh
+brew install grype syft
+./scripts/cve-report.sh
+```
+
+(`grype` and `syft` are in the `security` install group, so the `workstation` and `all` bundles, and `verify-setup.sh`, already cover them.)
+
+The scan is **read-only** — it changes nothing, so there is no Time Machine gate. It refreshes the grype vulnerability database, catalogs the installed Homebrew formulae under `$(brew --prefix)`, and matches them against NVD/GHSA. For each finding at or above the chosen severity it prints the installed and **fixed-in** version, the CVE id, and a copy-paste `brew upgrade …` for the affected formulae:
+
+```
+==> CVE report
+Findings: Critical 1 !!   High 2 !   Medium 4
+
+Patch available (severity >= medium):
+  !  openssl   3.3.0 -> 3.4.1  (CVE-2024-0001, High)
+  ...
+  Patch the Homebrew formulae with:
+    brew update && brew upgrade openssl wget
+```
+
+Options: `--min-severity <negligible|low|medium|high|critical>` (default `medium`) sets the detail threshold; `--offline` skips the database refresh; `--dry-run` previews the commands without scanning. It exits `0` when nothing High/Critical is found, `1` when there are High/Critical findings, and `2` on an operational error.
+
+**Scope, honestly:** this covers Homebrew formulae (and any language packages grype catalogs). GUI **casks** and **macOS** itself have no reliable CVE feed and are *not* scanned — the report prints how many casks it skipped, and `update-mac` is what keeps those current.
 
 ## Local Site Preview
 
