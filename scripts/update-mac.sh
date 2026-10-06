@@ -2,7 +2,7 @@
 #
 # update-mac: safe, incremental upgrade of a Mac built from this repo.
 #
-# Usage:  update-mac [--dry-run] [--greedy-casks] [--yes] [--with-macos] [--skip-backup-check] [--skip-macos]
+# Usage:  update-mac [--dry-run] [--greedy-casks] [--yes] [--with-macos] [--skip-backup-check] [--skip-macos] [--ask] [--verbose]
 #         (see --help for the full option list; README.md documents the behaviour)
 #
 # Works with macOS /bin/bash 3.2 (no associative arrays, no mapfile). Copy to ~/bin to use:
@@ -19,6 +19,29 @@ with_macos=false   # --with-macos: let --yes also run the macOS software update
 skip_backup_check=false
 skip_macos=false
 dry_run=false
+classic_prompts=false  # --ask: per-tool prompts instead of the selection screen
+verbose=false          # --verbose: list routine updates in the plan table too
+
+# Selection screen result: with selection_mode on, begin_domain runs exactly the tools
+# whose label is in selected_labels ("|Homebrew|npm|"), with no further prompts.
+selection_mode=false
+selected_labels=""
+
+# Execution order; domain_cmds[i] is the command that must exist for domain_labels[i].
+domain_labels=("Homebrew" "npm" "Mac App Store" "uv" "pipx" "Volta" "rustup" "mise" "macOS")
+domain_cmds=(brew npm mas uv pipx volta rustup mise softwareupdate)
+
+# Per-run scratch dir (scan results). The slow `softwareupdate -l` scan is started in
+# the background and joined later, so it overlaps with every other pre-flight check.
+scan_dir=$(mktemp -d "${TMPDIR:-/tmp}/update-mac.XXXXXX") || exit 2
+trap 'rm -rf "$scan_dir"' EXIT
+trap 'exit 130' INT TERM
+softwareupdate_pid=""
+
+# Per-tool outcome table, printed at the end.
+current_domain=""
+current_failures=0
+domain_results=""
 
 # Captured once by the pre-flight summary and reused by the macOS step so the
 # slow `softwareupdate -l` network scan only runs a single time per invocation.
@@ -27,14 +50,16 @@ softwareupdate_list_captured=false
 
 usage() {
   cat <<'EOF'
-Usage: update-mac [--dry-run] [--greedy-casks] [--yes] [--with-macos] [--skip-backup-check] [--skip-macos]
+Usage: update-mac [--dry-run] [--greedy-casks] [--yes] [--with-macos] [--skip-backup-check] [--skip-macos] [--ask] [--verbose]
 
 Default behavior:
 - Prints a pre-flight summary (system status + pending update counts) before touching anything.
 - Refuses to upgrade anything unless Time Machine has a latest backup (warns after 2 days,
   refuses after 7) and a visible destination.
-- Asks once per tool (Homebrew, npm, ...) with Yes / No / Skip / All / Quit.
-- Shows a preview first when the tool has a useful non-mutating check.
+- Scans every tool in parallel, then shows an upgrade-plan table (risky updates first).
+- Shows a selection screen (arrows/j,k move, space toggles, a all, n none, Enter runs,
+  q quits). Enter is the one approval: the ticked tools then run one step at a time with
+  no further prompts. (--ask restores the old per-tool prompts.)
 - Updates Homebrew without forcing auto-updating casks.
 
 Options:
@@ -45,13 +70,14 @@ Options:
   --skip-backup-check  Skip the Time Machine safety gate. Use when Terminal lacks
                        Full Disk Access and tmutil latestbackup cannot run.
   --with-macos         With --yes, also run `softwareupdate -i -a`. Without it, --yes leaves macOS alone.
-  --skip-macos         Do not run (or offer) `softwareupdate -i -a`; still lists what is pending.
+  --skip-macos         Do not run (or offer) the macOS update; still lists what is pending.
                        Useful when a major macOS upgrade is listed and you want to do it by hand.
+  --ask                Ask per tool (Yes/No/Skip/All/Quit) instead of the selection screen.
+  -v, --verbose        List routine (same-major) updates in the plan table as well.
   -h, --help           Show this help.
 
-At any prompt, choose [A]ll to approve this and every remaining tool without further prompts.
-[A]ll and --yes never cover the macOS software update: it is always asked separately
-(interactive), or skipped under --yes unless --with-macos is given.
+macOS: never pre-ticked on the selection screen; --yes skips it unless --with-macos is given.
+Major macOS upgrades are never installed by this script; only same-major updates are.
 EOF
 }
 
@@ -61,6 +87,11 @@ log() {
 
 note() {
   printf '%s\n' "$1"
+}
+
+# Preview-style hint: pointless once the selection screen has shown the plan.
+hint() {
+  [[ "$selection_mode" == true ]] || note "$1"
 }
 
 run_step() {
@@ -97,6 +128,9 @@ preview_step() {
   shift
   local output=""
   local status=0
+
+  # The plan table already covers what a preview would show.
+  [[ "$selection_mode" == true ]] && return 0
 
   log "$label"
   if output="$("$@" 2>&1)"; then
@@ -167,7 +201,7 @@ prompt_for_step() {
 
 # Gate a whole tool with a single decision. Returns 0 to run the tool's mutating
 # block, 1 to skip it. Handles dry-run, --yes, and the [A]ll prompt option.
-begin_domain() {
+begin_domain_gate() {
   local label="$1"
   local steps="$2"
   local prompt_status=0
@@ -176,6 +210,17 @@ begin_domain() {
     log "$label"
     printf '[dry-run] Would run: %s\n' "$steps"
     return 1
+  fi
+
+  # Selection screen already approved a set of tools: run those, skip the rest.
+  if [[ "$selection_mode" == true ]]; then
+    case "$selected_labels" in
+      *"|$label|"*) return 0 ;;
+      *)
+        printf 'Not selected: %s\n' "$label"
+        return 1
+        ;;
+    esac
   fi
 
   if [[ "$assume_yes" == true ]]; then
@@ -211,6 +256,35 @@ begin_domain() {
       exit 2
       ;;
   esac
+}
+
+# Record how the tool that just ran went (failures counted since it started).
+close_domain() {
+  local status="ok"
+
+  [[ -z "$current_domain" ]] && return 0
+  [[ "$failures" -gt "$current_failures" ]] && status="FAILED ($((failures - current_failures)) step(s))"
+  domain_results="${domain_results}${current_domain}|${status}"$'\n'
+  current_domain=""
+}
+
+# begin_domain_gate decides; this wrapper also tracks results for the final table.
+begin_domain() {
+  close_domain
+  begin_domain_gate "$@" || return 1
+  current_domain="$1"
+  current_failures=$failures
+  return 0
+}
+
+print_results_table() {
+  local label status
+
+  [[ -z "$domain_results" ]] && return 0
+  log "Results"
+  while IFS='|' read -r label status; do
+    [[ -n "$label" ]] && printf '  %-14s %s\n' "$label" "$status"
+  done <<<"$domain_results"
 }
 
 missing_tool() {
@@ -307,15 +381,25 @@ count_lines() {
   fi
 }
 
-# Capture `softwareupdate -l` once. The macOS step reuses the result so the slow
-# network scan does not run twice in a single invocation.
+# Start `softwareupdate -l` in the background (it is the slowest pre-flight scan).
+# The python plan waits on su.done; capture_softwareupdate_list joins it.
+start_softwareupdate_scan() {
+  command -v softwareupdate >/dev/null 2>&1 || return 0
+  [[ -n "$softwareupdate_pid" ]] && return 0
+  ( softwareupdate -l >"$scan_dir/su.txt" 2>&1; : >"$scan_dir/su.done" ) &
+  softwareupdate_pid=$!
+}
+
+# Load the scan result once. Call it from the parent shell (not inside $(...)) the
+# first time, so the cache survives; later subshell calls just reuse the variable.
 capture_softwareupdate_list() {
   if [[ "$softwareupdate_list_captured" == true ]]; then
     return 0
   fi
   softwareupdate_list_captured=true
-  if command -v softwareupdate >/dev/null 2>&1; then
-    softwareupdate_list_output=$(softwareupdate -l 2>&1) || true
+  if [[ -n "$softwareupdate_pid" ]]; then
+    wait "$softwareupdate_pid" 2>/dev/null
+    softwareupdate_list_output=$(cat "$scan_dir/su.txt" 2>/dev/null) || true
   fi
 }
 
@@ -387,35 +471,53 @@ print_macos_order_advice() {
     note "Note: --yes is set, so this run will NOT stop — it updates Homebrew first, then macOS."
     note "Re-run without --yes if you want to follow the order above."
   else
-    note "This run still updates Homebrew first; press Ctrl-C now to do macOS first instead."
+    if [[ "$classic_prompts" == true ]]; then
+      note "This run still updates Homebrew first; press Ctrl-C now to do macOS first instead."
+    else
+      note "To follow that order, tick only macOS on the selection screen, then re-run update-mac."
+    fi
   fi
 }
 
-# Render a grouped, risk-annotated upgrade plan. Uses an inline python3 program so
-# update-mac stays a single portable file (it is meant to be copied to ~/bin). All
-# checks are local: no network, no CVE lookups. Returns non-zero if python3 is
-# missing or the program fails, so the caller can fall back to the counts line.
+# Render the upgrade plan as a table (one row per outdated package, risky ones first)
+# and write a per-tool summary to $scan_dir/summary.tsv for the selection screen.
+# Every collector (brew, npm, uv, mas, mise, rustup, softwareupdate) runs concurrently
+# in an inline python3 program, so update-mac stays a single portable file (it is meant
+# to be copied to ~/bin). All checks are local/read-only: no CVE lookups. Returns
+# non-zero if python3 is missing or the program fails, so the caller can fall back to
+# the counts line.
 print_upgrade_plan() {
+  local rc=0
+
   # On a Mac without the Command Line Tools, /usr/bin/python3 is a shim that exists
   # but fails (or pops an install dialog), so probe it rather than trusting `command -v`.
   if ! command -v python3 >/dev/null 2>&1 || ! python3 -c '' >/dev/null 2>&1; then
     note "(python3 unavailable; showing plain counts instead of the upgrade plan.)"
+    capture_softwareupdate_list
     return 1
   fi
 
-  capture_softwareupdate_list
-
-  SOFTWAREUPDATE_LIST="$softwareupdate_list_output" python3 - <<'PY'
+  SCAN_DIR="$scan_dir" CUR_VERSION="$(sw_vers -productVersion 2>/dev/null)" \
+    SU_EXPECTED="$([[ -n "$softwareupdate_pid" ]] && echo 1 || echo 0)" \
+    PLAN_VERBOSE="$verbose" python3 - <<'PY' || rc=$?
 import json
 import os
 import re
 import shutil
 import subprocess
 import sys
+import time
+from concurrent.futures import ThreadPoolExecutor
 
-KINDS = (("formula", "formulae"), ("cask", "casks"), ("npm", "npm"), ("uv", "uv"),
-         ("mas", "mas"), ("mise", "mise"))
+SCAN_DIR = os.environ["SCAN_DIR"]
+CUR_VERSION = os.environ.get("CUR_VERSION", "")
+VERBOSE = os.environ.get("PLAN_VERBOSE") == "true"
+SU_EXPECTED = os.environ.get("SU_EXPECTED") == "1"
+
+# Same order update-mac runs the tools in.
+ORDER = ["Homebrew", "npm", "Mac App Store", "uv", "pipx", "Volta", "rustup", "mise", "macOS"]
 PRERELEASE = re.compile(r"(?i)(beta|canary|nightly|alpha|preview|insider|-rc[-.0-9])")
+RANK = {"MAJOR": 0, "restart": 1, "0.x": 2, "pre-release": 3, "pinned": 4}
 
 
 def run(cmd):
@@ -450,147 +552,320 @@ def short(version):
     return (version or "").split(",")[0]
 
 
-def collect():
-    items = []  # (name, installed, latest, kind, pinned, prerelease)
+def make(tool, name, installed, latest, pinned=False, restart=False):
+    tags = []
+    if pinned:
+        tags.append("pinned")
+    else:
+        kind = breaking(installed, latest)
+        if kind:
+            tags.append("MAJOR" if kind == "major" else kind)
+        # Judge pre-release by the version, not the name (a tool may be called "alpha-x").
+        if PRERELEASE.search(latest or ""):
+            tags.append("pre-release")
+    if restart:
+        tags.append("restart")
+    return {"tool": tool, "name": name, "installed": installed, "latest": latest, "tags": tags}
 
-    brew_raw = run(["brew", "outdated", "--json=v2"])
-    if brew_raw.strip():
-        try:
-            data = json.loads(brew_raw)
-        except ValueError:
-            data = {}
-        for kind, key in (("formula", "formulae"), ("cask", "casks")):
-            for it in data.get(key, []):
-                installed = (it.get("installed_versions") or [""])[0]
-                latest = it.get("current_version") or ""
-                name = it.get("name") or "?"
-                pre = bool(PRERELEASE.search(name) or PRERELEASE.search(latest))
-                items.append((name, installed, latest, kind, bool(it.get("pinned")), pre))
 
-    npm_raw = run(["npm", "outdated", "-g", "--json"])
-    if npm_raw.strip():
-        try:
-            ndata = json.loads(npm_raw)
-        except ValueError:
-            ndata = {}
-        for name, info in ndata.items():
-            installed = info.get("current") or ""
-            latest = info.get("latest") or ""
-            pre = bool(PRERELEASE.search(name) or PRERELEASE.search(latest))
-            items.append((name, installed, latest, "npm", False, pre))
+def rank(item):
+    return min([RANK[t] for t in item["tags"]] or [9])
 
+
+def load_json(raw):
+    try:
+        return json.loads(raw) if raw.strip() else {}
+    except ValueError:
+        return {}
+
+
+def collect_brew():
+    if not shutil.which("brew"):
+        return None
+    data = load_json(run(["brew", "outdated", "--json=v2"]))
+    items = []
+    for kind, key in (("", "formulae"), (" (cask)", "casks")):
+        for it in data.get(key, []):
+            installed = (it.get("installed_versions") or [""])[-1]
+            items.append(make("Homebrew", (it.get("name") or "?") + kind, installed,
+                              it.get("current_version") or "", pinned=bool(it.get("pinned"))))
+    return items
+
+
+def collect_npm():
+    if not shutil.which("npm"):
+        return None
+    data = load_json(run(["npm", "outdated", "-g", "--json"]))
+    return [make("npm", name, info.get("current") or "", info.get("latest") or "")
+            for name, info in data.items() if isinstance(info, dict)]
+
+
+def collect_uv():
+    if not shutil.which("uv"):
+        return None
+    items = []
     for line in run(["uv", "tool", "list", "--outdated"]).splitlines():
         m = re.match(r"(\S+)\s+v?(\S+)\s+\[latest:\s*([^\]]+)\]", line.strip())
         if m:
-            name, installed, latest = m.group(1), m.group(2), m.group(3).strip()
-            pre = bool(PRERELEASE.search(name) or PRERELEASE.search(latest))
-            items.append((name, installed, latest, "uv", False, pre))
+            items.append(make("uv", m.group(1), m.group(2), m.group(3).strip()))
+    return items
 
+
+def collect_mas():
+    if not shutil.which("mas"):
+        return None
+    items = []
     # Mac App Store: "<id>  <name>  (<installed> -> <latest>)"
     for line in run(["mas", "outdated"]).splitlines():
         m = re.match(r"\s*\d+\s+(.+?)\s+\(([^()]*?)\s*->\s*([^()]*?)\)\s*$", line)
         if m:
-            name, installed, latest = m.group(1), m.group(2), m.group(3)
-            items.append((name, installed, latest, "mas", False, False))
-
-    # mise: `mise outdated --json` => {tool: {"current": .., "latest": ..}}
-    mise_raw = run(["mise", "outdated", "--json"])
-    if mise_raw.strip():
-        try:
-            mdata = json.loads(mise_raw)
-        except ValueError:
-            mdata = {}
-        if isinstance(mdata, dict):
-            for name, info in mdata.items():
-                if isinstance(info, dict):
-                    installed = info.get("current") or ""
-                    latest = info.get("latest") or ""
-                    items.append((name, installed, latest, "mise", False, bool(PRERELEASE.search(latest))))
-
+            items.append(make("Mac App Store", m.group(1), m.group(2), m.group(3)))
     return items
 
 
-def macos_info():
-    text = os.environ.get("SOFTWAREUPDATE_LIST", "")
-    labels = re.findall(r"^\*\s*Label:", text, re.MULTILINE)
-    restart = []
+def collect_mise():
+    if not shutil.which("mise"):
+        return None
+    # `mise outdated --json` => {tool: {"current": .., "latest": ..}}
+    data = load_json(run(["mise", "outdated", "--json"]))
+    return [make("mise", name, info.get("current") or "", info.get("latest") or "")
+            for name, info in data.items() if isinstance(info, dict)]
+
+
+def collect_rustup():
+    if not shutil.which("rustup"):
+        return None
+    items = []
+    for line in run(["rustup", "check"]).splitlines():
+        m = re.match(r"(\S+)\s+-\s+Update available\s*:\s*(.+?)\s+->\s+(.+)$", line.strip())
+        if m:
+            items.append(make("rustup", m.group(1), m.group(2).split(" ")[0],
+                              m.group(3).split(" ")[0]))
+    return items
+
+
+def collect_macos():
+    # softwareupdate -l is started by the shell before this program, because it is the
+    # slowest scan; wait for its marker file instead of running it a second time.
+    if not SU_EXPECTED:
+        return None
+    deadline = time.time() + 300
+    while not os.path.exists(os.path.join(SCAN_DIR, "su.done")) and time.time() < deadline:
+        time.sleep(0.2)
+    try:
+        text = open(os.path.join(SCAN_DIR, "su.txt")).read()
+    except OSError:
+        return []
+    items = []
     for line in text.splitlines():
-        if "Title:" in line and "restart" in line.lower():
-            m = re.search(r"Title:\s*([^,]+)", line)
-            if m:
-                restart.append(m.group(1).strip())
-    return len(labels), restart
+        m = re.search(r"Title:\s*([^,]+),\s*Version:\s*([^,]+)", line)
+        if m:
+            title, version = m.group(1).strip(), m.group(2).strip()
+            installed = CUR_VERSION if title.startswith("macOS") else ""
+            items.append(make("macOS", title, installed, version,
+                              restart="restart" in line.lower()))
+    return items
+
+
+COLLECTORS = {
+    "Homebrew": collect_brew, "npm": collect_npm, "Mac App Store": collect_mas,
+    "uv": collect_uv, "rustup": collect_rustup, "mise": collect_mise, "macOS": collect_macos,
+}
 
 
 def main():
-    items = collect()
-    macos_count, restart_titles = macos_info()
+    results = {}
+    with ThreadPoolExecutor(max_workers=len(COLLECTORS)) as pool:
+        futures = {tool: pool.submit(fn) for tool, fn in COLLECTORS.items()}
+        for tool, future in futures.items():
+            try:
+                results[tool] = future.result()
+            except Exception as exc:
+                sys.stderr.write("update-mac: %s scan failed: %s\n" % (tool, exc))
+                results[tool] = []
 
-    counts = {}
-    for _, _, _, kind, _, _ in items:
-        counts[kind] = counts.get(kind, 0) + 1
+    color = sys.stdout.isatty()
+    rows, summary = [], []
+    for tool in ORDER:
+        items = results.get(tool)
+        if items is None:
+            continue
+        items.sort(key=lambda it: (rank(it), it["name"].lower()))
+        risky = [it for it in items if it["tags"]]
+        routine = [it for it in items if not it["tags"]]
+        for it in (items if VERBOSE else risky):
+            rows.append((tool, it["name"][:42], short(it["installed"]), short(it["latest"]),
+                         ", ".join(it["tags"])))
+        if routine and not VERBOSE:
+            rows.append((tool, "(+%d routine, same major; --verbose lists them)" % len(routine),
+                         "", "", ""))
+        tags = [t for it in items for t in it["tags"]]
+        summary.append("\t".join([tool, str(len(items)), str(tags.count("MAJOR")),
+                                  str(tags.count("pre-release")), str(tags.count("pinned")),
+                                  str(tags.count("restart"))]))
 
-    head = []
-    for kind, label in KINDS:
-        if counts.get(kind):
-            head.append("%d %s" % (counts[kind], label))
-    if macos_count:
-        head.append("%d macOS" % macos_count)
+    with open(os.path.join(SCAN_DIR, "summary.tsv"), "w") as fh:
+        fh.write("\n".join(summary) + ("\n" if summary else ""))
 
-    if not head:
+    if not rows:
         print("Upgrade plan: nothing pending.")
         return 0
 
-    print("Upgrade plan: " + ", ".join(head))
-
-    major = [it for it in items if not it[4] and breaking(it[1], it[2])]
-    prerel = [it for it in items if not it[4] and not breaking(it[1], it[2]) and it[5]]
-    pinned = [it for it in items if it[4]]
-
-    if major:
-        print("  !! major version jump (review release notes):")
-        width = max(len(it[0]) for it in major)
-        for name, installed, latest, kind, _, pre in major:
-            tags = kind if kind != "formula" else ""
-            if pre:
-                tags = (tags + ", pre-release").lstrip(", ")
-            suffix = "   (%s)" % tags if tags else ""
-            print("       %-*s  %s -> %s%s" % (width, name, short(installed), short(latest), suffix))
-
-    if restart_titles:
-        print("  !! macOS update requires a RESTART: " + "; ".join(restart_titles))
-
-    if prerel:
-        print("  ~  pre-release channel (auto-updating beta/canary/nightly):")
-        for name, installed, latest, kind, _, _ in prerel:
-            print("       %s  %s -> %s" % (name, short(installed), short(latest)))
-
-    if pinned:
-        print("     pinned (won't upgrade): " + ", ".join(it[0] for it in pinned))
-
-    routine = [
-        it for it in items
-        if not it[4] and not breaking(it[1], it[2]) and not it[5]
-    ]
-    if routine:
-        rc = {}
-        for _, _, _, kind, _, _ in routine:
-            rc[kind] = rc.get(kind, 0) + 1
-        summary = ", ".join(
-            "%d %s" % (rc[k], lbl)
-            for k, lbl in KINDS
-            if rc.get(k)
-        )
-        print("     routine (same major version): " + summary)
-
+    head = ("Tool", "Package", "Installed", "Latest", "Risk")
+    widths = [max(len(r[i]) for r in rows + [head]) for i in range(5)]
+    print("Upgrade plan (risky first):")
+    print("  " + "  ".join(h.ljust(w) for h, w in zip(head, widths)))
+    print("  " + "  ".join("-" * w for w in widths))
+    for r in rows:
+        cells = [c.ljust(w) for c, w in zip(r, widths)]
+        if color and "MAJOR" in r[4]:
+            cells[4] = "\033[1;31m" + cells[4] + "\033[0m"
+        print("  " + "  ".join(cells).rstrip())
     return 0
 
 
 try:
     sys.exit(main())
-except Exception:
+except Exception as exc:
+    sys.stderr.write("update-mac: upgrade plan failed: %s\n" % exc)
     sys.exit(1)
 PY
+
+  capture_softwareupdate_list
+  return "$rc"
+}
+
+# Per-tool summary for the table/selection screen. Prints "<count>|<detail>"; count is
+# "?" when the tool has no cheap outdated check (pipx, Volta).
+domain_status() {
+  local label="$1" line count="" major=0 pre=0 pinned=0 restart=0 detail=""
+
+  line=$(awk -F'\t' -v l="$label" '$1==l' "$scan_dir/summary.tsv" 2>/dev/null)
+  if [[ -z "$line" ]]; then
+    printf '?|no outdated check'
+    return 0
+  fi
+  IFS=$'\t' read -r _ count major pre pinned restart <<<"$line"
+  [[ "$major" -gt 0 ]] && detail="${detail}${detail:+, }${major} MAJOR"
+  [[ "$restart" -gt 0 ]] && detail="${detail}${detail:+, }needs restart"
+  [[ "$pre" -gt 0 ]] && detail="${detail}${detail:+, }${pre} pre-release"
+  [[ "$pinned" -gt 0 ]] && detail="${detail}${detail:+, }${pinned} pinned"
+  printf '%s|%s' "$count" "$detail"
+}
+
+# Plain summary table (used by --dry-run, --yes and --ask, where there is no selection screen).
+print_summary_table() {
+  local i status count detail
+
+  log "Summary"
+  printf '  %-14s %-10s %s\n' "Tool" "Outdated" "Notes"
+  for ((i = 0; i < ${#domain_labels[@]}; i++)); do
+    command -v "${domain_cmds[$i]}" >/dev/null 2>&1 || continue
+    status=$(domain_status "${domain_labels[$i]}")
+    count=${status%%|*}
+    detail=${status#*|}
+    printf '  %-14s %-10s %s\n' "${domain_labels[$i]}" "$count" "$detail"
+  done
+}
+
+# Keyboard checklist (pure bash 3.2, no dependencies). Enter is the single approval:
+# every ticked tool is then run, one step at a time, without further prompts.
+# Sets selection_mode/selected_labels; exits if the user quits or selects nothing.
+tui_labels=()
+tui_texts=()
+tui_marks=()
+tui_cursor=0
+
+tui_draw() {
+  local i mark total="${#tui_labels[@]}" count=0
+
+  [[ "$1" == redraw ]] && printf '\033[%dA' "$((total + 2))" >/dev/tty
+  printf '\r\033[K  Select what to update   ↑/↓ j/k move · space toggle · a all · n none · enter RUN · q quit\n' >/dev/tty
+  for ((i = 0; i < total; i++)); do
+    mark=' '
+    if [[ "${tui_marks[$i]}" -eq 1 ]]; then
+      mark=x
+      count=$((count + 1))
+    fi
+    if [[ "$i" -eq "$tui_cursor" ]]; then
+      printf '\r\033[K\033[7m> [%s] %-14s %s\033[0m\n' "$mark" "${tui_labels[$i]}" "${tui_texts[$i]}" >/dev/tty
+    else
+      printf '\r\033[K  [%s] %-14s %s\n' "$mark" "${tui_labels[$i]}" "${tui_texts[$i]}" >/dev/tty
+    fi
+  done
+  printf '\r\033[K  %d selected\n' "$count" >/dev/tty
+}
+
+choose_domains() {
+  local i status count detail text mark key rest total j
+  local chosen=""
+
+  for ((i = 0; i < ${#domain_labels[@]}; i++)); do
+    [[ "${domain_labels[$i]}" == macOS && "$skip_macos" == true ]] && continue
+    command -v "${domain_cmds[$i]}" >/dev/null 2>&1 || continue
+    status=$(domain_status "${domain_labels[$i]}")
+    count=${status%%|*}
+    detail=${status#*|}
+    if [[ "$count" == "?" ]]; then
+      text="$detail"
+      mark=1
+    else
+      text="$count outdated${detail:+ ($detail)}"
+      mark=0
+      [[ "$count" -gt 0 ]] && mark=1
+    fi
+    # An OS update is never pre-ticked: it is a deliberate choice (major upgrades are
+    # excluded from the install regardless).
+    [[ "${domain_labels[$i]}" == macOS ]] && mark=0
+    tui_labels+=("${domain_labels[$i]}")
+    tui_texts+=("$text")
+    tui_marks+=("$mark")
+  done
+
+  total=${#tui_labels[@]}
+  if [[ "$total" -eq 0 ]]; then
+    note "No supported tools found."
+    exit 0
+  fi
+
+  log "Choose what to update"
+  tui_draw first
+  while true; do
+    IFS= read -rsn1 key </dev/tty || exit 2
+    case "$key" in
+      $'\033')
+        rest=""
+        read -rsn2 -t 1 rest </dev/tty || rest=""
+        case "$rest" in
+          '[A') [[ "$tui_cursor" -gt 0 ]] && tui_cursor=$((tui_cursor - 1)) ;;
+          '[B') [[ "$tui_cursor" -lt $((total - 1)) ]] && tui_cursor=$((tui_cursor + 1)) ;;
+        esac
+        ;;
+      k) [[ "$tui_cursor" -gt 0 ]] && tui_cursor=$((tui_cursor - 1)) ;;
+      j) [[ "$tui_cursor" -lt $((total - 1)) ]] && tui_cursor=$((tui_cursor + 1)) ;;
+      ' ') tui_marks[tui_cursor]=$((1 - tui_marks[tui_cursor])) ;;
+      a) for ((j = 0; j < total; j++)); do tui_marks[j]=1; done ;;
+      n) for ((j = 0; j < total; j++)); do tui_marks[j]=0; done ;;
+      q)
+        printf '\nQuit requested. Nothing was changed.\n'
+        exit 130
+        ;;
+      '') break ;;
+    esac
+    tui_draw redraw
+  done
+
+  for ((i = 0; i < total; i++)); do
+    [[ "${tui_marks[$i]}" -eq 1 ]] && chosen="${chosen}${chosen:+, }${tui_labels[$i]}" \
+      && selected_labels="${selected_labels}${tui_labels[$i]}|"
+  done
+  if [[ -z "$chosen" ]]; then
+    printf '\nNothing selected. Nothing was changed.\n'
+    exit 0
+  fi
+  selected_labels="|${selected_labels}"
+  selection_mode=true
+  printf '\nApproved once: %s\nRunning one step at a time, no further prompts.\n' "$chosen"
 }
 
 print_preflight_summary() {
@@ -600,9 +875,8 @@ print_preflight_summary() {
 
   log "Pre-flight summary"
 
-  # Capture in the parent shell: the count helpers run in $(...) subshells, which
-  # would otherwise discard the cache and re-run the slow scan.
-  capture_softwareupdate_list
+  # Kick the slow macOS scan off now; it runs while the checks below execute.
+  start_softwareupdate_scan
 
   macos_version=$(sw_vers -productVersion 2>/dev/null || printf '?')
   macos_build=$(sw_vers -buildVersion 2>/dev/null || printf '?')
@@ -634,6 +908,7 @@ print_preflight_summary() {
   # only if python3 is unavailable.
   if ! print_upgrade_plan; then
     local parts=()
+    capture_softwareupdate_list
     command -v brew >/dev/null 2>&1 && parts+=("brew $(count_lines brew outdated --quiet)")
     command -v npm >/dev/null 2>&1 && parts+=("npm $(count_lines npm outdated -g --depth=0 --parseable)")
     command -v mas >/dev/null 2>&1 && parts+=("mas $(count_lines mas outdated)")
@@ -735,6 +1010,12 @@ while [[ "$#" -gt 0 ]]; do
     --skip-macos)
       skip_macos=true
       ;;
+    --ask)
+      classic_prompts=true
+      ;;
+    -v|--verbose)
+      verbose=true
+      ;;
     -h|--help)
       usage
       exit 0
@@ -767,6 +1048,14 @@ elif ! require_time_machine_backup; then
   exit 1
 fi
 
+# One approval for the whole run: pick tools on the selection screen (interactive), or
+# just show the summary table in --dry-run / --yes / --ask.
+if [[ "$dry_run" != true && "$assume_yes" != true && "$classic_prompts" != true ]]; then
+  choose_domains
+else
+  print_summary_table
+fi
+
 # Per-tool previews are intentionally minimal: the pre-flight upgrade plan already
 # lists what brew/npm/uv would change. Only previews the plan does not cover are kept.
 if command -v brew >/dev/null 2>&1; then
@@ -784,7 +1073,7 @@ if command -v brew >/dev/null 2>&1; then
       run_info "Homebrew doctor" brew doctor
     fi
   else
-    note "Skipping greedy cask upgrades. Use --greedy-casks if you want to force auto-updating casks."
+    hint "Skipping greedy cask upgrades. Use --greedy-casks if you want to force auto-updating casks."
     if begin_domain "Homebrew" "update, upgrade, cleanup, doctor"; then
       if run_step "Homebrew update" brew update; then
         run_step "Homebrew upgrade formulae and standard casks" brew upgrade
@@ -830,7 +1119,7 @@ fi
 
 if command -v pipx >/dev/null 2>&1; then
   preview_step "pipx installed packages" pipx list
-  note "pipx does not provide a compact outdated summary here, so the installed package list is shown before upgrades."
+  hint "pipx does not provide a compact outdated summary here, so the installed package list is shown before upgrades."
   if begin_domain "pipx" "package upgrades, shared library upgrades"; then
     run_step "pipx package upgrades" pipx upgrade-all
     run_step "pipx shared library upgrades" pipx upgrade-shared
@@ -858,7 +1147,7 @@ fi
 if command -v mise >/dev/null 2>&1; then
   preview_step "mise outdated tools" mise_in_home outdated
   preview_step "mise current tools" mise_in_home list
-  note "mise: outdated tools and the current list are shown above before any upgrade."
+  hint "mise: outdated tools and the current list are shown above before any upgrade."
   if begin_domain "mise" "tool upgrades, cache prune, doctor"; then
     run_step "mise tool upgrades" mise_in_home upgrade
     run_step "mise cache prune" mise_in_home cache prune
@@ -899,6 +1188,9 @@ if command -v softwareupdate >/dev/null 2>&1; then
 else
   note "softwareupdate is not available on this machine."
 fi
+
+close_domain
+print_results_table
 
 if [[ "$dry_run" == true ]]; then
   printf '\nDry run complete. Nothing was changed.\n'
