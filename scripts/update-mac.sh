@@ -688,30 +688,62 @@ def collect_npm():
             for name, info in data.items() if isinstance(info, dict)]
 
 
+PIPX_BLOCKED = []  # findings: newer release exists but cannot be installed in the venv's Python
+
+
+def python_ok(requires, version):
+    """Does a venv Python (e.g. "3.14.6") satisfy a PyPI requires_python like "<3.14,>=3.10"?
+    Minimal PEP 440 subset (>=, >, <=, <, ==, !=, optional .*); unknown syntax counts as OK."""
+    have = tuple(parts(version))
+    for spec in (requires or "").split(","):
+        m = re.match(r"\s*(>=|<=|==|!=|>|<)\s*([\d.]+?)(\.\*)?\s*$", spec)
+        if not m or not have:
+            continue
+        op, want, star = m.group(1), tuple(parts(m.group(2))), bool(m.group(3))
+        cut = have[:len(want)]
+        ok = {">=": have >= want, ">": have > want, "<=": cut <= want, "<": have < want,
+              "==": cut == want if star else have[:len(want)] == want,
+              "!=": not (cut == want if star else have[:len(want)] == want)}[op]
+        if not ok:
+            return False
+    return True
+
+
 def collect_pipx():
     if not shutil.which("pipx"):
         return None
     data = load_json(run(["pipx", "list", "--json"]))
-    pkgs = []
+    pkgs = []  # (name, version, venv python version)
     for venv in (data.get("venvs") or {}).values():
-        main = (venv.get("metadata") or {}).get("main_package") or {}
+        meta = venv.get("metadata") or {}
+        main = meta.get("main_package") or {}
         if main.get("package") and main.get("package_version"):
-            pkgs.append((main["package"], main["package_version"]))
+            pkgs.append((main["package"], main["package_version"], meta.get("python_version") or ""))
 
-    def latest(pv):
+    def latest(pkg):
         try:
-            url = "https://pypi.org/pypi/%s/json" % pv[0]
+            url = "https://pypi.org/pypi/%s/json" % pkg[0]
             with urllib.request.urlopen(url, timeout=15) as resp:
-                return json.load(resp)["info"]["version"]
+                info = json.load(resp)["info"]
+            return info["version"], info.get("requires_python") or ""
         except Exception:
-            return ""  # not on PyPI (git/local install) or offline: unknown, not outdated
+            return "", ""  # not on PyPI (git/local install) or offline: unknown, not outdated
 
     with ThreadPoolExecutor(max_workers=8) as pool:
-        lat = list(pool.map(latest, pkgs))
-    return [make("pipx", name, version, l) for (name, version), l in zip(pkgs, lat)
-            if l and newer(l, version)]
-
-
+        found = list(pool.map(latest, pkgs))
+    items = []
+    for (name, version, py), (lat, requires) in zip(pkgs, found):
+        if not lat or not newer(lat, version):
+            continue
+        if not python_ok(requires, py):
+            # pip would refuse it, so `pipx upgrade` is a silent no-op: report why, don't offer it.
+            PIPX_BLOCKED.append(finding(
+                "pipx-blocked", "pipx", "%s %s" % (name, version),
+                "%s needs Python %s, venv has %s" % (lat, requires, py.replace("Python ", "")),
+                "pipx reinstall --python python3.13 %s   (any Python that fits)" % name))
+            continue
+        items.append(make("pipx", name, version, lat))
+    return items
 
 
 def collect_uv():
@@ -898,6 +930,7 @@ def main():
             findings = health.result()
         except Exception as exc:
             sys.stderr.write("update-mac: health scan failed: %s\n" % exc)
+    findings = findings + PIPX_BLOCKED
 
     rows, summary, outdated = [], [], []
     for tool in ORDER:
@@ -927,7 +960,7 @@ def main():
 
     if findings:
         fixable = [f for f in findings if f["kind"] == "volta-dangling"]
-        warn = [f for f in findings if f["kind"] in ("deprecated", "disabled")]
+        warn = [f for f in findings if f["kind"] in ("deprecated", "disabled", "pipx-blocked")]
         links = [f for f in findings if f["kind"] == "broken-link"]
         extra = "%d deprecated/disabled, %d broken link(s)" % (len(warn), len(links))
         summary.insert(0, "\t".join(["Cleanup", str(len(fixable)), "0", "0", "0", "0", extra]))
@@ -947,7 +980,7 @@ def main():
 
     if findings:
         print("\nNeeds attention (%d) - things that no longer work or are on the way out:" % len(findings))
-        order = {"volta-dangling": 0, "disabled": 1, "deprecated": 2, "broken-link": 3}
+        order = {"volta-dangling": 0, "pipx-blocked": 1, "disabled": 2, "deprecated": 3, "broken-link": 4}
         findings.sort(key=lambda f: (order.get(f["kind"], 9), f["scope"], f["name"]))
         table = []
         for f in findings:
