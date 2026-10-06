@@ -2,7 +2,7 @@
 #
 # update-mac: safe, incremental upgrade of a Mac built from this repo.
 #
-# Usage:  update-mac [--dry-run] [--greedy-casks] [--yes] [--skip-backup-check] [--skip-macos]
+# Usage:  update-mac [--dry-run] [--greedy-casks] [--yes] [--with-macos] [--skip-backup-check] [--skip-macos]
 #         (see --help for the full option list; README.md documents the behaviour)
 #
 # Works with macOS /bin/bash 3.2 (no associative arrays, no mapfile). Copy to ~/bin to use:
@@ -27,12 +27,12 @@ softwareupdate_list_captured=false
 
 usage() {
   cat <<'EOF'
-Usage: update-mac [--dry-run] [--greedy-casks] [--yes] [--skip-backup-check] [--skip-macos]
+Usage: update-mac [--dry-run] [--greedy-casks] [--yes] [--with-macos] [--skip-backup-check] [--skip-macos]
 
 Default behavior:
 - Prints a pre-flight summary (system status + pending update counts) before touching anything.
-- Refuses to upgrade anything unless Time Machine has a latest backup (not older than 7 days)
-  and a visible destination.
+- Refuses to upgrade anything unless Time Machine has a latest backup (warns after 2 days,
+  refuses after 7) and a visible destination.
 - Asks once per tool (Homebrew, npm, ...) with Yes / No / Skip / All / Quit.
 - Shows a preview first when the tool has a useful non-mutating check.
 - Updates Homebrew without forcing auto-updating casks.
@@ -40,7 +40,7 @@ Default behavior:
 Options:
   -n, --dry-run        Preview every step and mutate nothing. Shows the summary and what each
                        tool would do, then exits. Skips the Time Machine gate (nothing changes).
-  --greedy-casks       Force Homebrew to upgrade auto-updating casks too.
+  --greedy-casks       Force Homebrew to upgrade auto-updating casks too (alias: --greedy).
   -y, --yes            Run mutating steps without interactive approval.
   --skip-backup-check  Skip the Time Machine safety gate. Use when Terminal lacks
                        Full Disk Access and tmutil latestbackup cannot run.
@@ -73,6 +73,7 @@ run_step() {
   else
     printf 'Failed: %s\n' "$label" >&2
     failures=$((failures + 1))
+    return 1
   fi
 }
 
@@ -117,7 +118,8 @@ ensure_prompt_available() {
   if [[ "$dry_run" == true || "$assume_yes" == true ]]; then
     return 0
   fi
-  if [[ ! -t 0 || ! -r /dev/tty ]]; then
+  # Prompts read /dev/tty, so test that it actually opens (stdin may be piped).
+  if ! { : </dev/tty; } 2>/dev/null; then
     printf 'Interactive approval is the default, but no terminal prompt is available. Re-run with --yes to auto-approve mutating steps, or --dry-run to preview only.\n' >&2
     exit 2
   fi
@@ -261,6 +263,8 @@ require_time_machine_backup() {
     elif [[ "$age" -gt 172800 ]]; then
       printf 'Warning: latest backup is %s.\n' "$(format_age "$age")"
     fi
+  else
+    printf 'Warning: could not read the backup timestamp from "%s"; backup age NOT verified.\n' "$latest_backup"
   fi
 }
 
@@ -392,7 +396,10 @@ print_macos_order_advice() {
 # checks are local: no network, no CVE lookups. Returns non-zero if python3 is
 # missing or the program fails, so the caller can fall back to the counts line.
 print_upgrade_plan() {
-  if ! command -v python3 >/dev/null 2>&1; then
+  # On a Mac without the Command Line Tools, /usr/bin/python3 is a shim that exists
+  # but fails (or pops an install dialog), so probe it rather than trusting `command -v`.
+  if ! command -v python3 >/dev/null 2>&1 || ! python3 -c '' >/dev/null 2>&1; then
+    note "(python3 unavailable; showing plain counts instead of the upgrade plan.)"
     return 1
   fi
 
@@ -593,6 +600,10 @@ print_preflight_summary() {
 
   log "Pre-flight summary"
 
+  # Capture in the parent shell: the count helpers run in $(...) subshells, which
+  # would otherwise discard the cache and re-run the slow scan.
+  capture_softwareupdate_list
+
   macos_version=$(sw_vers -productVersion 2>/dev/null || printf '?')
   macos_build=$(sw_vers -buildVersion 2>/dev/null || printf '?')
   host=$(scutil --get LocalHostName 2>/dev/null || hostname 2>/dev/null || printf '?')
@@ -646,6 +657,33 @@ print_preflight_summary() {
   if [[ "${#flags[@]}" -gt 0 ]]; then
     printf 'Active flags: %s\n' "${flags[*]}"
   fi
+}
+
+# Install pending macOS updates by explicit label, leaving out any macOS entry whose
+# major version differs from the running one (a full OS upgrade is never installed
+# implicitly; `softwareupdate -i -a` would take it). Needs root, so sudo is used.
+# $1 = current major macOS version.
+install_macos_updates() {
+  local cur_major="$1"
+  local labels=()
+  local label
+
+  # Entries look like: "* Label: <label>" then "\tTitle: <title>, Version: <v>, ...".
+  while IFS= read -r label; do
+    [[ -n "$label" ]] && labels+=("$label")
+  done < <(printf '%s\n' "$softwareupdate_list_output" | awk -v cur="$cur_major" '
+    /^[[:space:]]*\* Label:/ { if (lbl != "" && !skip) print lbl
+                               lbl = $0; sub(/^[[:space:]]*\* Label:[[:space:]]*/, "", lbl); skip = 0; next }
+    /Title:[[:space:]]*macOS/ { if (match($0, /Version:[[:space:]]*[0-9]+/)) {
+                                  v = substr($0, RSTART, RLENGTH); sub(/[^0-9]*/, "", v)
+                                  if (v != cur) skip = 1 } }
+    END { if (lbl != "" && !skip) print lbl }')
+
+  if [[ "${#labels[@]}" -eq 0 ]]; then
+    note "No installable macOS updates (major upgrades are excluded; install those by hand)."
+    return 0
+  fi
+  run_step "macOS software updates (${#labels[@]})" sudo softwareupdate -i "${labels[@]}"
 }
 
 # Run mise from $HOME so the *global* config is used regardless of the cwd, without
@@ -735,18 +773,25 @@ if command -v brew >/dev/null 2>&1; then
   if [[ "$use_greedy_casks" == true ]]; then
     preview_step "Homebrew outdated greedy casks (not in the plan above)" brew outdated --cask --greedy --verbose
     if begin_domain "Homebrew" "update, upgrade, greedy cask upgrade, cleanup, doctor"; then
-      run_step "Homebrew update" brew update
-      run_step "Homebrew upgrade formulae and standard casks" brew upgrade
-      run_step "Homebrew greedy cask upgrade" brew upgrade --cask --greedy
-      run_step "Homebrew cleanup" brew cleanup
+      # Upgrading on stale metadata is worse than not upgrading: stop if update fails.
+      if run_step "Homebrew update" brew update; then
+        run_step "Homebrew upgrade formulae and standard casks" brew upgrade
+        run_step "Homebrew greedy cask upgrade" brew upgrade --cask --greedy
+        run_step "Homebrew cleanup" brew cleanup
+      else
+        note "Skipping Homebrew upgrade/cleanup because the update step failed."
+      fi
       run_info "Homebrew doctor" brew doctor
     fi
   else
     note "Skipping greedy cask upgrades. Use --greedy-casks if you want to force auto-updating casks."
     if begin_domain "Homebrew" "update, upgrade, cleanup, doctor"; then
-      run_step "Homebrew update" brew update
-      run_step "Homebrew upgrade formulae and standard casks" brew upgrade
-      run_step "Homebrew cleanup" brew cleanup
+      if run_step "Homebrew update" brew update; then
+        run_step "Homebrew upgrade formulae and standard casks" brew upgrade
+        run_step "Homebrew cleanup" brew cleanup
+      else
+        note "Skipping Homebrew upgrade/cleanup because the update step failed."
+      fi
       run_info "Homebrew doctor" brew doctor
     fi
   fi
@@ -816,8 +861,8 @@ if command -v mise >/dev/null 2>&1; then
   note "mise: outdated tools and the current list are shown above before any upgrade."
   if begin_domain "mise" "tool upgrades, cache prune, doctor"; then
     run_step "mise tool upgrades" mise_in_home upgrade
-    run_step "mise cache prune" mise cache prune
-    run_info "mise doctor" mise doctor
+    run_step "mise cache prune" mise_in_home cache prune
+    run_info "mise doctor" mise_in_home doctor
   fi
 else
   missing_tool "mise" "brew install mise" "https://mise.jdx.dev/getting-started.html"
@@ -849,7 +894,7 @@ if command -v softwareupdate >/dev/null 2>&1; then
     [[ "$yes_flag" == true ]] || assume_yes=false
     begin_domain "macOS" "install all available software updates (not covered by [A]ll)" && macos_ok=true || macos_ok=false
     assume_yes=$saved_assume_yes
-    [[ "$macos_ok" == true ]] && run_step "macOS software updates" softwareupdate -i -a
+    [[ "$macos_ok" == true ]] && install_macos_updates "$cur_major"
   fi
 else
   note "softwareupdate is not available on this machine."
