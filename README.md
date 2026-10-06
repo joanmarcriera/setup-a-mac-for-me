@@ -96,22 +96,24 @@ It updates:
 
 It refuses to run upgrades unless Time Machine reports both a latest backup and a visible destination, and that backup must be under 7 days old (a warning appears after 2 days). `--skip-backup-check` bypasses the gate.
 
-It starts with a **pre-flight summary**: macOS version, free disk, the last Time Machine backup and its age, the Xcode and Command Line Tools versions, followed by a grouped, risk-annotated **upgrade plan** of what would change. The plan flags, using local checks only (no network, no CVE lookups):
+It starts with a **pre-flight summary**: macOS version, free disk, the last Time Machine backup and its age, the Xcode and Command Line Tools versions. Every scan (Homebrew, npm, uv, Mac App Store, mise, rustup and `softwareupdate`) then runs **in parallel**, and the result is shown as an **upgrade-plan table**, riskiest rows first. The Risk column flags, using local checks only (no CVE lookups):
 
-- `!!` **major version jumps** (leading version number changed, or a `0.x` minor bump) — the ones most likely to break something, so review release notes first
-- `!!` a **macOS update that requires a restart**
-- `~` **pre-release channels** (auto-updating `@beta` / `@canary` / nightly software)
-- **pinned** formulae that will not upgrade
+- `MAJOR` — a major version jump (or a `0.x` minor bump); review release notes first
+- `restart` — a macOS update that requires a restart
+- `pre-release` — beta / canary / nightly versions
+- `pinned` — formulae that will not upgrade
 
-The plan covers Homebrew formulae and casks, npm globals, uv tools, Mac App Store apps (`mas`) and mise tools. Everything else is summarized as routine counts. If `python3` is unavailable the plan degrades to a compact per-tool count line.
+Below the plan, a **Needs attention** table lists things that no longer work or are on the way out: Homebrew formulae/casks that upstream deprecated or disabled, deprecated global npm packages (with the registry's replacement hint), Volta packages whose files are gone, and dangling symlinks in `/opt/homebrew/bin`, `/usr/local/bin` and `~/.local/bin`. These are reported with a suggested fix; only broken Volta packages can be removed by `update-mac` itself, through the **Cleanup** entry on the selection screen (never by `--yes`).
+
+**Major version jumps are held back by default** (they show in the plan but are not applied): npm packages and Homebrew upgrades skip them, and Volta keeps Node/npm/Yarn/pnpm on their current major. Press `m` on the selection screen, or pass `--major`, to include them. Global npm packages are upgraded one at a time (`volta install <pkg>@latest` when Volta is present, since `npm update -g` fights Volta), so one broken package cannot abort the rest, and failures are listed at the end.
+
+Under Volta the npm scan reads Volta's own package list (plain `npm outdated -g` would only see the npm bundled in Volta's Node image), pipx packages are checked against PyPI, and a tool whose scan fails is shown as `scan FAILED` rather than "0 outdated". uv and mise also honour the major hold; Mac App Store and rustup do not, and the macOS row says so.
+
+Routine (same-major) updates are collapsed into one line per tool; add `--verbose` to list them. If `python3` is unavailable the plan degrades to a compact per-tool count line.
 
 When a macOS update is pending, the summary also prints a **recommended order**: install the macOS update first, reboot, then re-run `update-mac` for Homebrew and everything else. A macOS update can change the Command Line Tools and system libraries that Homebrew links against, so upgrading brew on the fresh system avoids mismatches. The note reminds you to back up with Time Machine first and shows your last backup. Only genuine macOS system updates trigger it — XProtect config data, Safari and the Command Line Tools do not. It is advisory: the run order is unchanged, so the note also states that this run still does Homebrew first (and, under `--yes`, that it will not stop to let you change your mind).
 
-By default it runs step by step:
-
-- it previews what it can with non-mutating checks
-- it asks **once per tool** with `Yes`, `No`, `Skip`, `All`, or `Quit`
-- choose `All` at any prompt to approve that tool and every remaining one without further prompts
+Then a **selection screen** lets you choose what to go through: `↑/↓` or `j/k` move, `space` toggles a tool, `a` selects all, `n` none, `m` toggles major jumps, `q` quits, and **`Enter` is the single approval**. The ticked tools then run one step at a time with no further prompts, and a results table is printed at the end. macOS is never pre-ticked. `--ask` restores the old per-tool `Yes/No/Skip/All/Quit` prompts.
 
 To preview everything without changing anything (and without the Time Machine gate), run:
 
@@ -127,7 +129,7 @@ By default it does **not** force auto-updating casks. If you want that behavior 
 update-mac --greedy-casks
 ```
 
-If a major macOS upgrade (for example 26 to 27) is listed, `update-mac` says so. The macOS update is never covered by the **[A]ll** answer or by `--yes`: interactively it is asked on its own at the end, and under `--yes` it is skipped unless you also pass `--with-macos`. Pass `--skip-macos` to not be asked at all and do it by hand:
+If a major macOS upgrade (for example 26 to 27) is listed, `update-mac` says so. The macOS update is never pre-ticked on the selection screen, and `--yes` skips it unless you also pass `--with-macos`. Only same-major updates are installed (by label); a major OS upgrade is always left for you to do by hand. Pass `--skip-macos` to not be asked at all and do it by hand:
 
 ```sh
 update-mac --skip-macos
