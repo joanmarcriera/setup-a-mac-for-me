@@ -1,7 +1,7 @@
 # Microsoft apps that are common enough to keep ready on a work machine.
 cask "microsoft-edge"
-cask "microsoft-office"
 cask "microsoft-teams"
-cask "onedrive"
-cask "microsoft-outlook"
-cask "microsoft-remote-desktop"
+
+mas "Microsoft Word", id: 462054704
+mas "Microsoft Excel", id: 462058435
+mas "Windows App", id: 1295203466

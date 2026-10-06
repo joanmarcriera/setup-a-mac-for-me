@@ -1,5 +1,9 @@
-# Screenshot, recording, and media tooling.
+# Screenshot, recording, download and media tooling.
 brew "ffmpeg"
+brew "yt-dlp"
+brew "gallery-dl"
 
 cask "shottr"
-cask "kap"
+cask "vlc"
+cask "blackhole-2ch"
+cask "blender"

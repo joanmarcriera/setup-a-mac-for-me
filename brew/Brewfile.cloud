@@ -1,0 +1,6 @@
+# Infrastructure-as-code and cloud CLIs.
+brew "opentofu"
+brew "oci-cli"
+brew "googleworkspace-cli"
+
+cask "gcloud-cli"

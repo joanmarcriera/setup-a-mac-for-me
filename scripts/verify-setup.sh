@@ -1,25 +1,56 @@
 #!/usr/bin/env bash
+#
+# verify-setup.sh - post-install audit of a Mac built from this repo.
+#
+# Everything is read from data/install-groups.json (the single source of truth) and
+# apply-macos-defaults.sh, so adding an app to the data file automatically adds it here.
+# Read-only: it changes nothing.
+#
+# Usage:
+#   scripts/verify-setup.sh [BUNDLE]        BUNDLE defaults to "workstation"
+#                                           (any bundle id in data/install-groups.json)
+#   scripts/verify-setup.sh --list          print the bundle ids and exit
+#
+# Checks: Homebrew formulae, casks and taps of the bundle's groups; Mac App Store apps if
+# a group carries an optional "mas" list (IDs or {"id":..}); macOS defaults via
+# `apply-macos-defaults.sh --check`. A tap-qualified name (user/tap/foo) matches the
+# installed short name "foo". For what is installed but NOT in the repo, use drift-report.sh.
+#
+# Exit status: 0 all good, 1 something missing or mismatched, 2 usage/environment error.
+# Works with macOS /bin/bash 3.2 (no mapfile, no associative arrays) and python3 stdlib.
 
-set -euo pipefail
+set -uo pipefail
 
-bundle="${1:-workstation}"
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 data_file="$repo_root/data/install-groups.json"
 
 if [[ ! -f "$data_file" ]]; then
   echo "Missing data file: $data_file" >&2
-  exit 1
+  exit 2
 fi
+command -v python3 >/dev/null 2>&1 || { echo "python3 is required." >&2; exit 2; }
+
+if [[ "${1:-}" == "--list" ]]; then
+  python3 -c 'import json,sys
+for b in json.load(open(sys.argv[1]))["bundles"]: print(b["id"], "-", b.get("description",""))' "$data_file"
+  exit 0
+fi
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  sed -n '3,/^$/p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//; /^#!/d'
+  exit 0
+fi
+
+bundle="${1:-workstation}"
 
 if ! command -v brew >/dev/null 2>&1; then
   echo "Homebrew is not installed." >&2
-  exit 1
+  exit 2
 fi
 
-mapfile -t expected < <(
+# Expected items as "kind:name" lines: formula, cask, tap, mas.
+expected="$(
   python3 - "$data_file" "$bundle" <<'PY'
-import json
-import sys
+import json, sys
 
 data_path, bundle_id = sys.argv[1], sys.argv[2]
 with open(data_path, "r", encoding="utf-8") as handle:
@@ -28,107 +59,81 @@ with open(data_path, "r", encoding="utf-8") as handle:
 groups = {group["id"]: group for group in data["groups"]}
 bundle = next((item for item in data["bundles"] if item["id"] == bundle_id), None)
 if bundle is None:
-    raise SystemExit(f"Unknown bundle: {bundle_id}")
+    ids = ", ".join(b["id"] for b in data["bundles"])
+    sys.stderr.write("Unknown bundle: %s (available: %s)\n" % (bundle_id, ids))
+    sys.exit(2)
 
-formulae = []
-casks = []
+seen = set()
 for group_id in bundle["include"]:
-    formulae.extend(groups[group_id]["formulae"])
-    casks.extend(groups[group_id]["casks"])
-
-seen = set()
-for formula in formulae:
-    if formula not in seen:
-        print(f"formula:{formula}")
-        seen.add(formula)
-
-seen = set()
-for cask in casks:
-    if cask not in seen:
-        print(f"cask:{cask}")
-        seen.add(cask)
+    g = groups[group_id]
+    for kind, key in (("tap", "taps"), ("formula", "formulae"), ("cask", "casks"), ("mas", "mas")):
+        for item in g.get(key, []):
+            name = str(item["id"]) if isinstance(item, dict) else str(item)
+            if (kind, name) not in seen:
+                seen.add((kind, name))
+                print("%s:%s" % (kind, name))
 PY
-)
+)" || exit 2
 
-mapfile -t installed_formulae < <(brew list --formula)
-mapfile -t installed_casks < <(brew list --cask)
+# One brew call per kind, then plain grep -Fx lookups (fast, bash 3.2 safe).
+installed_formulae="$(brew list --formula 2>/dev/null)"
+installed_casks="$(brew list --cask 2>/dev/null)"
+installed_taps="$(brew tap 2>/dev/null)"
+installed_mas=""
+command -v mas >/dev/null 2>&1 && installed_mas="$(mas list 2>/dev/null | awk '{print $1}')"
 
-missing_formulae=()
-missing_casks=()
-
-contains() {
-  local needle="$1"
-  shift
-  local item
-  for item in "$@"; do
-    if [[ "$item" == "$needle" ]]; then
-      return 0
-    fi
-  done
-  return 1
-}
-
-for entry in "${expected[@]}"; do
-  kind="${entry%%:*}"
-  name="${entry#*:}"
-  if [[ "$kind" == "formula" ]]; then
-    contains "$name" "${installed_formulae[@]}" || missing_formulae+=("$name")
-  else
-    contains "$name" "${installed_casks[@]}" || missing_casks+=("$name")
-  fi
-done
-
-read_default() {
-  local domain="$1"
-  local key="$2"
-  defaults read "$domain" "$key" 2>/dev/null || true
-}
+has() { printf '%s\n' "$2" | grep -Fxq -- "$1"; }
 
 failures=0
+missing_formulae="" missing_casks="" missing_taps="" missing_mas=""
 
-if [[ "${#missing_formulae[@]}" -gt 0 ]]; then
-  failures=1
-  echo "Missing formulae:"
-  printf '  - %s\n' "${missing_formulae[@]}"
-fi
+while IFS= read -r entry; do
+  [[ -z "$entry" ]] && continue
+  kind="${entry%%:*}"
+  name="${entry#*:}"
+  short="${name##*/}"
+  case "$kind" in
+    formula) has "$short" "$installed_formulae" || missing_formulae="$missing_formulae  - $name"$'\n' ;;
+    cask)    has "$short" "$installed_casks"    || missing_casks="$missing_casks  - $name"$'\n' ;;
+    tap)     has "$name" "$installed_taps"      || missing_taps="$missing_taps  - $name"$'\n' ;;
+    mas)
+      if ! command -v mas >/dev/null 2>&1; then
+        missing_mas="$missing_mas  - $name (mas not installed)"$'\n'
+      else
+        has "$name" "$installed_mas" || missing_mas="$missing_mas  - $name"$'\n'
+      fi
+      ;;
+  esac
+done <<<"$expected"
 
-if [[ "${#missing_casks[@]}" -gt 0 ]]; then
-  failures=1
-  echo "Missing casks:"
-  printf '  - %s\n' "${missing_casks[@]}"
-fi
-
-declare -A defaults_expect=(
-  ["com.apple.dock:autohide-time-modifier"]="0.5"
-  ["com.apple.dock:autohide-delay"]="0"
-  ["com.apple.dock:springboard-columns"]="10"
-  ["com.apple.dock:springboard-rows"]="8"
-)
-
-for compound in "${!defaults_expect[@]}"; do
-  domain="${compound%%:*}"
-  key="${compound#*:}"
-  value="$(read_default "$domain" "$key")"
-  if [[ "$value" != "${defaults_expect[$compound]}" ]]; then
+report() { # title, list
+  if [[ -n "$2" ]]; then
     failures=1
-    echo "Default mismatch: $domain $key expected ${defaults_expect[$compound]}, got ${value:-<unset>}"
+    printf '%s\n%s' "$1" "$2"
   fi
-done
+}
+report "Missing taps:" "$missing_taps"
+report "Missing formulae:" "$missing_formulae"
+report "Missing casks:" "$missing_casks"
+report "Missing Mac App Store apps:" "$missing_mas"
+
+# macOS defaults come from the one script that defines them.
+"$repo_root/scripts/apply-macos-defaults.sh" --check || failures=1
 
 if [[ "$failures" -eq 0 ]]; then
-  cat <<EOF
+  cat <<EOT
 Bundle "$bundle" looks good.
 
-Validated:
-- Homebrew formulae and casks from data/install-groups.json
-- Dock autohide timing
-- Launchpad grid size
+Validated (all from data/install-groups.json):
+- Homebrew taps, formulae and casks
+- Mac App Store apps (when the data lists any)
+- macOS defaults (apply-macos-defaults.sh --check)
 
 Manual checks still worth doing:
-- Tap to Click and three-finger drag
+- Three-finger drag
 - Vivaldi default browser and DuckDuckGo search
 - Keyboard Maestro shortcut wiring
-EOF
+EOT
   exit 0
 fi
 

@@ -1,4 +1,9 @@
-# PDF readers and editors kept ready for paperwork, review, and annotation.
+# PDF readers and command-line PDF and OCR tooling.
+brew "qpdf"
+brew "poppler"
+brew "tesseract"
+brew "weasyprint"
+brew "pango"
+
 cask "skim"
 cask "adobe-acrobat-reader"
-cask "pdf-expert"

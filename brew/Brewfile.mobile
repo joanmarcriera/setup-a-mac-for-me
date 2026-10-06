@@ -1,0 +1,12 @@
+# Toolchains for shipping Apple and Android apps.
+brew "openjdk@21"
+brew "gradle"
+brew "xcodegen"
+brew "swiftlint"
+
+cask "android-studio"
+cask "android-commandlinetools"
+cask "android-platform-tools"
+
+mas "Xcode", id: 497799835
+mas "Developer", id: 640199958

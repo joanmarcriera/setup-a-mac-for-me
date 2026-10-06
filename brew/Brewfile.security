@@ -1,3 +1,9 @@
-# Vulnerability scanning for installed packages (used by cve-report.sh).
-brew "grype"
+# Secret scanning, SBOM and vulnerability scans, hardware keys, password managers.
+brew "gitleaks"
 brew "syft"
+brew "grype"
+brew "ykman"
+
+cask "tailscale-app"
+cask "bitwarden"
+cask "keepassxc"
