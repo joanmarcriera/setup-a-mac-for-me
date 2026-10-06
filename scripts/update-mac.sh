@@ -35,7 +35,16 @@ domain_cmds=(volta brew npm mas uv pipx volta rustup mise softwareupdate)
 # Per-run scratch dir (scan results). The slow `softwareupdate -l` scan is started in
 # the background and joined later, so it overlaps with every other pre-flight check.
 scan_dir=$(mktemp -d "${TMPDIR:-/tmp}/update-mac.XXXXXX") || exit 2
-trap 'rm -rf "$scan_dir"' EXIT
+cleanup_exit() {
+  # A still-running background `softwareupdate -l` must not outlive us (Ctrl-C).
+  if [[ -n "$softwareupdate_pid" && ! -e "$scan_dir/su.done" ]]; then
+    pkill -P "$softwareupdate_pid" 2>/dev/null
+    kill "$softwareupdate_pid" 2>/dev/null
+  fi
+  { printf '\033[?25h' >/dev/tty; } 2>/dev/null  # selection screen hides the cursor
+  rm -rf "$scan_dir"
+}
+trap cleanup_exit EXIT
 trap 'exit 130' INT TERM
 softwareupdate_pid=""
 
@@ -68,7 +77,8 @@ Default behavior:
 Options:
   -n, --dry-run        Preview every step and mutate nothing. Shows the summary and what each
                        tool would do, then exits. Skips the Time Machine gate (nothing changes).
-  --greedy-casks       Force Homebrew to upgrade auto-updating casks too (alias: --greedy).
+  --greedy-casks       Force Homebrew to upgrade auto-updating casks too (alias: --greedy);
+                       this ignores the major-jump hold.
   -y, --yes            Run mutating steps without interactive approval.
   --skip-backup-check  Skip the Time Machine safety gate. Use when Terminal lacks
                        Full Disk Access and tmutil latestbackup cannot run.
@@ -221,10 +231,7 @@ begin_domain_gate() {
   if [[ "$selection_mode" == true ]]; then
     case "$selected_labels" in
       *"|$label|"*) return 0 ;;
-      *)
-        printf 'Not selected: %s\n' "$label"
-        return 1
-        ;;
+      *) return 1 ;;
     esac
   fi
 
@@ -403,7 +410,13 @@ capture_softwareupdate_list() {
   fi
   softwareupdate_list_captured=true
   if [[ -n "$softwareupdate_pid" ]]; then
-    wait "$softwareupdate_pid" 2>/dev/null
+    # Poll the marker instead of `wait`, so a hung scan cannot block us forever (5 min cap).
+    local waited=0
+    while [[ ! -e "$scan_dir/su.done" && "$waited" -lt 1500 ]]; do
+      sleep 0.2
+      waited=$((waited + 1))
+    done
+    [[ -e "$scan_dir/su.done" ]] || note "(softwareupdate -l timed out; macOS updates unknown)"
     softwareupdate_list_output=$(cat "$scan_dir/su.txt" 2>/dev/null) || true
   fi
 }
@@ -512,6 +525,7 @@ import shutil
 import subprocess
 import sys
 import time
+import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
 SCAN_DIR = os.environ["SCAN_DIR"]
@@ -525,14 +539,32 @@ PRERELEASE = re.compile(r"(?i)(beta|canary|nightly|alpha|preview|insider|-rc[-.0
 RANK = {"MAJOR": 0, "restart": 1, "0.x": 2, "pre-release": 3, "pinned": 4}
 
 
-def run(cmd):
+class ScanError(Exception):
+    pass
+
+
+FAILED = object()  # marker: this tool's scan failed (shown as "scan FAILED", never "0 outdated")
+
+
+def _run(cmd, strict):
     if not shutil.which(cmd[0]):
         return ""
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
-    except Exception:
+    except Exception as exc:
+        if strict:
+            raise ScanError("%s: %s" % (cmd[0], exc))
         return ""
     return result.stdout or ""
+
+
+def run(cmd):
+    return _run(cmd, True)
+
+
+def quiet(cmd):
+    # For best-effort checks (health scan): failures just yield no output.
+    return _run(cmd, False)
 
 
 def parts(version):
@@ -578,10 +610,14 @@ def rank(item):
     return min([RANK[t] for t in item["tags"]] or [9])
 
 
-def load_json(raw):
+def load_json(raw, strict=True):
+    if not raw.strip():
+        return {}
     try:
-        return json.loads(raw) if raw.strip() else {}
+        return json.loads(raw)
     except ValueError:
+        if strict:
+            raise ScanError("unparseable JSON output")
         return {}
 
 
@@ -599,12 +635,83 @@ def collect_brew():
     return items
 
 
+def volta_home():
+    return os.environ.get("VOLTA_HOME") or os.path.expanduser("~/.volta")
+
+
+def volta_active():
+    # Volta owns the global npm packages only when `npm -g` points into its tree. Then
+    # `npm outdated -g` merely sees the npm bundled in Volta's node image, a phantom row
+    # (the npm Volta actually runs can be newer), and misses the real Volta packages.
+    if not shutil.which("volta") or not shutil.which("npm"):
+        return False
+    return quiet(["npm", "root", "-g"]).strip().startswith(volta_home() + os.sep)
+
+
+def volta_packages():
+    """(valid, dangling) lists of (name, version) for Volta-tracked global packages."""
+    valid, dangling = [], []
+    for root, _, files in os.walk(os.path.join(volta_home(), "tools", "user", "packages")):
+        for fname in files:
+            if not fname.endswith(".json"):
+                continue
+            try:
+                with open(os.path.join(root, fname)) as fh:
+                    meta = json.load(fh)
+            except (OSError, ValueError):
+                continue
+            name, version = meta.get("name") or "", meta.get("version") or ""
+            if not name:
+                continue
+            manifest = os.path.join(volta_home(), "tools", "image", "packages", name,
+                                    "lib", "node_modules", name, "package.json")
+            (valid if os.path.exists(manifest) else dangling).append((name, version))
+    return valid, dangling
+
+
+def newer(latest, installed):
+    pl = parts(latest)
+    return bool(pl) and pl > parts(installed)
+
+
 def collect_npm():
     if not shutil.which("npm"):
         return None
+    if volta_active():
+        valid, _ = volta_packages()
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            latest = list(pool.map(lambda pv: run(["npm", "view", pv[0], "version"]).strip(), valid))
+        return [make("npm", name, version, lat) for (name, version), lat in zip(valid, latest)
+                if lat and newer(lat, version)]
     data = load_json(run(["npm", "outdated", "-g", "--json"]))
     return [make("npm", name, info.get("current") or "", info.get("latest") or "")
             for name, info in data.items() if isinstance(info, dict)]
+
+
+def collect_pipx():
+    if not shutil.which("pipx"):
+        return None
+    data = load_json(run(["pipx", "list", "--json"]))
+    pkgs = []
+    for venv in (data.get("venvs") or {}).values():
+        main = (venv.get("metadata") or {}).get("main_package") or {}
+        if main.get("package") and main.get("package_version"):
+            pkgs.append((main["package"], main["package_version"]))
+
+    def latest(pv):
+        try:
+            url = "https://pypi.org/pypi/%s/json" % pv[0]
+            with urllib.request.urlopen(url, timeout=15) as resp:
+                return json.load(resp)["info"]["version"]
+        except Exception:
+            return ""  # not on PyPI (git/local install) or offline: unknown, not outdated
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        lat = list(pool.map(latest, pkgs))
+    return [make("pipx", name, version, l) for (name, version), l in zip(pkgs, lat)
+            if l and newer(l, version)]
+
+
 
 
 def collect_uv():
@@ -634,7 +741,7 @@ def collect_mise():
     if not shutil.which("mise"):
         return None
     # `mise outdated --json` => {tool: {"current": .., "latest": ..}}
-    data = load_json(run(["mise", "outdated", "--json"]))
+    data = load_json(run(["mise", "outdated", "--json"]), strict=False)
     return [make("mise", name, info.get("current") or "", info.get("latest") or "")
             for name, info in data.items() if isinstance(info, dict)]
 
@@ -693,39 +800,20 @@ def collect_health():
     pkgs = []  # (name, version) of global npm packages, for the deprecation check
 
     # Volta global packages whose files/link target are gone: every update of them fails.
-    volta_home = os.environ.get("VOLTA_HOME") or os.path.expanduser("~/.volta")
-    udir = os.path.join(volta_home, "tools", "user", "packages")
-    if os.path.isdir(udir):
-        for root, _, files in os.walk(udir):
-            for fname in files:
-                if not fname.endswith(".json"):
-                    continue
-                try:
-                    with open(os.path.join(root, fname)) as fh:
-                        meta = json.load(fh)
-                except (OSError, ValueError):
-                    continue
-                name, version = meta.get("name") or "", meta.get("version") or ""
-                if not name:
-                    continue
-                manifest = os.path.join(volta_home, "tools", "image", "packages", name,
-                                        "lib", "node_modules", name, "package.json")
-                if os.path.exists(manifest):
-                    pkgs.append((name, version))
-                else:
-                    findings.append(finding("volta-dangling", "Volta", name,
-                                            "package files or link target missing",
-                                            "volta uninstall " + name))
+    if os.path.isdir(os.path.join(volta_home(), "tools", "user", "packages")):
+        pkgs, dangling = volta_packages()
+        for name, _ in dangling:
+            findings.append(finding("volta-dangling", "Volta", name,
+                                    "package files or link target missing", "volta uninstall " + name))
     elif shutil.which("npm"):
-        data = load_json(run(["npm", "ls", "-g", "--depth=0", "--json"]))
+        data = load_json(quiet(["npm", "ls", "-g", "--depth=0", "--json"]), strict=False)
         for name, info in (data.get("dependencies") or {}).items():
             pkgs.append((name, (info or {}).get("version") or ""))
 
     # Deprecated global npm packages (registry says so); private/local ones just 404 -> silent.
     if shutil.which("npm") and pkgs:
         def deprecated(pv):
-            msg = run(["npm", "view", "%s@%s" % pv, "deprecated"]).strip()
-            return pv, msg
+            return pv, quiet(["npm", "view", "%s@%s" % pv, "deprecated"]).strip()
         with ThreadPoolExecutor(max_workers=8) as pool:
             for (name, version), msg in pool.map(deprecated, pkgs):
                 if msg:
@@ -734,7 +822,7 @@ def collect_health():
 
     # Homebrew formulae/casks that upstream deprecated or disabled.
     if shutil.which("brew"):
-        data = load_json(run(["brew", "info", "--json=v2", "--installed"]))
+        data = load_json(quiet(["brew", "info", "--json=v2", "--installed"]), strict=False)
         for key, label in (("formulae", "formula"), ("casks", "cask")):
             for it in data.get(key, []):
                 name = it.get("name") or it.get("token") or "?"
@@ -743,12 +831,26 @@ def collect_health():
                          ("disable_replacement_formula", "disable_replacement_cask")),
                         ("deprecated", "deprecation_reason",
                          ("deprecation_replacement_formula", "deprecation_replacement_cask"))):
-                    if it.get(flag):
-                        new = first(it, *repl)
-                        fix = ("switch to " + new) if new else "find a replacement, or brew uninstall " + name
-                        findings.append(finding(flag, "Homebrew " + label, name,
-                                                "%s: %s" % (flag, it.get(why) or "no reason given"), fix))
-                        break
+                    if not it.get(flag):
+                        continue
+                    new = first(it, *repl)
+                    if new:
+                        fix = "switch to " + new
+                    else:
+                        on_request = ((it.get("installed") or [{}])[0]).get("installed_on_request")
+                        users = quiet(["brew", "uses", "--installed", name]).split() if label == "formula" else []
+                        if users:
+                            # Often a stale install record (the dependent was rebuilt against a newer
+                            # version): reinstalling the dependent refreshes it.
+                            fix = "needed by %s: try 'brew reinstall %s', then 'brew autoremove'" % (
+                                ", ".join(users), users[0])
+                        elif not on_request:
+                            fix = "unused dependency: brew autoremove"
+                        else:
+                            fix = "find a replacement, or brew uninstall " + name
+                    findings.append(finding(flag, "Homebrew " + label, name,
+                                            "%s: %s" % (flag, it.get(why) or "no reason given"), fix))
+                    break
 
     # Dangling symlinks in the bin dirs tools install into.
     for d in ("/opt/homebrew/bin", "/usr/local/bin", os.path.expanduser("~/.local/bin")):
@@ -765,7 +867,7 @@ def collect_health():
 
 COLLECTORS = {
     "Homebrew": collect_brew, "npm": collect_npm, "Mac App Store": collect_mas,
-    "uv": collect_uv, "rustup": collect_rustup, "mise": collect_mise, "macOS": collect_macos,
+    "uv": collect_uv, "pipx": collect_pipx, "rustup": collect_rustup, "mise": collect_mise, "macOS": collect_macos,
 }
 
 
@@ -791,7 +893,7 @@ def main():
                 results[tool] = future.result()
             except Exception as exc:
                 sys.stderr.write("update-mac: %s scan failed: %s\n" % (tool, exc))
-                results[tool] = []
+                results[tool] = FAILED
         try:
             findings = health.result()
         except Exception as exc:
@@ -800,6 +902,10 @@ def main():
     rows, summary, outdated = [], [], []
     for tool in ORDER:
         items = results.get(tool)
+        if items is FAILED:
+            rows.append((tool, "(scan FAILED; shown as unknown, not as up to date)", "", "", "scan failed"))
+            summary.append("\t".join([tool, "!", "0", "0", "0", "0", ""]))
+            continue
         if items is None:
             continue
         items.sort(key=lambda it: (rank(it), it["name"].lower()))
@@ -892,19 +998,30 @@ domain_text() {
 
   domain_info "$label"
   if [[ "$label" == Cleanup ]]; then
-    printf '%s broken Volta package(s) removable%s' "$di_count" "${di_extra:+ ($di_extra)}"
+    printf '%s broken Volta package(s) removable' "$di_count"
     return 0
   fi
   if [[ "$di_count" == "?" ]]; then
     printf 'no outdated check'
     return 0
   fi
+  if [[ "$di_count" == "!" ]]; then
+    printf 'scan FAILED (see messages above); not pre-ticked'
+    return 0
+  fi
   if [[ "$di_major" -gt 0 ]]; then
-    if [[ "$include_major" == true ]]; then
-      detail="${di_major} MAJOR included"
-    else
-      detail="${di_major} MAJOR held back"
-    fi
+    # Only these tools actually honour the major hold; be honest for the others.
+    case "$label" in
+      Homebrew|npm|uv|mise)
+        if [[ "$include_major" == true ]]; then
+          detail="${di_major} MAJOR included"
+        else
+          detail="${di_major} MAJOR held back"
+        fi
+        ;;
+      macOS) detail="${di_major} MAJOR, never installed by this script" ;;
+      *) detail="${di_major} MAJOR, not held back" ;;
+    esac
   fi
   [[ "$di_restart" -gt 0 ]] && detail="${detail}${detail:+, }needs restart"
   [[ "$di_pre" -gt 0 ]] && detail="${detail}${detail:+, }${di_pre} pre-release"
@@ -957,6 +1074,13 @@ held_back_names() {
     "$scan_dir/outdated.tsv" 2>/dev/null
 }
 
+# Drop one finding ($1 kind, $2 name) once it has been dealt with, so later steps stop
+# treating it as broken.
+forget_finding() {
+  awk -F'\t' -v k="$1" -v n="$2" '!($1==k && $3==n)' "$scan_dir/findings.tsv" \
+    >"$scan_dir/findings.tmp" 2>/dev/null && mv "$scan_dir/findings.tmp" "$scan_dir/findings.tsv"
+}
+
 # Exit 0 if $1 is a Volta package the health scan found broken.
 is_dangling() {
   awk -F'\t' -v n="$1" '$1=="volta-dangling" && $3==n {f=1} END{exit !f}' \
@@ -969,46 +1093,82 @@ is_dangling() {
 tui_labels=()
 tui_marks=()
 tui_cursor=0
+tui_cols=80
+tui_rows=24
+
+# Default tick for a tool: it has something to do (pinned excluded; major jumps excluded
+# unless included). Unknown work ("?") counts as work, a failed scan ("!") does not. An OS
+# update or a removal is never pre-ticked: those are deliberate choices.
+tui_default_mark() {
+  local label="$1" todo
+
+  if [[ "$label" == macOS || "$label" == Cleanup ]]; then
+    printf 0
+    return 0
+  fi
+  domain_info "$label"
+  case "$di_count" in
+    '?') printf 1 ;;
+    '!') printf 0 ;;
+    *)
+      todo=$((di_count - di_pinned))
+      [[ "$include_major" == true ]] || todo=$((todo - di_major))
+      [[ "$todo" -gt 0 ]] && printf 1 || printf 0
+      ;;
+  esac
+}
+
+# One screen line, cut to the terminal width so it can never wrap (wrapping would break
+# the cursor-up redraw). $2 = hl highlights it.
+tui_line() {
+  local text="${1:0:$((tui_cols - 1))}"
+
+  if [[ "${2:-}" == hl ]]; then
+    printf '\r\033[K\033[7m%s\033[0m\n' "$text" >/dev/tty
+  else
+    printf '\r\033[K%s\n' "$text" >/dev/tty
+  fi
+}
 
 tui_draw() {
-  local i mark total="${#tui_labels[@]}" count=0
+  local i mark pointer line total="${#tui_labels[@]}" count=0
 
-  [[ "$1" == redraw ]] && printf '\033[%dA' "$((total + 2))" >/dev/tty
-  printf '\r\033[K  Select what to update   ↑/↓ j/k move · space toggle · a all · n none · m majors · enter RUN · q quit\n' >/dev/tty
+  [[ "$1" == redraw ]] && printf '\033[%dA' "$((total + 3))" >/dev/tty
+  tui_line "  Select what to update"
+  tui_line "  j/k move   space toggle   a all   n none   m majors   Enter RUN   q quit"
   for ((i = 0; i < total; i++)); do
     mark=' '
+    pointer=' '
     if [[ "${tui_marks[$i]}" -eq 1 ]]; then
       mark=x
       count=$((count + 1))
     fi
+    [[ "$i" -eq "$tui_cursor" ]] && pointer='>'
+    line=$(printf '%s [%s] %-14s %s' "$pointer" "$mark" "${tui_labels[$i]}" "$(domain_text "${tui_labels[$i]}")")
     if [[ "$i" -eq "$tui_cursor" ]]; then
-      printf '\r\033[K\033[7m> [%s] %-14s %s\033[0m\n' "$mark" "${tui_labels[$i]}" "$(domain_text "${tui_labels[$i]}")" >/dev/tty
+      tui_line "$line" hl
     else
-      printf '\r\033[K  [%s] %-14s %s\n' "$mark" "${tui_labels[$i]}" "$(domain_text "${tui_labels[$i]}")" >/dev/tty
+      tui_line "$line"
     fi
   done
-  printf '\r\033[K  %d selected   -   major version jumps: %s (m toggles)\n' "$count" \
-    "$([[ "$include_major" == true ]] && echo INCLUDED || echo held back)" >/dev/tty
+  tui_line "  $count selected   -   major jumps: $([[ "$include_major" == true ]] && echo INCLUDED || echo held back)"
 }
 
 choose_domains() {
-  local i mark key rest total j
+  local i key rest total j size
   local chosen=""
+
+  size=$(stty size </dev/tty 2>/dev/null) || size=""
+  # Some terminals/ptys report 0x0: treat that as unknown and keep the 24x80 default.
+  if [[ "$size" =~ ^[0-9]+\ [0-9]+$ && "${size%% *}" -gt 0 && "${size##* }" -gt 0 ]]; then
+    tui_rows=${size%% *}
+    tui_cols=${size##* }
+  fi
 
   for ((i = 0; i < ${#domain_labels[@]}; i++)); do
     domain_listed "$i" || continue
-    domain_info "${domain_labels[$i]}"
-    # Pre-tick a tool only when it has something to do without a major jump (unknown
-    # counts, e.g. pipx/Volta, are ticked). An OS update or a removal is never pre-ticked:
-    # those are deliberate choices.
-    mark=1
-    if [[ "$di_count" != "?" ]]; then
-      mark=0
-      [[ $((di_count - di_major)) -gt 0 ]] && mark=1
-    fi
-    [[ "${domain_labels[$i]}" == macOS || "${domain_labels[$i]}" == Cleanup ]] && mark=0
     tui_labels+=("${domain_labels[$i]}")
-    tui_marks+=("$mark")
+    tui_marks+=("$(tui_default_mark "${domain_labels[$i]}")")
   done
 
   total=${#tui_labels[@]}
@@ -1016,8 +1176,15 @@ choose_domains() {
     note "No supported tools found."
     exit 0
   fi
+  if [[ "$tui_rows" -lt $((total + 6)) ]]; then
+    note "Terminal too short for the selection screen; using per-tool prompts instead."
+    classic_prompts=true
+    print_summary_table
+    return 0
+  fi
 
   log "Choose what to update"
+  printf '\033[?25l' >/dev/tty
   tui_draw first
   while true; do
     IFS= read -rsn1 key </dev/tty || exit 2
@@ -1026,8 +1193,8 @@ choose_domains() {
         rest=""
         read -rsn2 -t 1 rest </dev/tty || rest=""
         case "$rest" in
-          '[A') [[ "$tui_cursor" -gt 0 ]] && tui_cursor=$((tui_cursor - 1)) ;;
-          '[B') [[ "$tui_cursor" -lt $((total - 1)) ]] && tui_cursor=$((tui_cursor + 1)) ;;
+          '[A'|'OA') [[ "$tui_cursor" -gt 0 ]] && tui_cursor=$((tui_cursor - 1)) ;;
+          '[B'|'OB') [[ "$tui_cursor" -lt $((total - 1)) ]] && tui_cursor=$((tui_cursor + 1)) ;;
         esac
         ;;
       k) [[ "$tui_cursor" -gt 0 ]] && tui_cursor=$((tui_cursor - 1)) ;;
@@ -1035,15 +1202,23 @@ choose_domains() {
       ' ') tui_marks[tui_cursor]=$((1 - tui_marks[tui_cursor])) ;;
       a) for ((j = 0; j < total; j++)); do tui_marks[j]=1; done ;;
       n) for ((j = 0; j < total; j++)); do tui_marks[j]=0; done ;;
-      m) [[ "$include_major" == true ]] && include_major=false || include_major=true ;;
+      m)
+        [[ "$include_major" == true ]] && include_major=false || include_major=true
+        # Re-tick the tools whose only work is a major jump, to match the new setting.
+        for ((j = 0; j < total; j++)); do
+          domain_info "${tui_labels[$j]}"
+          [[ "$di_major" -gt 0 ]] && tui_marks[j]=$(tui_default_mark "${tui_labels[$j]}")
+        done
+        ;;
       q)
-        printf '\nQuit requested. Nothing was changed.\n'
+        printf '\033[?25h\nQuit requested. Nothing was changed.\n' >/dev/tty
         exit 130
         ;;
       '') break ;;
     esac
     tui_draw redraw
   done
+  printf '\033[?25h' >/dev/tty
 
   for ((i = 0; i < total; i++)); do
     [[ "${tui_marks[$i]}" -eq 1 ]] && chosen="${chosen}${chosen:+, }${tui_labels[$i]}" \
@@ -1151,6 +1326,13 @@ install_macos_updates() {
   run_step "macOS software updates (${#labels[@]})" sudo softwareupdate -i "${labels[@]}"
 }
 
+# Volta owns the global npm packages only when `npm -g` points into its tree (a Volta
+# install alone is not enough: brew's npm may be the one on PATH).
+volta_active() {
+  command -v volta >/dev/null 2>&1 || return 1
+  [[ "$(npm root -g 2>/dev/null)" == "${VOLTA_HOME:-$HOME/.volta}"/* ]]
+}
+
 # Upgrade global npm packages one at a time, so a single broken package cannot abort the
 # rest, and list what failed. Volta manages globals here (`npm update -g` fights it and
 # breaks on local-path packages), so use `volta install <pkg>@latest`; plain npm otherwise.
@@ -1159,7 +1341,7 @@ update_npm_globals() {
   local name pkgs=() held=() failed=()
 
   if [[ ! -f "$scan_dir/summary.tsv" ]]; then
-    if command -v volta >/dev/null 2>&1; then
+    if volta_active; then
       note "No upgrade plan (python3 missing) and Volta manages the globals: use 'volta install <pkg>' by hand."
     else
       run_step "npm global package updates" npm update -g
@@ -1172,11 +1354,9 @@ update_npm_globals() {
 
   if [[ "${#pkgs[@]}" -gt 0 ]]; then
     for name in "${pkgs[@]}"; do
-      if [[ "$name" == npm ]] && command -v volta >/dev/null 2>&1; then
-        note "Skipping npm itself: it ships with Node and is handled by the Volta step."
-      elif is_dangling "$name"; then
+      if is_dangling "$name"; then
         note "Skipping $name: broken Volta package (tick Cleanup to remove it)."
-      elif command -v volta >/dev/null 2>&1; then
+      elif volta_active; then
         run_step "Volta install $name@latest" volta install "$name@latest" || failed+=("$name")
       else
         run_step "npm install -g $name@latest" npm install -g "$name@latest" || failed+=("$name")
@@ -1211,6 +1391,38 @@ brew_upgrade_step() {
   run_step "Homebrew upgrade formulae and standard casks" brew upgrade
 }
 
+# uv / mise: like Homebrew, leave major jumps alone unless include_major (when the plan
+# found some: upgrade only the other planned tools by name; else the plain "upgrade all").
+uv_upgrade_step() {
+  local name names=() held=()
+
+  while IFS= read -r name; do [[ -n "$name" ]] && held+=("$name"); done < <(held_back_names uv)
+  if [[ "${#held[@]}" -gt 0 ]]; then
+    while IFS= read -r name; do [[ -n "$name" ]] && names+=("$name"); done < <(outdated_names uv)
+    note "Holding back major jump(s): $(join_by ', ' "${held[@]}"). Re-run with --major (or press m) to include."
+    if [[ "${#names[@]}" -gt 0 ]]; then
+      for name in "${names[@]}"; do run_step "uv tool upgrade $name" uv tool upgrade "$name"; done
+    fi
+    return 0
+  fi
+  run_step "uv tool upgrades" uv tool upgrade --all
+}
+
+mise_upgrade_step() {
+  local name names=() held=()
+
+  while IFS= read -r name; do [[ -n "$name" ]] && held+=("$name"); done < <(held_back_names mise)
+  if [[ "${#held[@]}" -gt 0 ]]; then
+    while IFS= read -r name; do [[ -n "$name" ]] && names+=("$name"); done < <(outdated_names mise)
+    note "Holding back major jump(s): $(join_by ', ' "${held[@]}"). Re-run with --major (or press m) to include."
+    if [[ "${#names[@]}" -gt 0 ]]; then
+      run_step "mise upgrade (without major jumps)" mise_in_home upgrade "${names[@]}"
+    fi
+    return 0
+  fi
+  run_step "mise tool upgrades" mise_in_home upgrade
+}
+
 # Run mise from $HOME so the *global* config is used regardless of the cwd, without
 # a login shell (`bash -l` would source profile files and can hang or print noise).
 mise_in_home() {
@@ -1225,7 +1437,8 @@ volta_spec() {
     printf '%s' "$1"
     return 0
   fi
-  major=$("$1" --version 2>/dev/null | grep -oE '[0-9]+' | head -n1)
+  # From $HOME: inside a project with a "volta" pin the shim would report the pinned version.
+  major=$(cd "$HOME" && "$1" --version 2>/dev/null | grep -oE '[0-9]+' | head -n1)
   printf '%s' "${major:+$1@$major}"
   [[ -n "$major" ]] || printf '%s' "$1"
 }
@@ -1298,6 +1511,7 @@ done
 # Dry-run mutates nothing, so it overrides --yes.
 if [[ "$dry_run" == true ]]; then
   assume_yes=false
+  yes_flag=false
 fi
 
 ensure_prompt_available
@@ -1328,12 +1542,13 @@ cleanup_names=()
 while IFS= read -r cleanup_name; do
   [[ -n "$cleanup_name" ]] && cleanup_names+=("$cleanup_name")
 done < <(awk -F'\t' '$1=="volta-dangling" {print $3}' "$scan_dir/findings.tsv" 2>/dev/null)
-if [[ "${#cleanup_names[@]}" -gt 0 ]]; then
+if command -v volta >/dev/null 2>&1 && [[ "${#cleanup_names[@]}" -gt 0 ]]; then
   if [[ "$assume_yes" == true && "$selection_mode" != true ]]; then
     note "Cleanup: ${#cleanup_names[@]} broken Volta package(s) found ($(join_by ', ' "${cleanup_names[@]}")); --yes never removes anything. Use the selection screen, or: volta uninstall <name>"
   elif begin_domain "Cleanup" "remove broken Volta packages: $(join_by ', ' "${cleanup_names[@]}")"; then
     for cleanup_name in "${cleanup_names[@]}"; do
-      run_step "Volta uninstall $cleanup_name" volta uninstall "$cleanup_name"
+      run_step "Volta uninstall $cleanup_name" volta uninstall "$cleanup_name" \
+        && forget_finding volta-dangling "$cleanup_name"
     done
   fi
 fi
@@ -1392,7 +1607,7 @@ if command -v uv >/dev/null 2>&1; then
   # -x: exact process name (a bare `pgrep -f uv` also matches this very command line).
   preview_step "uv processes currently running (cache may be locked by these)" bash -c 'pgrep -lx uv || echo none'
   if begin_domain "uv" "tool upgrades, cache prune"; then
-    run_step "uv tool upgrades" uv tool upgrade --all
+    uv_upgrade_step
     run_step "uv cache prune" uv cache prune
   fi
 else
@@ -1431,7 +1646,7 @@ if command -v mise >/dev/null 2>&1; then
   preview_step "mise current tools" mise_in_home list
   hint "mise: outdated tools and the current list are shown above before any upgrade."
   if begin_domain "mise" "tool upgrades, cache prune, doctor"; then
-    run_step "mise tool upgrades" mise_in_home upgrade
+    mise_upgrade_step
     run_step "mise cache prune" mise_in_home cache prune
     run_info "mise doctor" mise_in_home doctor
   fi
@@ -1439,7 +1654,9 @@ else
   missing_tool "mise" "brew install mise" "https://mise.jdx.dev/getting-started.html"
 fi
 
-if command -v softwareupdate >/dev/null 2>&1; then
+if [[ "$selection_mode" == true && "$selected_labels" != *"|macOS|"* ]]; then
+  :  # macOS was not selected on the selection screen: nothing to show or do
+elif command -v softwareupdate >/dev/null 2>&1; then
   capture_softwareupdate_list
   cur_major=""
   log "Available macOS software updates"
