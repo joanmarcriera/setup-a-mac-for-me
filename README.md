@@ -6,6 +6,8 @@ Opinionated MacBook Pro rebuild notes for Joan Marc Riera.
 
 This repo publishes a reusable Mac setup guide and Homebrew installer. Visit [mac.riera.co.uk](https://mac.riera.co.uk/) for the interactive site, or copy install commands directly from `brew/README.md`.
 
+Can't install Homebrew? Jump to [No Homebrew? Configure The Mac With Built-in Tools Only](#no-homebrew-configure-the-mac-with-built-in-tools-only).
+
 To rebuild a Mac:
 1. Install Homebrew: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
 2. Copy the install commands you need from `brew/README.md` (or the site)
@@ -22,6 +24,65 @@ This repo now serves two jobs:
 - a public GitHub Pages site under `docs/`
 - a practical rebuild kit for the next clean Mac setup
 
+## No Homebrew? Configure The Mac With Built-in Tools Only
+
+For a Mac where Homebrew can't be installed (managed/work laptop, no admin rights, or just a
+fresh MacBook Air you want sorted in five minutes). `scripts/mac-settings.sh` is a menu that
+toggles mouse, trackpad, Dock, Finder, keyboard, screenshot and menu bar settings using only
+`defaults`, which ships with macOS. No Homebrew, no git, no Xcode tools, no sudo.
+
+Download it with the built-in `curl` and run it:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/joanmarcriera/setup-a-mac-for-me/main/scripts/mac-settings.sh -o ~/mac-settings.sh
+bash ~/mac-settings.sh
+```
+
+Every run shows the **current** state of each setting, so run it again whenever you want to
+switch something on or off:
+
+```text
+Mac settings - macOS 26.1 (built-in tools only)
+
+  1  Mouse & trackpad        2/7 on
+  2  Dock                    1/12 on
+  ...
+> 2
+
+Dock
+
+   1 [x]  Auto-hide the Dock
+   2 [ ]* Dock appears instantly (no delay, fast slide)
+   3 [ ]  Hide recent apps in the Dock
+  ...
+  Type numbers to toggle (e.g. 1 3), a = apply, b = back
+```
+
+- Pick a section, type item numbers to toggle (`1 3 5`), then `a` to apply. Nothing changes until
+  you apply; `*` marks a queued change, toggling it again cancels it.
+- Turning a setting **off** deletes the key, so macOS goes back to its own default.
+- Before applying, the touched preferences are exported to
+  `~/Library/Application Support/mac-settings/backup-<time>/` (`defaults import <domain> <file>` restores one).
+- The Dock, Finder and menu bar restart on their own. Mouse, trackpad and keyboard changes need a
+  log out and back in; text and window changes need the app relaunched. The script tells you which.
+- `bash ~/mac-settings.sh --list` prints every setting and its state; `--dry-run` opens the menu but
+  only prints the commands.
+
+What it can toggle:
+
+| Section | Settings |
+| --- | --- |
+| Mouse & trackpad | tap to click, three-finger drag, natural scrolling off, no mouse acceleration, faster mouse/trackpad pointer, Magic Mouse right-click |
+| Dock | auto-hide, instant show (no delay), hide recent apps, only open apps, smaller icons, magnification, Dock on the left, minimise into app icon, scale effect, dim hidden apps, fixed Spaces order, no Quick Note hot corner |
+| Desktop & windows | wallpaper click doesn't hide windows, tiled windows without gaps, Ctrl+Cmd drag windows from anywhere, always-visible scroll bars, don't reopen windows |
+| Finder | file extensions, hidden files, path bar, status bar, full path in title, folders first, list view, search current folder, no extension-change warning, new windows at home, empty Trash after 30 days, no `.DS_Store` on network/USB, show `~/Library` |
+| Keyboard & typing | fast key repeat, hold-to-repeat (no accent popup), F1-F12 as function keys, Tab through all controls, no autocorrect / auto-capitals / smart quotes / double-space full stop |
+| Screenshots | save to `~/Pictures/Screenshots`, no window shadow, no floating thumbnail |
+| Menu bar | battery percentage, clock seconds, auto-hide menu bar |
+| Dialogs & apps | expanded Save/Print dialogs, save to disk not iCloud, TextEdit plain text |
+
+To add a setting, add one `add` line to the table at the top of the script (format documented there).
+
 ## What Changed
 
 The repo is now organized around one source of truth for install groups:
@@ -30,6 +91,7 @@ The repo is now organized around one source of truth for install groups:
 - `brew/`: generated `Brewfile.*` files and copy/paste commands
 - `docs/`: static GitHub Pages site with raw Homebrew commands and direct macOS preference commands
 - `scripts/apply-macos-defaults.sh`: optional helper for the Tap to Click, Dock and Launchpad defaults shown on the site (`--dry-run`, `--check`, `--reset`)
+- `scripts/mac-settings.sh`: no-Homebrew menu to toggle mouse, Dock, Finder, keyboard and other macOS settings (see above)
 - `scripts/verify-setup.sh`: data-driven check of a bundle's taps, formulae, casks (and Mac App Store apps if listed) plus the scripted macOS defaults
 - `scripts/drift-report.sh`: read-only "what changed since I set this up" report (installed vs `data/install-groups.json`)
 - `scripts/cve-report.sh`: read-only CVE scan of the installed Homebrew packages (grype + syft)
